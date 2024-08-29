@@ -7,5 +7,6 @@ namespace FurnitureStoreBE.Services.Authentication
     {
         Task<string> Register(RegisterRequest register);
         Task<string> Login(string username, string password);
+        Task<Guid> GetMe();
     }
 }

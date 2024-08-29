@@ -1,5 +1,6 @@
 using FurnitureStoreBE.Config;
 using FurnitureStoreBE.Data;
+using FurnitureStoreBE.Exceptions;
 using FurnitureStoreBE.Services.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -41,7 +42,7 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 builder.Services.AddControllers();
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -59,7 +60,6 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ClockSkew = TimeSpan.Zero
     };
 });
 
@@ -68,6 +68,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 
 builder.Services.AddScoped<FurnitureStoreBE.Services.Authentication.IAuthenticationService, AuthenticationServiceImp>();
 
+builder.Services.AddExceptionHandler<DefaultExceptionHandler>();
 var app = builder.Build();
 
 
@@ -81,9 +82,14 @@ app.MapControllers();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.Run();
 app.UseCors(x => x
     .AllowAnyOrigin()
     .AllowAnyMethod()
     .AllowAnyHeader());
+
+app.UseExceptionHandler(opt => { });
+
+
+app.Run();
+
 

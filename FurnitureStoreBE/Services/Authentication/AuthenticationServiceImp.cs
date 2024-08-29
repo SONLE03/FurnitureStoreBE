@@ -1,60 +1,97 @@
 ﻿using FurnitureStoreBE.Data;
 using FurnitureStoreBE.DTOs.Request;
+using FurnitureStoreBE.Exceptions;
 using FurnitureStoreBE.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
-using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
+using BCrypt.Net;
+using Microsoft.AspNetCore.Http;
 
 namespace FurnitureStoreBE.Services.Authentication
 {
     public class AuthenticationServiceImp : IAuthenticationService
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ApplicationDBContext _context;
         private readonly IConfiguration _configuration;
-        public AuthenticationServiceImp(ApplicationDBContext context, IConfiguration configuration)
+       
+
+        public AuthenticationServiceImp(ApplicationDBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
+        }
+        public string HashPassword(string password)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(password);
         }
 
+        public bool VerifyPassword(string hashedPassword, string password)
+        {
+            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+        }
+        public async Task<Guid> GetMe()
+        {
+            var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirstValue("Id");
+
+            if (Guid.TryParse(userIdClaim, out Guid userId))
+            {
+                return userId;
+            }
+
+            throw new UnauthorizedAccessException("User is not authenticated or ID is missing.");
+        }
         public async Task<string> Register(RegisterRequest register)
         {
             if (register == null) throw new ArgumentNullException(nameof(register));
 
             var existingUser = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == register.Email);
+                .AnyAsync(u => u.Email == register.Email);
 
-            if (existingUser != null)
+            if (existingUser)
             {
-                throw new InvalidOperationException("User with this email already exists.");
+                throw new ObjectAlreadyExistsException("User with this email already exists.");
             }
-
-            var newUser = new User
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                Email = register.Email,
-                Password = register.Password, // Consider hashing the password before saving
-                Role = Enums.ERole.Customer
-            };
+                var newUser = new User
+                {
+                    Email = register.Email,
+                    Password = HashPassword(register.Password),
+                    Role = Enums.ERole.Customer
+                };
+                var guidString = "3C3E31FD-331B-4269-4B6D-08DCC8603E7F"; // Note: Ensure no extra spaces around hyphens
+                if (Guid.TryParse(guidString, out Guid parsedGuid))
+                {
+                    newUser.setCommonCreate(parsedGuid);
+                }
+                var createdUser = _context.Users.Add(newUser);
+        
 
-            var createdUser = _context.Users.Add(newUser);
-            await _context.SaveChangesAsync();
+                var customer = new Customer
+                {
+                    id = createdUser.Entity.Id
+                };
 
-            var customer = new Customer
+                _context.Customers.Add(customer);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return createdUser.Entity.Id.ToString();
+
+            }
+            catch
             {
-                id = createdUser.Entity.Id
-            };
-
-            _context.Customers.Add(customer);
-            await _context.SaveChangesAsync();
-
-            return createdUser.Entity.Id.ToString();
+                await transaction.RollbackAsync();
+                throw;
+            }
+           
         }
+
         static bool AuthenticateNormalUser(string userName, string passWord)
         {
             //Check the given user credential is valid - Usually this should be checked from database
@@ -78,7 +115,7 @@ namespace FurnitureStoreBE.Services.Authentication
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"] ?? string.Empty);
             var claims = new List<Claim>()
             {
-                new Claim("Id", Guid.NewGuid().ToString()),
+                new Claim("Id", "123123123"),
                 new Claim(JwtRegisteredClaimNames.Sub, username),
                 new Claim(JwtRegisteredClaimNames.Email, password),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())

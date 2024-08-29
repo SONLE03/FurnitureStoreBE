@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure.Core;
+using Elfie.Serialization;
+using FurnitureStoreBE.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FurnitureStoreBE.Controllers
@@ -11,7 +14,7 @@ namespace FurnitureStoreBE.Controllers
         [HttpGet()]
         public string getVoid()
         {
-            return "10";
+            throw new IOException("abcd");
         }
     }
 }

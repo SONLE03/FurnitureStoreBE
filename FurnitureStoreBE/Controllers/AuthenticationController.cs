@@ -4,6 +4,7 @@ using FurnitureStoreBE.Services.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using System.Text;
 
 namespace FurnitureStoreBE.Controllers
@@ -26,16 +27,8 @@ namespace FurnitureStoreBE.Controllers
             {
                 return BadRequest("Invalid registration data.");
             }
-
-            try
-            {
-                var userId = await _authenticationService.Register(register);
-                return Ok(userId);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var userId = await _authenticationService.Register(register);
+            return Ok(userId);
         }
         [HttpPost("login/{email}/{password}")]
         public async Task<IActionResult> Login(string email, string password)
@@ -46,6 +39,37 @@ namespace FurnitureStoreBE.Controllers
             //return Ok(accessToken);
            
             return Ok(await _authenticationService.Login(email, password));
+        }
+        //[HttpGet("me")]
+        //[Authorize]
+        //public IActionResult GetMe()
+        //{
+        //    // Lấy thông tin người dùng từ Claims
+        //    var userId = User.FindFirstValue("Id"); // Lấy Id từ claim
+        //    var userName = User.Identity.Name; // Lấy tên người dùng từ claim
+        //    var email = User.FindFirstValue(ClaimTypes.Email); // Lấy email từ claim
+        //    var role = User.FindFirstValue(ClaimTypes.Role); // Lấy vai trò từ claim nếu có
+
+        //    return Ok(new
+        //    {
+        //        UserId = userId,
+        //        UserName = userName,
+        //        Email = email,
+        //        Role = role
+        //    });
+        //}
+        [HttpGet("me")]
+        public async Task<IActionResult> GetMe()
+        {
+            try
+            {
+                var userId = await _authenticationService.GetMe();
+                return Ok(userId);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { Message = ex.Message });
+            }
         }
 
     }
