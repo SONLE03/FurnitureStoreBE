@@ -22,7 +22,7 @@ namespace FurnitureStoreBE.Models
         public string IsDefault { get; set; }
 
 
-        public Guid UserId { get; set; }    
+        public string UserId { get; set; }    
         public User User { get; set; }
         public ICollection<Order> Orders { get; set; }
     }

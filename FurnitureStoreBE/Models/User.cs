@@ -1,20 +1,16 @@
 ﻿using FurnitureStoreBE.Enums;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Principal;
 
 namespace FurnitureStoreBE.Models
 {
     [Table("User")]
-    public class User : BaseEntity
+    public class User : IdentityUser
     {
-        [Key]
-        public Guid Id { get; set; }
-        public required string Email { get; set; }
-        public required string Password { get; set; }
-        public string? FullName {  get; set; }
-        public string? Phone { get; set; }
+        public string? FullName { get; set; }
         public DateTime? DateOfBirth { get; set; }
-        public ERole Role { get; set; }
         public Guid? AssetId { get; set; }
         public Asset? Asset { get; set; }
         public ICollection<RefreshToken>? Tokens { get; set; }

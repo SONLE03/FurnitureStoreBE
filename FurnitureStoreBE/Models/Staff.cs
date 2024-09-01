@@ -7,7 +7,7 @@ namespace FurnitureStoreBE.Models
     public class Staff
     {
         [Key]
-        public Guid id { get; set; }
+        public string id { get; set; }
 
         public required string Position { get; set; }
     }

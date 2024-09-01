@@ -1,75 +1,58 @@
 ﻿using FurnitureStoreBE.Data;
-using FurnitureStoreBE.DTOs.Request;
+using FurnitureStoreBE.DTOs.Request.Auth;
+using FurnitureStoreBE.Models;
 using FurnitureStoreBE.Services.Authentication;
+using Humanizer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Security.Claims;
 using System.Text;
 
 namespace FurnitureStoreBE.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("/auth")]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthService _authenticationService;
         private readonly ApplicationDBContext _applicationDBContext;
-        public AuthenticationController(IAuthenticationService authenticationService, ApplicationDBContext applicationDBContext)
+        public AuthenticationController(IAuthService authenticationService, ApplicationDBContext applicationDBContext)
         {
             _authenticationService = authenticationService;
             _applicationDBContext = applicationDBContext;
         }
-        [HttpPost]
+        [HttpPost("/register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest register)
         {
-            if (register == null)
+            if (!ModelState.IsValid)
             {
                 return BadRequest("Invalid registration data.");
             }
-            var userId = await _authenticationService.Register(register);
-            return Ok(userId);
-        }
-        [HttpPost("login/{email}/{password}")]
-        public async Task<IActionResult> Login(string email, string password)
-        {
-            //var user = await _applicationDBContext.Users.FirstOrDefaultAsync(u => u.Email == email);
-            //string key = $"dddddd.{user.FullName}.{user.Id}";
-            //string accessToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(key));
-            //return Ok(accessToken);
-           
-            return Ok(await _authenticationService.Login(email, password));
-        }
-        //[HttpGet("me")]
-        //[Authorize]
-        //public IActionResult GetMe()
-        //{
-        //    // Lấy thông tin người dùng từ Claims
-        //    var userId = User.FindFirstValue("Id"); // Lấy Id từ claim
-        //    var userName = User.Identity.Name; // Lấy tên người dùng từ claim
-        //    var email = User.FindFirstValue(ClaimTypes.Email); // Lấy email từ claim
-        //    var role = User.FindFirstValue(ClaimTypes.Role); // Lấy vai trò từ claim nếu có
 
-        //    return Ok(new
-        //    {
-        //        UserId = userId,
-        //        UserName = userName,
-        //        Email = email,
-        //        Role = role
-        //    });
-        //}
-        [HttpGet("me")]
-        public async Task<IActionResult> GetMe()
-        {
             try
             {
-                var userId = await _authenticationService.GetMe();
-                return Ok(userId);
+                await _authenticationService.Register(register);
+                return Ok("User created successfully");
             }
-            catch (UnauthorizedAccessException ex)
+            catch (InvalidOperationException ex)
             {
-                return Unauthorized(new { Message = ex.Message });
+                return BadRequest(ex.Message);
             }
+        }
+        [HttpPost("/login")]
+        public async Task<IActionResult> Login([FromBody] SigninRequest signinRequest)
+        {
+            
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid signin data.");
+            }
+
+            return Ok(await _authenticationService.Login(signinRequest));
         }
 
     }

@@ -14,7 +14,7 @@ namespace FurnitureStoreBE.Controllers
         [HttpGet()]
         public string getVoid()
         {
-            throw new IOException("abcd");
+            return "10";
         }
     }
 }

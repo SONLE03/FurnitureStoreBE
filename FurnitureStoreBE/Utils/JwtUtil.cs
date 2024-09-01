@@ -26,9 +26,9 @@ namespace FurnitureStoreBE.Utils
         {
           
             var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, userName), 
-                new Claim("id", userId), 
+            {   
+                new Claim("id", userId),
+                new Claim(ClaimTypes.Name, userName),   
                 new Claim(ClaimTypes.Role, userRole)
             };
             var tokenDescriptor = new SecurityTokenDescriptor

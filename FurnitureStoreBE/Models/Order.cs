@@ -21,7 +21,7 @@ namespace FurnitureStoreBE.Models
         public EOrderStatus OrderStatus { get; set; }
         public Guid? CouponId { get; set; }
         public Coupon Coupon { get; set; }
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
         public User User { get; set; }
         public Guid AddressId { get; set; }
         public Address Address { get; set; }

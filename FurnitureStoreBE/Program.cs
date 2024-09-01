@@ -2,18 +2,21 @@ using FurnitureStoreBE.Config;
 using FurnitureStoreBE.Data;
 using FurnitureStoreBE.Exceptions;
 using FurnitureStoreBE.Services.Authentication;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Identity;
+using FurnitureStoreBE.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using FurnitureStoreBE.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Web API with Jwt Authentication", Version = "v1" });
@@ -41,13 +44,19 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
+
 builder.Services.AddControllers();
+
 builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme =
+    options.DefaultChallengeScheme =
+    options.DefaultForbidScheme =
+    options.DefaultScheme =
+    options.DefaultSignInScheme =
+    options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(o =>
 {
     o.TokenValidationParameters = new TokenValidationParameters
@@ -63,14 +72,27 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddAuthorization();
+
+builder.Services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedEmail = false)
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDBContext>();
+
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<FurnitureStoreBE.Services.Authentication.IAuthenticationService, AuthenticationServiceImp>();
-
 builder.Services.AddExceptionHandler<DefaultExceptionHandler>();
+
+builder.Services.AddScoped<JwtUtil>();
+builder.Services.AddScoped<IAuthService, AuthServiceImp>();
+
+
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    AppUserSeeder.SeedRootAdminUser(scope, app);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -78,17 +100,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.MapControllers();
 app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
 app.UseCors(x => x
     .AllowAnyOrigin()
     .AllowAnyMethod()
     .AllowAnyHeader());
-
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
 app.UseExceptionHandler(opt => { });
-
 
 app.Run();
 

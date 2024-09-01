@@ -15,7 +15,6 @@ namespace FurnitureStoreBE.Models
         public Asset Asset { get; set; }
         public long Quantity {  get; set; }
         public long UsageCount { get; set; } = 0;
-        public ICollection<User> Users { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public required decimal MinOrderValue { get; set; }
         [Column(TypeName = "decimal(18,2)")]

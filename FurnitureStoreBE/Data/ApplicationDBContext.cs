@@ -1,10 +1,11 @@
 ﻿using FurnitureStoreBE.Models;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 namespace FurnitureStoreBE.Data
 {
-    public class ApplicationDBContext : DbContext
+    public class ApplicationDBContext : IdentityDbContext<User>
     {
         public ApplicationDBContext(DbContextOptions dbContextOptions)
         : base(dbContextOptions)
@@ -35,10 +36,12 @@ namespace FurnitureStoreBE.Data
         public DbSet<Reply> Replys { get; set; }
         public DbSet<UserUsedCoupon> UserUsedCoupon { get; set; }   
         public DbSet<Notification> Notification { get; set; }
-
+        public DbSet<AspNetTypeClaims> TypeClaims { get; set; }
+        public DbSet<AspNetRoleClaims<string>> RoleClaims { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
+            base.OnModelCreating(modelBuilder);
             // User Relationships
             modelBuilder.Entity<Asset>()
                 .HasOne(p => p.User)
@@ -328,9 +331,1197 @@ namespace FurnitureStoreBE.Data
               .HasOne(p => p.User)
               .WithOne(p => p.Cart)
               .HasForeignKey<Cart>(p => p.UserId);
+            modelBuilder.Entity<AspNetTypeClaims>()
+               .HasMany(tc => tc.RoleClaims)
+               .WithOne(rc => rc.AspNetTypeClaims)
+               .HasForeignKey(rc => rc.AspNetTypeClaimsId)
+               .OnDelete(DeleteBehavior.Restrict);
+            SeedData(modelBuilder);
+        }
 
-            base.OnModelCreating(modelBuilder);
+        private void SeedData(ModelBuilder modelBuilder)
+        {
+            // Seed Type Claims
+            modelBuilder.Entity<AspNetTypeClaims>().HasData(
+                new AspNetTypeClaims
+                {
+                    Id = 1,
+                    Name = "ManageUser"
+                },
+                new AspNetTypeClaims
+                {
+                    Id = 2,
+                    Name = "ManageBrand"
+                },
+                new AspNetTypeClaims
+                {
+                    Id = 3,
+                    Name = "ManageCategory"
+                },
+                new AspNetTypeClaims
+                {
+                    Id = 4,
+                    Name = "ManageColor"
+                },
+                new AspNetTypeClaims
+                {
+                    Id = 5,
+                    Name = "ManageCoupon"
+                },
+                new AspNetTypeClaims
+                {
+                    Id = 6,
+                    Name = "ManageCustomer"
+                },
+                new AspNetTypeClaims
+                {
+                    Id = 7,
+                    Name = "ManageDesigner"
+                },
+                new AspNetTypeClaims
+                {
+                    Id = 8,
+                    Name = "ManageFurnitureType"
+                },
+                new AspNetTypeClaims
+                {
+                    Id = 9,
+                    Name = "ManageMaterial"
+                },
+                new AspNetTypeClaims
+                {
+                    Id = 10,
+                    Name = "ManageMaterialType"
+                },
+                new AspNetTypeClaims
+                {
+                    Id = 11,
+                    Name = "ManageNotification"
+                },
+                new AspNetTypeClaims
+                {
+                    Id = 12,
+                    Name = "ManageRole"
+                },
+                new AspNetTypeClaims
+                {
+                    Id = 13,
+                    Name = "ManageOrder"
+                },
+                new AspNetTypeClaims
+                {
+                    Id = 14,
+                    Name = "ManageProduct"
+                },
+                new AspNetTypeClaims
+                {
+                    Id = 15,
+                    Name = "ManageQuestion"
+                },
+                new AspNetTypeClaims
+                {
+                    Id = 16,
+                    Name = "ManageReply"
+                },
+                new AspNetTypeClaims
+                {
+                    Id = 17,
+                    Name = "ManageReview"
+                },
+                new AspNetTypeClaims
+                {
+                    Id = 18,
+                    Name = "ManageRoomSpace"
+                },
+                new AspNetTypeClaims
+                {
+                    Id = 19,
+                    Name = "ManageReport"
+                }
+            );
+            // Seed roles
+            modelBuilder.Entity<IdentityRole>().HasData(
+                new IdentityRole
+                {
+                    Id = "1", // Unique identifier for the role
+                    Name = "Owner",
+                    NormalizedName = "OWNER"
+                },
+                new IdentityRole
+                {
+                    Id = "2", // Unique identifier for the role
+                    Name = "Staff",
+                    NormalizedName = "STAFF",
+                },
+                new IdentityRole
+                {
+                    Id = "3", // Unique identifier for the role
+                    Name = "Customer",
+                    NormalizedName = "CUSTOMER"
+                }
+            );
+
+            // Seed role claims
+            modelBuilder.Entity<AspNetRoleClaims<string>>().HasData(
+                // Owner permission => all
+                // User claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 1,
+                    RoleId = "1", // Owner role
+                    ClaimType = "Create",
+                    ClaimValue = "CreateUser",
+                    AspNetTypeClaimsId = 1
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 2,
+                    RoleId = "1",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateUser",
+                    AspNetTypeClaimsId = 1
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 3,
+                    RoleId = "1",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteUser",
+                    AspNetTypeClaimsId = 1
+                },
+
+                // Brand claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 4,
+                    RoleId = "1",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateBrand",
+                    AspNetTypeClaimsId = 2
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 5,
+                    RoleId = "1",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateBrand",
+                    AspNetTypeClaimsId = 2
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 6,
+                    RoleId = "1",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteBrand",
+                    AspNetTypeClaimsId = 2
+                },
+
+                // Category claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 7,
+                    RoleId = "1",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateCategory",
+                    AspNetTypeClaimsId = 3
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 8,
+                    RoleId = "1",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateCategory",
+                    AspNetTypeClaimsId = 3
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 9,
+                    RoleId = "1",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteCategory",
+                    AspNetTypeClaimsId = 3
+                },
+
+                // Color claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 10,
+                    RoleId = "1",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateColor",
+                    AspNetTypeClaimsId = 4
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 11,
+                    RoleId = "1",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateColor",
+                    AspNetTypeClaimsId = 4
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 12,
+                    RoleId = "1",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteColor",
+                    AspNetTypeClaimsId = 4
+                },
+
+                // Coupon claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 13,
+                    RoleId = "1",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateCoupon",
+                    AspNetTypeClaimsId = 5
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 14,
+                    RoleId = "1",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateCoupon",
+                    AspNetTypeClaimsId = 5
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 15,
+                    RoleId = "1",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteCoupon",
+                    AspNetTypeClaimsId = 5
+                },
+
+                // Customer claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 16,
+                    RoleId = "1",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateCustomer",
+                    AspNetTypeClaimsId = 6
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 17,
+                    RoleId = "1",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateCustomer",
+                    AspNetTypeClaimsId = 6
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 18,
+                    RoleId = "1",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteCustomer",
+                    AspNetTypeClaimsId = 6
+                },
+
+                // Designer claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 19,
+                    RoleId = "1",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateDesigner",
+                    AspNetTypeClaimsId = 7
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 20,
+                    RoleId = "1",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateDesigner",
+                    AspNetTypeClaimsId = 7
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 21,
+                    RoleId = "1",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteDesigner",
+                    AspNetTypeClaimsId = 7
+                },
+
+                // FurnitureType claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 22,
+                    RoleId = "1",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateFurnitureType",
+                    AspNetTypeClaimsId = 8
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 23,
+                    RoleId = "1",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateFurnitureType",
+                    AspNetTypeClaimsId = 8
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 24,
+                    RoleId = "1",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteFurnitureType",
+                    AspNetTypeClaimsId = 8
+                },
+
+                // Material claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 25,
+                    RoleId = "1",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateMaterial",
+                    AspNetTypeClaimsId = 9
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 26,
+                    RoleId = "1",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateMaterial",
+                    AspNetTypeClaimsId = 9
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 27,
+                    RoleId = "1",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteMaterial",
+                    AspNetTypeClaimsId = 9
+                },
+
+                // MaterialType claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 28,
+                    RoleId = "1",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateMaterialType",
+                    AspNetTypeClaimsId = 10
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 29,
+                    RoleId = "1",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateMaterialType",
+                    AspNetTypeClaimsId = 10
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 30,
+                    RoleId = "1",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteMaterialType",
+                    AspNetTypeClaimsId = 10
+                },
+
+                // Notification claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 31,
+                    RoleId = "1",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateNotification",
+                    AspNetTypeClaimsId = 11
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 32,
+                    RoleId = "1",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateNotification",
+                    AspNetTypeClaimsId = 11
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 33,
+                    RoleId = "1",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteNotification",
+                    AspNetTypeClaimsId = 11
+                },
+
+                // Role claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 34,
+                    RoleId = "1",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateRole",
+                    AspNetTypeClaimsId = 12
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 35,
+                    RoleId = "1",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateRole",
+                    AspNetTypeClaimsId = 12
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 36,
+                    RoleId = "1",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteRole",
+                    AspNetTypeClaimsId = 12
+                },
+
+                // Order claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 37,
+                    RoleId = "1",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateOrder",
+                    AspNetTypeClaimsId = 13
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 38,
+                    RoleId = "1",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateOrder",
+                    AspNetTypeClaimsId = 13
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 39,
+                    RoleId = "1",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteOrder",
+                    AspNetTypeClaimsId = 13
+                },
+
+                // Product claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 40,
+                    RoleId = "1",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateProduct",
+                    AspNetTypeClaimsId = 14
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 41,
+                    RoleId = "1",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateProduct",
+                    AspNetTypeClaimsId = 14
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 42,
+                    RoleId = "1",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteProduct",
+                    AspNetTypeClaimsId = 14
+                },
+
+                // Question claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 43,
+                    RoleId = "1",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateQuestion",
+                    AspNetTypeClaimsId = 15
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 44,
+                    RoleId = "1",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateQuestion",
+                    AspNetTypeClaimsId = 15
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 45,
+                    RoleId = "1",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteQuestion",
+                    AspNetTypeClaimsId = 15
+                },
+
+                // Reply claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 46,
+                    RoleId = "1",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateReply",
+                    AspNetTypeClaimsId = 16
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 47,
+                    RoleId = "1",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateReply",
+                    AspNetTypeClaimsId = 16
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 48,
+                    RoleId = "1",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteReply",
+                    AspNetTypeClaimsId = 16
+                },
+
+                // Review claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 49,
+                    RoleId = "1",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateReview",
+                    AspNetTypeClaimsId = 17
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 50,
+                    RoleId = "1",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateReview",
+                    AspNetTypeClaimsId = 17
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 51,
+                    RoleId = "1",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteReview",
+                    AspNetTypeClaimsId = 17
+                },
+
+                // RoomSpace claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 52,
+                    RoleId = "1",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateRoomSpace",
+                    AspNetTypeClaimsId = 18
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 53,
+                    RoleId = "1",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateRoomSpace",
+                    AspNetTypeClaimsId = 18
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 54,
+                    RoleId = "1",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteRoomSpace",
+                    AspNetTypeClaimsId = 18
+                },
+
+                new AspNetRoleClaims<string>
+                {
+                    Id = 55,
+                    RoleId = "1",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateReport",
+                    AspNetTypeClaimsId = 19
+                },
+                // Staff permission 
+                new AspNetRoleClaims<string>
+                {
+                    Id = 56,
+                    RoleId = "2", // Updated role
+                    ClaimType = "Create",
+                    ClaimValue = "CreateUser",
+                    AspNetTypeClaimsId = 1
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 57,
+                    RoleId = "2",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateUser",
+                    AspNetTypeClaimsId = 1
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 58,
+                    RoleId = "2",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteUser",
+                    AspNetTypeClaimsId = 1
+                },
+
+                // Brand claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 59,
+                    RoleId = "2",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateBrand",
+                    AspNetTypeClaimsId = 2
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 60,
+                    RoleId = "2",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateBrand",
+                    AspNetTypeClaimsId = 2
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 61,
+                    RoleId = "2",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteBrand",
+                    AspNetTypeClaimsId = 2
+                },
+
+                // Category claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 62,
+                    RoleId = "2",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateCategory",
+                    AspNetTypeClaimsId = 3
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 63,
+                    RoleId = "2",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateCategory",
+                    AspNetTypeClaimsId = 3
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 64,
+                    RoleId = "2",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteCategory",
+                    AspNetTypeClaimsId = 3
+                },
+
+                // Color claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 65,
+                    RoleId = "2",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateColor",
+                    AspNetTypeClaimsId = 4
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 66,
+                    RoleId = "2",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateColor",
+                    AspNetTypeClaimsId = 4
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 67,
+                    RoleId = "2",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteColor",
+                    AspNetTypeClaimsId = 4
+                },
+
+                // Coupon claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 68,
+                    RoleId = "2",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateCoupon",
+                    AspNetTypeClaimsId = 5
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 69,
+                    RoleId = "2",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateCoupon",
+                    AspNetTypeClaimsId = 5
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 70,
+                    RoleId = "2",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteCoupon",
+                    AspNetTypeClaimsId = 5
+                },
+
+                // Customer claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 71,
+                    RoleId = "2",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateCustomer",
+                    AspNetTypeClaimsId = 6
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 72,
+                    RoleId = "2",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateCustomer",
+                    AspNetTypeClaimsId = 6
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 73,
+                    RoleId = "2",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteCustomer",
+                    AspNetTypeClaimsId = 6
+                },
+
+                // Designer claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 74,
+                    RoleId = "2",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateDesigner",
+                    AspNetTypeClaimsId = 7
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 75,
+                    RoleId = "2",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateDesigner",
+                    AspNetTypeClaimsId = 7
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 76,
+                    RoleId = "2",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteDesigner",
+                    AspNetTypeClaimsId = 7
+                },
+
+                // FurnitureType claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 77,
+                    RoleId = "2",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateFurnitureType",
+                    AspNetTypeClaimsId = 8
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 78,
+                    RoleId = "2",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateFurnitureType",
+                    AspNetTypeClaimsId = 8
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 79,
+                    RoleId = "2",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteFurnitureType",
+                    AspNetTypeClaimsId = 8
+                },
+
+                // Material claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 80,
+                    RoleId = "2",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateMaterial",
+                    AspNetTypeClaimsId = 9
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 81,
+                    RoleId = "2",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateMaterial",
+                    AspNetTypeClaimsId = 9
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 82,
+                    RoleId = "2",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteMaterial",
+                    AspNetTypeClaimsId = 9
+                },
+
+                // MaterialType claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 83,
+                    RoleId = "2",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateMaterialType",
+                    AspNetTypeClaimsId = 10
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 84,
+                    RoleId = "2",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateMaterialType",
+                    AspNetTypeClaimsId = 10
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 85,
+                    RoleId = "2",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteMaterialType",
+                    AspNetTypeClaimsId = 10
+                },
+
+                // Notification claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 86,
+                    RoleId = "2",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateNotification",
+                    AspNetTypeClaimsId = 11
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 87,
+                    RoleId = "2",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateNotification",
+                    AspNetTypeClaimsId = 11
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 88,
+                    RoleId = "2",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteNotification",
+                    AspNetTypeClaimsId = 11
+                },
+
+                // Role claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 89,
+                    RoleId = "2",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateRole",
+                    AspNetTypeClaimsId = 12
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 90,
+                    RoleId = "2",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateRole",
+                    AspNetTypeClaimsId = 12
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 91,
+                    RoleId = "2",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteRole",
+                    AspNetTypeClaimsId = 12
+                },
+
+                // Order claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 92,
+                    RoleId = "2",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateOrder",
+                    AspNetTypeClaimsId = 13
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 93,
+                    RoleId = "2",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateOrder",
+                    AspNetTypeClaimsId = 13
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 94,
+                    RoleId = "2",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteOrder",
+                    AspNetTypeClaimsId = 13
+                },
+
+                // Product claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 95,
+                    RoleId = "2",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateProduct",
+                    AspNetTypeClaimsId = 14
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 96,
+                    RoleId = "2",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateProduct",
+                    AspNetTypeClaimsId = 14
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 97,
+                    RoleId = "2",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteProduct",
+                    AspNetTypeClaimsId = 14
+                },
+
+                // Question claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 98,
+                    RoleId = "2",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateQuestion",
+                    AspNetTypeClaimsId = 15
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 99,
+                    RoleId = "2",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateQuestion",
+                    AspNetTypeClaimsId = 15
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 100,
+                    RoleId = "2",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteQuestion",
+                    AspNetTypeClaimsId = 15
+                },
+
+                // Reply claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 101,
+                    RoleId = "2",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateReply",
+                    AspNetTypeClaimsId = 16
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 102,
+                    RoleId = "2",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateReply",
+                    AspNetTypeClaimsId = 16
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 103,
+                    RoleId = "2",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteReply",
+                    AspNetTypeClaimsId = 16
+                },
+
+                // Review claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 104,
+                    RoleId = "2",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateReview",
+                    AspNetTypeClaimsId = 17
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 105,
+                    RoleId = "2",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateReview",
+                    AspNetTypeClaimsId = 17
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 106,
+                    RoleId = "2",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteReview",
+                    AspNetTypeClaimsId = 17
+                },
+
+                // RoomSpace claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 107,
+                    RoleId = "2",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateRoomSpace",
+                    AspNetTypeClaimsId = 18
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 108,
+                    RoleId = "2",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateRoomSpace",
+                    AspNetTypeClaimsId = 18
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 109,
+                    RoleId = "2",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteRoomSpace",
+                    AspNetTypeClaimsId = 18
+                },
+
+                new AspNetRoleClaims<string>
+                {
+                    Id = 110,
+                    RoleId = "2",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateReport",
+                    AspNetTypeClaimsId = 19
+                },
+                // Customer permission
+                // Order claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 111,
+                    RoleId = "3",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateOrder",
+                    AspNetTypeClaimsId = 13
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 112,
+                    RoleId = "3",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateOrder",
+                    AspNetTypeClaimsId = 13
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 113,
+                    RoleId = "3",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteOrder",
+                    AspNetTypeClaimsId = 13
+                },
+
+                // Question claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 114,
+                    RoleId = "3",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateQuestion",
+                    AspNetTypeClaimsId = 15
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 115,
+                    RoleId = "3",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateQuestion",
+                    AspNetTypeClaimsId = 15
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 116,
+                    RoleId = "3",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteQuestion",
+                    AspNetTypeClaimsId = 15
+                },
+
+                // Reply claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 117,
+                    RoleId = "3",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateReply",
+                    AspNetTypeClaimsId = 16
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 118,
+                    RoleId = "3",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateReply",
+                    AspNetTypeClaimsId = 16
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 119,
+                    RoleId = "3",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteReply",
+                    AspNetTypeClaimsId = 16
+                },
+
+                // Review claims
+                new AspNetRoleClaims<string>
+                {
+                    Id = 120,
+                    RoleId = "3",
+                    ClaimType = "Create",
+                    ClaimValue = "CreateReview",
+                    AspNetTypeClaimsId = 17
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 121,
+                    RoleId = "3",
+                    ClaimType = "Update",
+                    ClaimValue = "UpdateReview",
+                    AspNetTypeClaimsId = 17
+                },
+                new AspNetRoleClaims<string>
+                {
+                    Id = 122,
+                    RoleId = "3",
+                    ClaimType = "Delete",
+                    ClaimValue = "DeleteReview",
+                    AspNetTypeClaimsId = 17
+                }
+            );
         }
     }
-
 }
+ 
