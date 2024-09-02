@@ -7,7 +7,7 @@ namespace FurnitureStoreBE.Services.Token
     {
         Task<string> GenerateRefreshToken(User user);
         Task<RefreshToken> FindByToken(string token);
-        Task<RefreshToken> VerifyExpiration(RefreshToken refreshToken);
+        RefreshToken VerifyExpiration(RefreshToken refreshToken);
         void DeleteRefreshTokenByUserId(string userId);
     }
 }

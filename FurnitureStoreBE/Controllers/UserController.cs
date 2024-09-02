@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FurnitureStoreBE.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
         [HttpGet()]
+        [Authorize(Policy = "CreateUserPolicy")]
         public string getVoid()
         {
             return "10";

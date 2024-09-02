@@ -6,7 +6,7 @@ namespace FurnitureStoreBE.Services.Authentication
 {
     public interface IAuthService
     {
-        Task Register(RegisterRequest register);
+        Task<bool> Register(RegisterRequest register);
         Task<LoginResponse> Login(SigninRequest loginRequest);
         Task<Guid> GetMe();
     }

@@ -469,7 +469,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 1,
                     RoleId = "1", // Owner role
-                    ClaimType = "Create",
+                    ClaimType = "CreateUser",
                     ClaimValue = "CreateUser",
                     AspNetTypeClaimsId = 1
                 },
@@ -477,7 +477,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 2,
                     RoleId = "1",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateUser",
                     ClaimValue = "UpdateUser",
                     AspNetTypeClaimsId = 1
                 },
@@ -485,7 +485,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 3,
                     RoleId = "1",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteUser",
                     ClaimValue = "DeleteUser",
                     AspNetTypeClaimsId = 1
                 },
@@ -495,7 +495,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 4,
                     RoleId = "1",
-                    ClaimType = "Create",
+                    ClaimType = "CreateBrand",
                     ClaimValue = "CreateBrand",
                     AspNetTypeClaimsId = 2
                 },
@@ -503,7 +503,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 5,
                     RoleId = "1",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateBrand",
                     ClaimValue = "UpdateBrand",
                     AspNetTypeClaimsId = 2
                 },
@@ -511,7 +511,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 6,
                     RoleId = "1",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteBrand",
                     ClaimValue = "DeleteBrand",
                     AspNetTypeClaimsId = 2
                 },
@@ -521,7 +521,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 7,
                     RoleId = "1",
-                    ClaimType = "Create",
+                    ClaimType = "CreateCategory",
                     ClaimValue = "CreateCategory",
                     AspNetTypeClaimsId = 3
                 },
@@ -529,7 +529,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 8,
                     RoleId = "1",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateCategory",
                     ClaimValue = "UpdateCategory",
                     AspNetTypeClaimsId = 3
                 },
@@ -537,7 +537,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 9,
                     RoleId = "1",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteCategory",
                     ClaimValue = "DeleteCategory",
                     AspNetTypeClaimsId = 3
                 },
@@ -547,7 +547,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 10,
                     RoleId = "1",
-                    ClaimType = "Create",
+                    ClaimType = "CreateColor",
                     ClaimValue = "CreateColor",
                     AspNetTypeClaimsId = 4
                 },
@@ -555,7 +555,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 11,
                     RoleId = "1",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateColor",
                     ClaimValue = "UpdateColor",
                     AspNetTypeClaimsId = 4
                 },
@@ -563,7 +563,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 12,
                     RoleId = "1",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteColor",
                     ClaimValue = "DeleteColor",
                     AspNetTypeClaimsId = 4
                 },
@@ -573,7 +573,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 13,
                     RoleId = "1",
-                    ClaimType = "Create",
+                    ClaimType = "CreateCoupon",
                     ClaimValue = "CreateCoupon",
                     AspNetTypeClaimsId = 5
                 },
@@ -581,7 +581,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 14,
                     RoleId = "1",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateCoupon",
                     ClaimValue = "UpdateCoupon",
                     AspNetTypeClaimsId = 5
                 },
@@ -589,7 +589,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 15,
                     RoleId = "1",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteCoupon",
                     ClaimValue = "DeleteCoupon",
                     AspNetTypeClaimsId = 5
                 },
@@ -599,7 +599,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 16,
                     RoleId = "1",
-                    ClaimType = "Create",
+                    ClaimType = "CreateCustomer",
                     ClaimValue = "CreateCustomer",
                     AspNetTypeClaimsId = 6
                 },
@@ -607,7 +607,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 17,
                     RoleId = "1",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateCustomer",
                     ClaimValue = "UpdateCustomer",
                     AspNetTypeClaimsId = 6
                 },
@@ -615,7 +615,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 18,
                     RoleId = "1",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteCustomer",
                     ClaimValue = "DeleteCustomer",
                     AspNetTypeClaimsId = 6
                 },
@@ -625,7 +625,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 19,
                     RoleId = "1",
-                    ClaimType = "Create",
+                    ClaimType = "CreateDesigner",
                     ClaimValue = "CreateDesigner",
                     AspNetTypeClaimsId = 7
                 },
@@ -633,7 +633,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 20,
                     RoleId = "1",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateDesigner",
                     ClaimValue = "UpdateDesigner",
                     AspNetTypeClaimsId = 7
                 },
@@ -641,7 +641,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 21,
                     RoleId = "1",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteDesigner",
                     ClaimValue = "DeleteDesigner",
                     AspNetTypeClaimsId = 7
                 },
@@ -651,7 +651,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 22,
                     RoleId = "1",
-                    ClaimType = "Create",
+                    ClaimType = "CreateFurnitureType",
                     ClaimValue = "CreateFurnitureType",
                     AspNetTypeClaimsId = 8
                 },
@@ -659,7 +659,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 23,
                     RoleId = "1",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateFurnitureType",
                     ClaimValue = "UpdateFurnitureType",
                     AspNetTypeClaimsId = 8
                 },
@@ -667,7 +667,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 24,
                     RoleId = "1",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteFurnitureType",
                     ClaimValue = "DeleteFurnitureType",
                     AspNetTypeClaimsId = 8
                 },
@@ -677,7 +677,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 25,
                     RoleId = "1",
-                    ClaimType = "Create",
+                    ClaimType = "CreateMaterial",
                     ClaimValue = "CreateMaterial",
                     AspNetTypeClaimsId = 9
                 },
@@ -685,7 +685,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 26,
                     RoleId = "1",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateMaterial",
                     ClaimValue = "UpdateMaterial",
                     AspNetTypeClaimsId = 9
                 },
@@ -693,7 +693,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 27,
                     RoleId = "1",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteMaterial",
                     ClaimValue = "DeleteMaterial",
                     AspNetTypeClaimsId = 9
                 },
@@ -703,7 +703,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 28,
                     RoleId = "1",
-                    ClaimType = "Create",
+                    ClaimType = "CreateMaterialType",
                     ClaimValue = "CreateMaterialType",
                     AspNetTypeClaimsId = 10
                 },
@@ -711,7 +711,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 29,
                     RoleId = "1",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateMaterialType",
                     ClaimValue = "UpdateMaterialType",
                     AspNetTypeClaimsId = 10
                 },
@@ -719,7 +719,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 30,
                     RoleId = "1",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteMaterialType",
                     ClaimValue = "DeleteMaterialType",
                     AspNetTypeClaimsId = 10
                 },
@@ -729,7 +729,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 31,
                     RoleId = "1",
-                    ClaimType = "Create",
+                    ClaimType = "CreateNotification",
                     ClaimValue = "CreateNotification",
                     AspNetTypeClaimsId = 11
                 },
@@ -737,7 +737,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 32,
                     RoleId = "1",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateNotification",
                     ClaimValue = "UpdateNotification",
                     AspNetTypeClaimsId = 11
                 },
@@ -745,7 +745,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 33,
                     RoleId = "1",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteNotification",
                     ClaimValue = "DeleteNotification",
                     AspNetTypeClaimsId = 11
                 },
@@ -755,7 +755,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 34,
                     RoleId = "1",
-                    ClaimType = "Create",
+                    ClaimType = "CreateRole",
                     ClaimValue = "CreateRole",
                     AspNetTypeClaimsId = 12
                 },
@@ -763,7 +763,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 35,
                     RoleId = "1",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateRole",
                     ClaimValue = "UpdateRole",
                     AspNetTypeClaimsId = 12
                 },
@@ -771,7 +771,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 36,
                     RoleId = "1",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteRole",
                     ClaimValue = "DeleteRole",
                     AspNetTypeClaimsId = 12
                 },
@@ -781,7 +781,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 37,
                     RoleId = "1",
-                    ClaimType = "Create",
+                    ClaimType = "CreateOrder",
                     ClaimValue = "CreateOrder",
                     AspNetTypeClaimsId = 13
                 },
@@ -789,7 +789,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 38,
                     RoleId = "1",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateOrder",
                     ClaimValue = "UpdateOrder",
                     AspNetTypeClaimsId = 13
                 },
@@ -797,7 +797,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 39,
                     RoleId = "1",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteOrder",
                     ClaimValue = "DeleteOrder",
                     AspNetTypeClaimsId = 13
                 },
@@ -807,7 +807,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 40,
                     RoleId = "1",
-                    ClaimType = "Create",
+                    ClaimType = "CreateProduct",
                     ClaimValue = "CreateProduct",
                     AspNetTypeClaimsId = 14
                 },
@@ -815,7 +815,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 41,
                     RoleId = "1",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateProduct",
                     ClaimValue = "UpdateProduct",
                     AspNetTypeClaimsId = 14
                 },
@@ -823,7 +823,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 42,
                     RoleId = "1",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteProduct",
                     ClaimValue = "DeleteProduct",
                     AspNetTypeClaimsId = 14
                 },
@@ -833,7 +833,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 43,
                     RoleId = "1",
-                    ClaimType = "Create",
+                    ClaimType = "CreateQuestion",
                     ClaimValue = "CreateQuestion",
                     AspNetTypeClaimsId = 15
                 },
@@ -841,7 +841,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 44,
                     RoleId = "1",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateQuestion",
                     ClaimValue = "UpdateQuestion",
                     AspNetTypeClaimsId = 15
                 },
@@ -849,7 +849,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 45,
                     RoleId = "1",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteQuestion",
                     ClaimValue = "DeleteQuestion",
                     AspNetTypeClaimsId = 15
                 },
@@ -859,7 +859,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 46,
                     RoleId = "1",
-                    ClaimType = "Create",
+                    ClaimType = "CreateReply",
                     ClaimValue = "CreateReply",
                     AspNetTypeClaimsId = 16
                 },
@@ -867,7 +867,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 47,
                     RoleId = "1",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateReply",
                     ClaimValue = "UpdateReply",
                     AspNetTypeClaimsId = 16
                 },
@@ -875,7 +875,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 48,
                     RoleId = "1",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteReply",
                     ClaimValue = "DeleteReply",
                     AspNetTypeClaimsId = 16
                 },
@@ -885,7 +885,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 49,
                     RoleId = "1",
-                    ClaimType = "Create",
+                    ClaimType = "CreateReview",
                     ClaimValue = "CreateReview",
                     AspNetTypeClaimsId = 17
                 },
@@ -893,7 +893,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 50,
                     RoleId = "1",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateReview",
                     ClaimValue = "UpdateReview",
                     AspNetTypeClaimsId = 17
                 },
@@ -901,7 +901,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 51,
                     RoleId = "1",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteReview",
                     ClaimValue = "DeleteReview",
                     AspNetTypeClaimsId = 17
                 },
@@ -911,7 +911,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 52,
                     RoleId = "1",
-                    ClaimType = "Create",
+                    ClaimType = "CreateRoomSpace",
                     ClaimValue = "CreateRoomSpace",
                     AspNetTypeClaimsId = 18
                 },
@@ -919,7 +919,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 53,
                     RoleId = "1",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateRoomSpace",
                     ClaimValue = "UpdateRoomSpace",
                     AspNetTypeClaimsId = 18
                 },
@@ -927,25 +927,27 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 54,
                     RoleId = "1",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteRoomSpace",
                     ClaimValue = "DeleteRoomSpace",
                     AspNetTypeClaimsId = 18
                 },
 
+                // Report claims
                 new AspNetRoleClaims<string>
                 {
                     Id = 55,
                     RoleId = "1",
-                    ClaimType = "Create",
+                    ClaimType = "CreateReport",
                     ClaimValue = "CreateReport",
                     AspNetTypeClaimsId = 19
                 },
+
                 // Staff permission 
                 new AspNetRoleClaims<string>
                 {
                     Id = 56,
                     RoleId = "2", // Updated role
-                    ClaimType = "Create",
+                    ClaimType = "CreateUser",
                     ClaimValue = "CreateUser",
                     AspNetTypeClaimsId = 1
                 },
@@ -953,7 +955,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 57,
                     RoleId = "2",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateUser",
                     ClaimValue = "UpdateUser",
                     AspNetTypeClaimsId = 1
                 },
@@ -961,7 +963,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 58,
                     RoleId = "2",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteUser",
                     ClaimValue = "DeleteUser",
                     AspNetTypeClaimsId = 1
                 },
@@ -971,7 +973,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 59,
                     RoleId = "2",
-                    ClaimType = "Create",
+                    ClaimType = "CreateBrand",
                     ClaimValue = "CreateBrand",
                     AspNetTypeClaimsId = 2
                 },
@@ -979,7 +981,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 60,
                     RoleId = "2",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateBrand",
                     ClaimValue = "UpdateBrand",
                     AspNetTypeClaimsId = 2
                 },
@@ -987,7 +989,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 61,
                     RoleId = "2",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteBrand",
                     ClaimValue = "DeleteBrand",
                     AspNetTypeClaimsId = 2
                 },
@@ -997,7 +999,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 62,
                     RoleId = "2",
-                    ClaimType = "Create",
+                    ClaimType = "CreateCategory",
                     ClaimValue = "CreateCategory",
                     AspNetTypeClaimsId = 3
                 },
@@ -1005,7 +1007,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 63,
                     RoleId = "2",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateCategory",
                     ClaimValue = "UpdateCategory",
                     AspNetTypeClaimsId = 3
                 },
@@ -1013,7 +1015,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 64,
                     RoleId = "2",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteCategory",
                     ClaimValue = "DeleteCategory",
                     AspNetTypeClaimsId = 3
                 },
@@ -1023,7 +1025,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 65,
                     RoleId = "2",
-                    ClaimType = "Create",
+                    ClaimType = "CreateColor",
                     ClaimValue = "CreateColor",
                     AspNetTypeClaimsId = 4
                 },
@@ -1031,7 +1033,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 66,
                     RoleId = "2",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateColor",
                     ClaimValue = "UpdateColor",
                     AspNetTypeClaimsId = 4
                 },
@@ -1039,7 +1041,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 67,
                     RoleId = "2",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteColor",
                     ClaimValue = "DeleteColor",
                     AspNetTypeClaimsId = 4
                 },
@@ -1049,7 +1051,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 68,
                     RoleId = "2",
-                    ClaimType = "Create",
+                    ClaimType = "CreateCoupon",
                     ClaimValue = "CreateCoupon",
                     AspNetTypeClaimsId = 5
                 },
@@ -1057,7 +1059,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 69,
                     RoleId = "2",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateCoupon",
                     ClaimValue = "UpdateCoupon",
                     AspNetTypeClaimsId = 5
                 },
@@ -1065,7 +1067,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 70,
                     RoleId = "2",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteCoupon",
                     ClaimValue = "DeleteCoupon",
                     AspNetTypeClaimsId = 5
                 },
@@ -1075,7 +1077,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 71,
                     RoleId = "2",
-                    ClaimType = "Create",
+                    ClaimType = "CreateCustomer",
                     ClaimValue = "CreateCustomer",
                     AspNetTypeClaimsId = 6
                 },
@@ -1083,7 +1085,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 72,
                     RoleId = "2",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateCustomer",
                     ClaimValue = "UpdateCustomer",
                     AspNetTypeClaimsId = 6
                 },
@@ -1091,7 +1093,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 73,
                     RoleId = "2",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteCustomer",
                     ClaimValue = "DeleteCustomer",
                     AspNetTypeClaimsId = 6
                 },
@@ -1101,7 +1103,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 74,
                     RoleId = "2",
-                    ClaimType = "Create",
+                    ClaimType = "CreateDesigner",
                     ClaimValue = "CreateDesigner",
                     AspNetTypeClaimsId = 7
                 },
@@ -1109,7 +1111,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 75,
                     RoleId = "2",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateDesigner",
                     ClaimValue = "UpdateDesigner",
                     AspNetTypeClaimsId = 7
                 },
@@ -1117,7 +1119,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 76,
                     RoleId = "2",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteDesigner",
                     ClaimValue = "DeleteDesigner",
                     AspNetTypeClaimsId = 7
                 },
@@ -1127,7 +1129,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 77,
                     RoleId = "2",
-                    ClaimType = "Create",
+                    ClaimType = "CreateFurnitureType",
                     ClaimValue = "CreateFurnitureType",
                     AspNetTypeClaimsId = 8
                 },
@@ -1135,7 +1137,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 78,
                     RoleId = "2",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateFurnitureType",
                     ClaimValue = "UpdateFurnitureType",
                     AspNetTypeClaimsId = 8
                 },
@@ -1143,7 +1145,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 79,
                     RoleId = "2",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteFurnitureType",
                     ClaimValue = "DeleteFurnitureType",
                     AspNetTypeClaimsId = 8
                 },
@@ -1153,7 +1155,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 80,
                     RoleId = "2",
-                    ClaimType = "Create",
+                    ClaimType = "CreateMaterial",
                     ClaimValue = "CreateMaterial",
                     AspNetTypeClaimsId = 9
                 },
@@ -1161,7 +1163,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 81,
                     RoleId = "2",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateMaterial",
                     ClaimValue = "UpdateMaterial",
                     AspNetTypeClaimsId = 9
                 },
@@ -1169,7 +1171,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 82,
                     RoleId = "2",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteMaterial",
                     ClaimValue = "DeleteMaterial",
                     AspNetTypeClaimsId = 9
                 },
@@ -1179,7 +1181,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 83,
                     RoleId = "2",
-                    ClaimType = "Create",
+                    ClaimType = "CreateMaterialType",
                     ClaimValue = "CreateMaterialType",
                     AspNetTypeClaimsId = 10
                 },
@@ -1187,7 +1189,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 84,
                     RoleId = "2",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateMaterialType",
                     ClaimValue = "UpdateMaterialType",
                     AspNetTypeClaimsId = 10
                 },
@@ -1195,7 +1197,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 85,
                     RoleId = "2",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteMaterialType",
                     ClaimValue = "DeleteMaterialType",
                     AspNetTypeClaimsId = 10
                 },
@@ -1205,7 +1207,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 86,
                     RoleId = "2",
-                    ClaimType = "Create",
+                    ClaimType = "CreateNotification",
                     ClaimValue = "CreateNotification",
                     AspNetTypeClaimsId = 11
                 },
@@ -1213,7 +1215,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 87,
                     RoleId = "2",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateNotification",
                     ClaimValue = "UpdateNotification",
                     AspNetTypeClaimsId = 11
                 },
@@ -1221,7 +1223,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 88,
                     RoleId = "2",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteNotification",
                     ClaimValue = "DeleteNotification",
                     AspNetTypeClaimsId = 11
                 },
@@ -1231,7 +1233,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 89,
                     RoleId = "2",
-                    ClaimType = "Create",
+                    ClaimType = "CreateRole",
                     ClaimValue = "CreateRole",
                     AspNetTypeClaimsId = 12
                 },
@@ -1239,7 +1241,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 90,
                     RoleId = "2",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateRole",
                     ClaimValue = "UpdateRole",
                     AspNetTypeClaimsId = 12
                 },
@@ -1247,7 +1249,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 91,
                     RoleId = "2",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteRole",
                     ClaimValue = "DeleteRole",
                     AspNetTypeClaimsId = 12
                 },
@@ -1257,7 +1259,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 92,
                     RoleId = "2",
-                    ClaimType = "Create",
+                    ClaimType = "CreateOrder",
                     ClaimValue = "CreateOrder",
                     AspNetTypeClaimsId = 13
                 },
@@ -1265,7 +1267,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 93,
                     RoleId = "2",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateOrder",
                     ClaimValue = "UpdateOrder",
                     AspNetTypeClaimsId = 13
                 },
@@ -1273,7 +1275,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 94,
                     RoleId = "2",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteOrder",
                     ClaimValue = "DeleteOrder",
                     AspNetTypeClaimsId = 13
                 },
@@ -1283,7 +1285,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 95,
                     RoleId = "2",
-                    ClaimType = "Create",
+                    ClaimType = "CreateProduct",
                     ClaimValue = "CreateProduct",
                     AspNetTypeClaimsId = 14
                 },
@@ -1291,7 +1293,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 96,
                     RoleId = "2",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateProduct",
                     ClaimValue = "UpdateProduct",
                     AspNetTypeClaimsId = 14
                 },
@@ -1299,7 +1301,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 97,
                     RoleId = "2",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteProduct",
                     ClaimValue = "DeleteProduct",
                     AspNetTypeClaimsId = 14
                 },
@@ -1309,7 +1311,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 98,
                     RoleId = "2",
-                    ClaimType = "Create",
+                    ClaimType = "CreateQuestion",
                     ClaimValue = "CreateQuestion",
                     AspNetTypeClaimsId = 15
                 },
@@ -1317,7 +1319,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 99,
                     RoleId = "2",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateQuestion",
                     ClaimValue = "UpdateQuestion",
                     AspNetTypeClaimsId = 15
                 },
@@ -1325,7 +1327,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 100,
                     RoleId = "2",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteQuestion",
                     ClaimValue = "DeleteQuestion",
                     AspNetTypeClaimsId = 15
                 },
@@ -1335,7 +1337,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 101,
                     RoleId = "2",
-                    ClaimType = "Create",
+                    ClaimType = "CreateReply",
                     ClaimValue = "CreateReply",
                     AspNetTypeClaimsId = 16
                 },
@@ -1343,7 +1345,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 102,
                     RoleId = "2",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateReply",
                     ClaimValue = "UpdateReply",
                     AspNetTypeClaimsId = 16
                 },
@@ -1351,7 +1353,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 103,
                     RoleId = "2",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteReply",
                     ClaimValue = "DeleteReply",
                     AspNetTypeClaimsId = 16
                 },
@@ -1361,7 +1363,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 104,
                     RoleId = "2",
-                    ClaimType = "Create",
+                    ClaimType = "CreateReview",
                     ClaimValue = "CreateReview",
                     AspNetTypeClaimsId = 17
                 },
@@ -1369,7 +1371,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 105,
                     RoleId = "2",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateReview",
                     ClaimValue = "UpdateReview",
                     AspNetTypeClaimsId = 17
                 },
@@ -1377,7 +1379,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 106,
                     RoleId = "2",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteReview",
                     ClaimValue = "DeleteReview",
                     AspNetTypeClaimsId = 17
                 },
@@ -1387,7 +1389,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 107,
                     RoleId = "2",
-                    ClaimType = "Create",
+                    ClaimType = "CreateRoomSpace",
                     ClaimValue = "CreateRoomSpace",
                     AspNetTypeClaimsId = 18
                 },
@@ -1395,7 +1397,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 108,
                     RoleId = "2",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateRoomSpace",
                     ClaimValue = "UpdateRoomSpace",
                     AspNetTypeClaimsId = 18
                 },
@@ -1403,26 +1405,28 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 109,
                     RoleId = "2",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteRoomSpace",
                     ClaimValue = "DeleteRoomSpace",
                     AspNetTypeClaimsId = 18
                 },
 
+                // Report claims
                 new AspNetRoleClaims<string>
                 {
                     Id = 110,
                     RoleId = "2",
-                    ClaimType = "Create",
+                    ClaimType = "CreateReport",
                     ClaimValue = "CreateReport",
                     AspNetTypeClaimsId = 19
                 },
+
                 // Customer permission
                 // Order claims
                 new AspNetRoleClaims<string>
                 {
                     Id = 111,
                     RoleId = "3",
-                    ClaimType = "Create",
+                    ClaimType = "CreateOrder",
                     ClaimValue = "CreateOrder",
                     AspNetTypeClaimsId = 13
                 },
@@ -1430,7 +1434,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 112,
                     RoleId = "3",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateOrder",
                     ClaimValue = "UpdateOrder",
                     AspNetTypeClaimsId = 13
                 },
@@ -1438,7 +1442,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 113,
                     RoleId = "3",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteOrder",
                     ClaimValue = "DeleteOrder",
                     AspNetTypeClaimsId = 13
                 },
@@ -1448,7 +1452,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 114,
                     RoleId = "3",
-                    ClaimType = "Create",
+                    ClaimType = "CreateQuestion",
                     ClaimValue = "CreateQuestion",
                     AspNetTypeClaimsId = 15
                 },
@@ -1456,7 +1460,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 115,
                     RoleId = "3",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateQuestion",
                     ClaimValue = "UpdateQuestion",
                     AspNetTypeClaimsId = 15
                 },
@@ -1464,7 +1468,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 116,
                     RoleId = "3",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteQuestion",
                     ClaimValue = "DeleteQuestion",
                     AspNetTypeClaimsId = 15
                 },
@@ -1474,7 +1478,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 117,
                     RoleId = "3",
-                    ClaimType = "Create",
+                    ClaimType = "CreateReply",
                     ClaimValue = "CreateReply",
                     AspNetTypeClaimsId = 16
                 },
@@ -1482,7 +1486,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 118,
                     RoleId = "3",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateReply",
                     ClaimValue = "UpdateReply",
                     AspNetTypeClaimsId = 16
                 },
@@ -1490,7 +1494,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 119,
                     RoleId = "3",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteReply",
                     ClaimValue = "DeleteReply",
                     AspNetTypeClaimsId = 16
                 },
@@ -1500,7 +1504,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 120,
                     RoleId = "3",
-                    ClaimType = "Create",
+                    ClaimType = "CreateReview",
                     ClaimValue = "CreateReview",
                     AspNetTypeClaimsId = 17
                 },
@@ -1508,7 +1512,7 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 121,
                     RoleId = "3",
-                    ClaimType = "Update",
+                    ClaimType = "UpdateReview",
                     ClaimValue = "UpdateReview",
                     AspNetTypeClaimsId = 17
                 },
@@ -1516,10 +1520,11 @@ namespace FurnitureStoreBE.Data
                 {
                     Id = 122,
                     RoleId = "3",
-                    ClaimType = "Delete",
+                    ClaimType = "DeleteReview",
                     ClaimValue = "DeleteReview",
                     AspNetTypeClaimsId = 17
                 }
+
             );
         }
     }
