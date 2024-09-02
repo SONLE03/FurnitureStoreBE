@@ -1,8 +1,11 @@
 ﻿using Azure;
 using FurnitureStoreBE.Data;
 using FurnitureStoreBE.DTOs.Request.Auth;
+using FurnitureStoreBE.DTOs.Request.AuthRequest;
 using FurnitureStoreBE.Services.Authentication;
 using FurnitureStoreBE.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -19,8 +22,8 @@ namespace FurnitureStoreBE.Controllers
             _authenticationService = authenticationService;
             _applicationDBContext = applicationDBContext;
         }
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest register)
+        [HttpPost("signup")]
+        public async Task<IActionResult> Register([FromBody] SignupRequest register)
         {
             if (!ModelState.IsValid)
             {
@@ -29,15 +32,15 @@ namespace FurnitureStoreBE.Controllers
 
             try
             {
-                var response = await _authenticationService.Register(register);
-                return new SuccessfulResponse<object>(response, (int)HttpStatusCode.Created, "Register successfully").GetResponse();
+                var response = await _authenticationService.Signup(register);
+                return new SuccessfulResponse<object>(response, (int)HttpStatusCode.Created, "Signup successfully").GetResponse();
             }
             catch (InvalidOperationException ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost("login")]
+        [HttpPost("signin")]
         public async Task<IActionResult> Login([FromBody] SigninRequest loginRequest)
         {
 
@@ -45,14 +48,25 @@ namespace FurnitureStoreBE.Controllers
             {
                 return BadRequest("Invalid signin data.");
             }
-
-            return Ok(await _authenticationService.Login(loginRequest));
+            return new SuccessfulResponse<object>(await _authenticationService.Signin(loginRequest), (int)HttpStatusCode.OK, "Signin successfully").GetResponse();
         }
-        //[HttpPost("refreshToken")]
-        //public async Task<IActionResult> RefreshToken(HttpRequest httpRequest)
-        //{
-        //    string token = httpRequest.
-        //    return Ok();
-        //}
+        [HttpPost("refreshToken")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest tokenRequest)
+        {
+            return new SuccessfulResponse<object>(await _authenticationService.HandleRefreshToken(tokenRequest), (int)HttpStatusCode.OK, "Refresh token successfully").GetResponse();
+        }
+        [HttpPost("me")]
+        [Authorize]
+        public async Task<IActionResult> GetMe([FromBody] string userId)
+        {
+            return new SuccessfulResponse<object>(await _authenticationService.GetMe(userId), (int)HttpStatusCode.OK, "Get me successfully").GetResponse();
+        }
+        [HttpPost("signout")]
+        [Authorize]
+        public async Task<IActionResult> Signout([FromBody] string userId)
+        {
+            _authenticationService.Signout(userId);
+            return new SuccessfulResponse<object>(null, (int)HttpStatusCode.OK, "Signout successfully").GetResponse();
+        }
     }
 }

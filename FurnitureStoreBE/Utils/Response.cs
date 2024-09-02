@@ -8,11 +8,11 @@ namespace FurnitureStoreBE.Utils
     public class SuccessfulResponse<T>
     {
         public bool Success {  get; set; }
-        public T Data { get; set; }
+        public T? Data { get; set; }
         public int _StatusCode { get; set; }
         public string? Message { get; set; }
 
-        public SuccessfulResponse(T data, int statusCode, string? message)
+        public SuccessfulResponse(T? data, int statusCode, string? message)
         {
             this.Success = true;
             this.Data = data;
@@ -24,8 +24,8 @@ namespace FurnitureStoreBE.Utils
             var jsonResponse = JsonSerializer.Serialize(new
             {
                 success = this.Success,
-                statusCode = (int)this._StatusCode,
-                message = this.Message,
+                status = (int)this._StatusCode,
+                detail = this.Message,
                 data = this.Data
             });
             return new ContentResult

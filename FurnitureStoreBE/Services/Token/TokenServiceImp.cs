@@ -1,4 +1,5 @@
 ﻿using FurnitureStoreBE.Data;
+using FurnitureStoreBE.Exceptions;
 using FurnitureStoreBE.Models;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Common;
@@ -34,9 +35,13 @@ namespace FurnitureStoreBE.Services.Token
                 _context.Tokens.RemoveRange(refreshTokens);
                 _context.SaveChanges();
             }
+            else
+            {
+                throw new BusinessException("Logout failed");
+            }
         }
 
-        public Task<RefreshToken> FindByToken(string refreshToken) => _context.Tokens.Where(token => token.Token == refreshToken).FirstAsync();
+        public Task<bool> FindByToken(string userId, string refreshToken) => _context.Tokens.AnyAsync(token => token.Token == refreshToken && token.User.Id == userId);
 
         public async Task<string> GenerateRefreshToken(User user)
         {
@@ -56,16 +61,21 @@ namespace FurnitureStoreBE.Services.Token
             await _context.SaveChangesAsync();
             return token;
         }
-
-        public RefreshToken VerifyExpiration(RefreshToken refreshToken)
+        public bool VerifyExpiration(string _token)
         {
+            var refreshToken = _context.Tokens.Where(token => token.Token == _token).FirstOrDefault();
+            if (refreshToken == null)
+            {
+                throw new ObjectNotFoundException("Token not found");
+            } 
+
             if(refreshToken.ExpiredDate.CompareTo(DateTime.UtcNow) < 0)
             {
                 _context.Remove(refreshToken);
                 _context.SaveChanges();
-                throw new IOException(refreshToken.Token + " Refresh token was expired. Please make a new signin request");
+                throw new BusinessException(refreshToken.Token + " Refresh token was expired. Please make a new signin request");
             }
-            return refreshToken;
+            return true;
         }
     }
 }

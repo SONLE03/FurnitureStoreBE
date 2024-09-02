@@ -1,6 +1,6 @@
 ﻿namespace FurnitureStoreBE.DTOs.Response.AuthResponse
 {
-    public class LoginResponse
+    public class SigninResponse
     {
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }

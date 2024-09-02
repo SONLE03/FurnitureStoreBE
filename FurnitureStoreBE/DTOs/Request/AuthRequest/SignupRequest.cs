@@ -2,7 +2,7 @@
 
 namespace FurnitureStoreBE.DTOs.Request.Auth
 {
-    public class RegisterRequest
+    public class SignupRequest
     {
         [Required(ErrorMessage = "Email is required.")]
         [RegularExpression(@"^.*@gmail\.com$", ErrorMessage = "Email must end with @gmail.com")]

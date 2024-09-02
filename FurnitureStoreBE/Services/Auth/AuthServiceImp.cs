@@ -8,12 +8,10 @@ using FurnitureStoreBE.DTOs.Response.AuthResponse;
 using FurnitureStoreBE.Utils;
 using Microsoft.AspNetCore.Identity;
 using System.Diagnostics;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using System.Net.WebSockets;
 using FurnitureStoreBE.Enums;
 using FurnitureStoreBE.Services.Token;
+using FurnitureStoreBE.DTOs.Request.AuthRequest;
+using Microsoft.AspNetCore.Identity.Data;
 
 namespace FurnitureStoreBE.Services.Authentication
 {
@@ -42,18 +40,15 @@ namespace FurnitureStoreBE.Services.Authentication
             _roleManager = roleManager;
             _tokenService = tokenService;
         }
-        public async Task<Guid> GetMe()
+        public async Task<User> GetMe(string userId)
         {
-            var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirstValue("Id");
-
-            if (Guid.TryParse(userIdClaim, out Guid userId))
+            if(!await _context.Users.AnyAsync(u => u.Id == userId))
             {
-                return userId;
+                throw new ObjectNotFoundException("User not found");
             }
-
-            throw new UnauthorizedAccessException("User is not authenticated or ID is missing.");
+            return await _context.Users.FirstAsync(u => u.Id == userId);
         }
-        public async Task<bool> Register(RegisterRequest register)
+        public async Task<bool> Signup(SignupRequest register)
         {
             var stopwatch = Stopwatch.StartNew();
             string email = register.Email;
@@ -116,15 +111,22 @@ namespace FurnitureStoreBE.Services.Authentication
                 Console.WriteLine($"Register method executed in: {stopwatch.ElapsedMilliseconds} ms");
             }
         }
-        public async Task<LoginResponse> Login(SigninRequest loginRequest)
+        public async Task<SigninResponse> Signin(SigninRequest loginRequest)
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginRequest.Email.ToLower());
             if (user == null) throw new ObjectNotFoundException("User not found");
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginRequest.Password, false);
             if (!result.Succeeded) throw new WrongPasswordException();
-            return await this.GenerateToken(user);
+            return new SigninResponse
+            {
+                AccessToken = await GenerateAccessToken(user),
+                RefreshToken = await _tokenService.GenerateRefreshToken(user),
+                UserId = user.Id,
+            };
         }
-        public async Task<LoginResponse> GenerateToken(User user)
+
+
+        public async Task<string> GenerateAccessToken(User user)
         {
             var _role = await _userManager.GetRolesAsync(user);
             if (_role == null)
@@ -135,13 +137,23 @@ namespace FurnitureStoreBE.Services.Authentication
             _logger.LogInformation("Claims for user {UserId}: {Claims}", user.Id, string.Join(", ", claims.Select(c => $"{c.Type}: {c.Value}")));
 
             var accessToken = await _jwtUtil.GenerateToken(user, _role.FirstOrDefault(), claims);
-            var refreshToken = await _tokenService.GenerateRefreshToken(user);
-            return new LoginResponse
-            {
-                AccessToken = accessToken,
-                RefreshToken = refreshToken,
-                UserId = user.Id,
-            };
+            return accessToken;
+        }
+
+        public async Task<string> HandleRefreshToken(RefreshTokenRequest tokenRequest)
+        {
+            var userId = tokenRequest.UserId;
+            var token = tokenRequest.Token;
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            if (user == null) throw new ObjectNotFoundException("User not found");
+            if (!await _tokenService.FindByToken(userId, token)) throw new ObjectNotFoundException("The user does not contain this token");
+            _tokenService.VerifyExpiration(token);
+            return await GenerateAccessToken(user);
+        }
+
+        public async void Signout(string userId)
+        {
+            _tokenService.DeleteRefreshTokenByUserId(userId);
         }
     }
 }

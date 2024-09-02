@@ -6,8 +6,8 @@ namespace FurnitureStoreBE.Services.Token
     public interface ITokenService
     {
         Task<string> GenerateRefreshToken(User user);
-        Task<RefreshToken> FindByToken(string token);
-        RefreshToken VerifyExpiration(RefreshToken refreshToken);
+        Task<bool> FindByToken(string userId, string token);
+        bool VerifyExpiration(string refreshToken);
         void DeleteRefreshTokenByUserId(string userId);
     }
 }
