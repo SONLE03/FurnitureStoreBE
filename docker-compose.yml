@@ -1,0 +1,24 @@
+services:
+  furniturestorebe:
+    image: ${DOCKER_REGISTRY-}furniturestorebe
+    container_name: furniturestorebe
+    build:
+      context: .
+      dockerfile: FurnitureStoreBE/Dockerfile
+    ports:
+         - "5000:5000"
+         - "5001:5001"
+
+  furniturestorebe.database:
+    image: postgres:latest
+    container_name: furniturestorebe.database
+    environment:
+        - POSTGRES_DB=FurnitureStore
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=lhs00000
+    ports:
+        - 5432:5432 
+    volumes: 
+        - ./.containers/furniturestore-db:/var/lib/postgresql/data
+     
+    
