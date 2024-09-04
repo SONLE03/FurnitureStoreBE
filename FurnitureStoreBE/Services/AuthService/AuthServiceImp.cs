@@ -11,7 +11,12 @@ using System.Diagnostics;
 using FurnitureStoreBE.Enums;
 using FurnitureStoreBE.Services.Token;
 using FurnitureStoreBE.DTOs.Request.AuthRequest;
-using Microsoft.AspNetCore.Identity.Data;
+using FurnitureStoreBE.DTOs.Request.MailRequest;
+using System.Xml.Linq;
+using FurnitureStoreBE.DTOs.Response.MailResponse;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace FurnitureStoreBE.Services.Authentication
 {
@@ -26,9 +31,10 @@ namespace FurnitureStoreBE.Services.Authentication
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ITokenService _tokenService;
+        private readonly IMailService _mailService;
 
         public AuthServiceImp(ILogger<AuthServiceImp> logger, ApplicationDBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor
-            , JwtUtil jwtUtil, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager, ITokenService tokenService)
+            , JwtUtil jwtUtil, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager, ITokenService tokenService, IMailService mailService)
         {
             _logger = logger;
             _context = context;
@@ -39,6 +45,8 @@ namespace FurnitureStoreBE.Services.Authentication
             _signInManager = signInManager;
             _roleManager = roleManager;
             _tokenService = tokenService;
+            _mailService = mailService;
+
         }
         public async Task<User> GetMe(string userId)
         {
@@ -153,7 +161,80 @@ namespace FurnitureStoreBE.Services.Authentication
 
         public async void Signout(string userId)
         {
-            _tokenService.DeleteRefreshTokenByUserId(userId);
+            try
+            {
+                _tokenService.DeleteRefreshTokenByUserId(userId);
+            }catch (BusinessException ex)
+            {
+                throw new BusinessException(ex.Message);
+            }
         }
+
+        public async Task<OtpResponse> ForgotPassword(string email)
+        {
+            if (!await _context.Users.AnyAsync(u => u.Email == email))
+            {
+                throw new ObjectNotFoundException("User with this email not found.");
+            }
+            Random random = new Random();
+            int randomNumber = random.Next(100000, 1000000);
+            var mailRequest = new MailRequest
+             {
+                 ToEmail = email,
+                 Subject = "Verification code to reset password.",
+                 Body = $@"Hi! This is the one-time password (OTP): {randomNumber}. Do not share this OTP with anyone."
+             };
+            await _mailService.SendEmailAsync(mailRequest);
+            return new OtpResponse
+            {
+                Otp = randomNumber,
+                Email = email
+            };
+        }
+
+        public async Task ChangePassword(ChangePasswordRequest changePasswordRequest)
+        {
+            var user = await _context.Users.Where(u => changePasswordRequest.UserId == u.Id).FirstAsync();
+            if(user == null)
+            {
+                throw new ObjectNotFoundException("User not found");
+            }
+            IdentityResult changePasswordResult = await _userManager.ChangePasswordAsync(user, changePasswordRequest.OldPassword, changePasswordRequest.NewPassword);
+            if (!changePasswordResult.Succeeded)
+            {
+                throw new BusinessException("Change password failed");
+            }
+        }
+
+        public async Task ResetPassword(ResetPasswordRequest resetPasswordRequest)
+        {
+            var user = await _userManager.FindByEmailAsync(resetPasswordRequest.Email);
+            if (user == null)
+            {
+                throw new ObjectNotFoundException("User not found.");
+            }
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var resultRemovePassword = await _userManager.RemovePasswordAsync(user);
+                if (!resultRemovePassword.Succeeded)
+                {
+                    throw new BusinessException("Failed to remove the current password.");
+                }
+                var resultResetPassword = await _userManager.AddPasswordAsync(user, resetPasswordRequest.NewPassword);
+                if (!resultResetPassword.Succeeded)
+                {
+                    throw new BusinessException("Failed to set the new password.");
+                }
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw new BusinessException("Reset password failed");
+            }
+        }
+
     }
 }

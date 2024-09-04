@@ -3,8 +3,8 @@ using System;
 using FurnitureStoreBE.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -18,43 +18,43 @@ namespace FurnitureStoreBE.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.8")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("FurnitureStoreBE.Models.Address", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("District")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("IsDefault")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("PostalCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Province")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("SpecificAddress")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Ward")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -66,7 +66,7 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("FurnitureStoreBE.Models.Admin", b =>
                 {
                     b.Property<string>("id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("id");
 
@@ -77,13 +77,13 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -191,29 +191,29 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("CloudinaryId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("FolderName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid?>("ProductVariantId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("ReviewId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("URL")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -228,39 +228,38 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("BrandName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AssetId")
-                        .IsUnique()
-                        .HasFilter("[AssetId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Brand");
                 });
@@ -269,11 +268,11 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -286,18 +285,18 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("FurnitureStoreBE.Models.CartItem", b =>
                 {
                     b.Property<Guid>("CartId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ProductVariantId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Color")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Dimension")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -319,36 +318,36 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("FurnitureTypeId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -364,14 +363,14 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ColorCode")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ColorName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -382,29 +381,29 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("DiscountValue")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ECouponApplyType")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("ECouponStatus")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("ECouponType")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("MinOrderValue")
                         .HasColumnType("decimal(18,2)");
@@ -413,7 +412,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("UsageCount")
                         .HasColumnType("bigint");
@@ -421,8 +420,7 @@ namespace FurnitureStoreBE.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AssetId")
-                        .IsUnique()
-                        .HasFilter("[AssetId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("Code")
                         .IsUnique();
@@ -433,7 +431,7 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("FurnitureStoreBE.Models.Customer", b =>
                 {
                     b.Property<string>("id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("id");
 
@@ -444,24 +442,23 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AssetId")
-                        .IsUnique()
-                        .HasFilter("[AssetId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Desginer");
                 });
@@ -469,25 +466,25 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("FurnitureStoreBE.Models.Favorite", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("UserId", "ProductId");
 
@@ -500,42 +497,41 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("RoomSpaceId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AssetId")
-                        .IsUnique()
-                        .HasFilter("[AssetId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("RoomSpaceId");
 
@@ -546,27 +542,26 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("MaterialTypeId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AssetId")
-                        .IsUnique()
-                        .HasFilter("[AssetId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("MaterialTypeId");
 
@@ -577,39 +572,38 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AssetId")
-                        .IsUnique()
-                        .HasFilter("[AssetId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("MaterialType");
                 });
@@ -618,40 +612,40 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("ENotificationType")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<bool>("Read")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("RedirectUrl")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -662,48 +656,48 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("AddressId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CanceledAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("CompletedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("CouponId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("DeliveredAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<int>("OrderStatus")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("PaymentMethod")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("ShippingFee")
                         .HasColumnType("decimal(18,2)");
@@ -718,14 +712,14 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -741,18 +735,18 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("FurnitureStoreBE.Models.OrderItem", b =>
                 {
                     b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ProductVariantId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Color")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Dimension")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -774,29 +768,29 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("BrandId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("Discount")
                         .HasColumnType("decimal(18,2)");
@@ -809,19 +803,19 @@ namespace FurnitureStoreBE.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<long>("Sold")
                         .HasColumnType("bigint");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -839,23 +833,23 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ColorId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("DisplayDimension")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("Height")
                         .HasColumnType("decimal(18,2)");
@@ -867,16 +861,16 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<long>("Quantity")
                         .HasColumnType("bigint");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("Width")
                         .HasColumnType("decimal(18,2)");
@@ -894,33 +888,33 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -935,26 +929,26 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("ExpiredDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("IpAddress")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Token")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("UserAgent")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -967,36 +961,36 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("QuestionId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("ReviewId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -1013,36 +1007,36 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<int>("Rate")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -1057,39 +1051,38 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AssetId")
-                        .IsUnique()
-                        .HasFilter("[AssetId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("RoomSpace");
                 });
@@ -1097,11 +1090,11 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("FurnitureStoreBE.Models.Staff", b =>
                 {
                     b.Property<string>("id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Position")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("id");
 
@@ -1111,77 +1104,75 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("FurnitureStoreBE.Models.User", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<Guid?>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("DateOfBirth")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AssetId")
-                        .IsUnique()
-                        .HasFilter("[AssetId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+                        .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -1189,10 +1180,10 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("FurnitureStoreBE.Models.UserUsedCoupon", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("CouponId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<long>("Quantity")
                         .HasColumnType("bigint");
@@ -1207,26 +1198,25 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                        .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
 
@@ -1255,24 +1245,24 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasMaxLength(34)
-                        .HasColumnType("nvarchar(34)");
+                        .HasColumnType("character varying(34)");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -1289,19 +1279,19 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -1313,17 +1303,17 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -1335,10 +1325,10 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -1350,16 +1340,16 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
@@ -1369,10 +1359,10 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("ProductApplied", b =>
                 {
                     b.Property<Guid>("CouponId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("CouponId", "ProductId");
 
@@ -1384,10 +1374,10 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("ProductDesigner", b =>
                 {
                     b.Property<Guid>("DesignerId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("DesignerId", "ProductId");
 
@@ -1399,10 +1389,10 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("ProductMaterial", b =>
                 {
                     b.Property<Guid>("MaterialId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("MaterialId", "ProductId");
 
@@ -1414,10 +1404,10 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("UserNotification", b =>
                 {
                     b.Property<Guid>("NotificationId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("NotificationId", "UserId");
 
@@ -1431,7 +1421,7 @@ namespace FurnitureStoreBE.Migrations
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>");
 
                     b.Property<int?>("AspNetTypeClaimsId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasIndex("AspNetTypeClaimsId");
 
@@ -1441,7 +1431,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 1,
-                            ClaimType = "Create",
+                            ClaimType = "CreateUser",
                             ClaimValue = "CreateUser",
                             RoleId = "1",
                             AspNetTypeClaimsId = 1
@@ -1449,7 +1439,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 2,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateUser",
                             ClaimValue = "UpdateUser",
                             RoleId = "1",
                             AspNetTypeClaimsId = 1
@@ -1457,7 +1447,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 3,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteUser",
                             ClaimValue = "DeleteUser",
                             RoleId = "1",
                             AspNetTypeClaimsId = 1
@@ -1465,7 +1455,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 4,
-                            ClaimType = "Create",
+                            ClaimType = "CreateBrand",
                             ClaimValue = "CreateBrand",
                             RoleId = "1",
                             AspNetTypeClaimsId = 2
@@ -1473,7 +1463,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 5,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateBrand",
                             ClaimValue = "UpdateBrand",
                             RoleId = "1",
                             AspNetTypeClaimsId = 2
@@ -1481,7 +1471,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 6,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteBrand",
                             ClaimValue = "DeleteBrand",
                             RoleId = "1",
                             AspNetTypeClaimsId = 2
@@ -1489,7 +1479,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 7,
-                            ClaimType = "Create",
+                            ClaimType = "CreateCategory",
                             ClaimValue = "CreateCategory",
                             RoleId = "1",
                             AspNetTypeClaimsId = 3
@@ -1497,7 +1487,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 8,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateCategory",
                             ClaimValue = "UpdateCategory",
                             RoleId = "1",
                             AspNetTypeClaimsId = 3
@@ -1505,7 +1495,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 9,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteCategory",
                             ClaimValue = "DeleteCategory",
                             RoleId = "1",
                             AspNetTypeClaimsId = 3
@@ -1513,7 +1503,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 10,
-                            ClaimType = "Create",
+                            ClaimType = "CreateColor",
                             ClaimValue = "CreateColor",
                             RoleId = "1",
                             AspNetTypeClaimsId = 4
@@ -1521,7 +1511,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 11,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateColor",
                             ClaimValue = "UpdateColor",
                             RoleId = "1",
                             AspNetTypeClaimsId = 4
@@ -1529,7 +1519,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 12,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteColor",
                             ClaimValue = "DeleteColor",
                             RoleId = "1",
                             AspNetTypeClaimsId = 4
@@ -1537,7 +1527,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 13,
-                            ClaimType = "Create",
+                            ClaimType = "CreateCoupon",
                             ClaimValue = "CreateCoupon",
                             RoleId = "1",
                             AspNetTypeClaimsId = 5
@@ -1545,7 +1535,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 14,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateCoupon",
                             ClaimValue = "UpdateCoupon",
                             RoleId = "1",
                             AspNetTypeClaimsId = 5
@@ -1553,7 +1543,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 15,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteCoupon",
                             ClaimValue = "DeleteCoupon",
                             RoleId = "1",
                             AspNetTypeClaimsId = 5
@@ -1561,7 +1551,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 16,
-                            ClaimType = "Create",
+                            ClaimType = "CreateCustomer",
                             ClaimValue = "CreateCustomer",
                             RoleId = "1",
                             AspNetTypeClaimsId = 6
@@ -1569,7 +1559,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 17,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateCustomer",
                             ClaimValue = "UpdateCustomer",
                             RoleId = "1",
                             AspNetTypeClaimsId = 6
@@ -1577,7 +1567,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 18,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteCustomer",
                             ClaimValue = "DeleteCustomer",
                             RoleId = "1",
                             AspNetTypeClaimsId = 6
@@ -1585,7 +1575,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 19,
-                            ClaimType = "Create",
+                            ClaimType = "CreateDesigner",
                             ClaimValue = "CreateDesigner",
                             RoleId = "1",
                             AspNetTypeClaimsId = 7
@@ -1593,7 +1583,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 20,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateDesigner",
                             ClaimValue = "UpdateDesigner",
                             RoleId = "1",
                             AspNetTypeClaimsId = 7
@@ -1601,7 +1591,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 21,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteDesigner",
                             ClaimValue = "DeleteDesigner",
                             RoleId = "1",
                             AspNetTypeClaimsId = 7
@@ -1609,7 +1599,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 22,
-                            ClaimType = "Create",
+                            ClaimType = "CreateFurnitureType",
                             ClaimValue = "CreateFurnitureType",
                             RoleId = "1",
                             AspNetTypeClaimsId = 8
@@ -1617,7 +1607,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 23,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateFurnitureType",
                             ClaimValue = "UpdateFurnitureType",
                             RoleId = "1",
                             AspNetTypeClaimsId = 8
@@ -1625,7 +1615,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 24,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteFurnitureType",
                             ClaimValue = "DeleteFurnitureType",
                             RoleId = "1",
                             AspNetTypeClaimsId = 8
@@ -1633,7 +1623,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 25,
-                            ClaimType = "Create",
+                            ClaimType = "CreateMaterial",
                             ClaimValue = "CreateMaterial",
                             RoleId = "1",
                             AspNetTypeClaimsId = 9
@@ -1641,7 +1631,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 26,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateMaterial",
                             ClaimValue = "UpdateMaterial",
                             RoleId = "1",
                             AspNetTypeClaimsId = 9
@@ -1649,7 +1639,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 27,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteMaterial",
                             ClaimValue = "DeleteMaterial",
                             RoleId = "1",
                             AspNetTypeClaimsId = 9
@@ -1657,7 +1647,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 28,
-                            ClaimType = "Create",
+                            ClaimType = "CreateMaterialType",
                             ClaimValue = "CreateMaterialType",
                             RoleId = "1",
                             AspNetTypeClaimsId = 10
@@ -1665,7 +1655,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 29,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateMaterialType",
                             ClaimValue = "UpdateMaterialType",
                             RoleId = "1",
                             AspNetTypeClaimsId = 10
@@ -1673,7 +1663,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 30,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteMaterialType",
                             ClaimValue = "DeleteMaterialType",
                             RoleId = "1",
                             AspNetTypeClaimsId = 10
@@ -1681,7 +1671,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 31,
-                            ClaimType = "Create",
+                            ClaimType = "CreateNotification",
                             ClaimValue = "CreateNotification",
                             RoleId = "1",
                             AspNetTypeClaimsId = 11
@@ -1689,7 +1679,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 32,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateNotification",
                             ClaimValue = "UpdateNotification",
                             RoleId = "1",
                             AspNetTypeClaimsId = 11
@@ -1697,7 +1687,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 33,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteNotification",
                             ClaimValue = "DeleteNotification",
                             RoleId = "1",
                             AspNetTypeClaimsId = 11
@@ -1705,7 +1695,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 34,
-                            ClaimType = "Create",
+                            ClaimType = "CreateRole",
                             ClaimValue = "CreateRole",
                             RoleId = "1",
                             AspNetTypeClaimsId = 12
@@ -1713,7 +1703,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 35,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateRole",
                             ClaimValue = "UpdateRole",
                             RoleId = "1",
                             AspNetTypeClaimsId = 12
@@ -1721,7 +1711,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 36,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteRole",
                             ClaimValue = "DeleteRole",
                             RoleId = "1",
                             AspNetTypeClaimsId = 12
@@ -1729,7 +1719,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 37,
-                            ClaimType = "Create",
+                            ClaimType = "CreateOrder",
                             ClaimValue = "CreateOrder",
                             RoleId = "1",
                             AspNetTypeClaimsId = 13
@@ -1737,7 +1727,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 38,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateOrder",
                             ClaimValue = "UpdateOrder",
                             RoleId = "1",
                             AspNetTypeClaimsId = 13
@@ -1745,7 +1735,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 39,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteOrder",
                             ClaimValue = "DeleteOrder",
                             RoleId = "1",
                             AspNetTypeClaimsId = 13
@@ -1753,7 +1743,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 40,
-                            ClaimType = "Create",
+                            ClaimType = "CreateProduct",
                             ClaimValue = "CreateProduct",
                             RoleId = "1",
                             AspNetTypeClaimsId = 14
@@ -1761,7 +1751,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 41,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateProduct",
                             ClaimValue = "UpdateProduct",
                             RoleId = "1",
                             AspNetTypeClaimsId = 14
@@ -1769,7 +1759,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 42,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteProduct",
                             ClaimValue = "DeleteProduct",
                             RoleId = "1",
                             AspNetTypeClaimsId = 14
@@ -1777,7 +1767,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 43,
-                            ClaimType = "Create",
+                            ClaimType = "CreateQuestion",
                             ClaimValue = "CreateQuestion",
                             RoleId = "1",
                             AspNetTypeClaimsId = 15
@@ -1785,7 +1775,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 44,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateQuestion",
                             ClaimValue = "UpdateQuestion",
                             RoleId = "1",
                             AspNetTypeClaimsId = 15
@@ -1793,7 +1783,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 45,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteQuestion",
                             ClaimValue = "DeleteQuestion",
                             RoleId = "1",
                             AspNetTypeClaimsId = 15
@@ -1801,7 +1791,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 46,
-                            ClaimType = "Create",
+                            ClaimType = "CreateReply",
                             ClaimValue = "CreateReply",
                             RoleId = "1",
                             AspNetTypeClaimsId = 16
@@ -1809,7 +1799,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 47,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateReply",
                             ClaimValue = "UpdateReply",
                             RoleId = "1",
                             AspNetTypeClaimsId = 16
@@ -1817,7 +1807,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 48,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteReply",
                             ClaimValue = "DeleteReply",
                             RoleId = "1",
                             AspNetTypeClaimsId = 16
@@ -1825,7 +1815,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 49,
-                            ClaimType = "Create",
+                            ClaimType = "CreateReview",
                             ClaimValue = "CreateReview",
                             RoleId = "1",
                             AspNetTypeClaimsId = 17
@@ -1833,7 +1823,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 50,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateReview",
                             ClaimValue = "UpdateReview",
                             RoleId = "1",
                             AspNetTypeClaimsId = 17
@@ -1841,7 +1831,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 51,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteReview",
                             ClaimValue = "DeleteReview",
                             RoleId = "1",
                             AspNetTypeClaimsId = 17
@@ -1849,7 +1839,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 52,
-                            ClaimType = "Create",
+                            ClaimType = "CreateRoomSpace",
                             ClaimValue = "CreateRoomSpace",
                             RoleId = "1",
                             AspNetTypeClaimsId = 18
@@ -1857,7 +1847,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 53,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateRoomSpace",
                             ClaimValue = "UpdateRoomSpace",
                             RoleId = "1",
                             AspNetTypeClaimsId = 18
@@ -1865,7 +1855,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 54,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteRoomSpace",
                             ClaimValue = "DeleteRoomSpace",
                             RoleId = "1",
                             AspNetTypeClaimsId = 18
@@ -1873,7 +1863,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 55,
-                            ClaimType = "Create",
+                            ClaimType = "CreateReport",
                             ClaimValue = "CreateReport",
                             RoleId = "1",
                             AspNetTypeClaimsId = 19
@@ -1881,7 +1871,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 56,
-                            ClaimType = "Create",
+                            ClaimType = "CreateUser",
                             ClaimValue = "CreateUser",
                             RoleId = "2",
                             AspNetTypeClaimsId = 1
@@ -1889,7 +1879,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 57,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateUser",
                             ClaimValue = "UpdateUser",
                             RoleId = "2",
                             AspNetTypeClaimsId = 1
@@ -1897,7 +1887,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 58,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteUser",
                             ClaimValue = "DeleteUser",
                             RoleId = "2",
                             AspNetTypeClaimsId = 1
@@ -1905,7 +1895,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 59,
-                            ClaimType = "Create",
+                            ClaimType = "CreateBrand",
                             ClaimValue = "CreateBrand",
                             RoleId = "2",
                             AspNetTypeClaimsId = 2
@@ -1913,7 +1903,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 60,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateBrand",
                             ClaimValue = "UpdateBrand",
                             RoleId = "2",
                             AspNetTypeClaimsId = 2
@@ -1921,7 +1911,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 61,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteBrand",
                             ClaimValue = "DeleteBrand",
                             RoleId = "2",
                             AspNetTypeClaimsId = 2
@@ -1929,7 +1919,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 62,
-                            ClaimType = "Create",
+                            ClaimType = "CreateCategory",
                             ClaimValue = "CreateCategory",
                             RoleId = "2",
                             AspNetTypeClaimsId = 3
@@ -1937,7 +1927,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 63,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateCategory",
                             ClaimValue = "UpdateCategory",
                             RoleId = "2",
                             AspNetTypeClaimsId = 3
@@ -1945,7 +1935,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 64,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteCategory",
                             ClaimValue = "DeleteCategory",
                             RoleId = "2",
                             AspNetTypeClaimsId = 3
@@ -1953,7 +1943,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 65,
-                            ClaimType = "Create",
+                            ClaimType = "CreateColor",
                             ClaimValue = "CreateColor",
                             RoleId = "2",
                             AspNetTypeClaimsId = 4
@@ -1961,7 +1951,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 66,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateColor",
                             ClaimValue = "UpdateColor",
                             RoleId = "2",
                             AspNetTypeClaimsId = 4
@@ -1969,7 +1959,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 67,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteColor",
                             ClaimValue = "DeleteColor",
                             RoleId = "2",
                             AspNetTypeClaimsId = 4
@@ -1977,7 +1967,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 68,
-                            ClaimType = "Create",
+                            ClaimType = "CreateCoupon",
                             ClaimValue = "CreateCoupon",
                             RoleId = "2",
                             AspNetTypeClaimsId = 5
@@ -1985,7 +1975,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 69,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateCoupon",
                             ClaimValue = "UpdateCoupon",
                             RoleId = "2",
                             AspNetTypeClaimsId = 5
@@ -1993,7 +1983,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 70,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteCoupon",
                             ClaimValue = "DeleteCoupon",
                             RoleId = "2",
                             AspNetTypeClaimsId = 5
@@ -2001,7 +1991,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 71,
-                            ClaimType = "Create",
+                            ClaimType = "CreateCustomer",
                             ClaimValue = "CreateCustomer",
                             RoleId = "2",
                             AspNetTypeClaimsId = 6
@@ -2009,7 +1999,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 72,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateCustomer",
                             ClaimValue = "UpdateCustomer",
                             RoleId = "2",
                             AspNetTypeClaimsId = 6
@@ -2017,7 +2007,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 73,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteCustomer",
                             ClaimValue = "DeleteCustomer",
                             RoleId = "2",
                             AspNetTypeClaimsId = 6
@@ -2025,7 +2015,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 74,
-                            ClaimType = "Create",
+                            ClaimType = "CreateDesigner",
                             ClaimValue = "CreateDesigner",
                             RoleId = "2",
                             AspNetTypeClaimsId = 7
@@ -2033,7 +2023,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 75,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateDesigner",
                             ClaimValue = "UpdateDesigner",
                             RoleId = "2",
                             AspNetTypeClaimsId = 7
@@ -2041,7 +2031,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 76,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteDesigner",
                             ClaimValue = "DeleteDesigner",
                             RoleId = "2",
                             AspNetTypeClaimsId = 7
@@ -2049,7 +2039,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 77,
-                            ClaimType = "Create",
+                            ClaimType = "CreateFurnitureType",
                             ClaimValue = "CreateFurnitureType",
                             RoleId = "2",
                             AspNetTypeClaimsId = 8
@@ -2057,7 +2047,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 78,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateFurnitureType",
                             ClaimValue = "UpdateFurnitureType",
                             RoleId = "2",
                             AspNetTypeClaimsId = 8
@@ -2065,7 +2055,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 79,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteFurnitureType",
                             ClaimValue = "DeleteFurnitureType",
                             RoleId = "2",
                             AspNetTypeClaimsId = 8
@@ -2073,7 +2063,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 80,
-                            ClaimType = "Create",
+                            ClaimType = "CreateMaterial",
                             ClaimValue = "CreateMaterial",
                             RoleId = "2",
                             AspNetTypeClaimsId = 9
@@ -2081,7 +2071,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 81,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateMaterial",
                             ClaimValue = "UpdateMaterial",
                             RoleId = "2",
                             AspNetTypeClaimsId = 9
@@ -2089,7 +2079,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 82,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteMaterial",
                             ClaimValue = "DeleteMaterial",
                             RoleId = "2",
                             AspNetTypeClaimsId = 9
@@ -2097,7 +2087,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 83,
-                            ClaimType = "Create",
+                            ClaimType = "CreateMaterialType",
                             ClaimValue = "CreateMaterialType",
                             RoleId = "2",
                             AspNetTypeClaimsId = 10
@@ -2105,7 +2095,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 84,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateMaterialType",
                             ClaimValue = "UpdateMaterialType",
                             RoleId = "2",
                             AspNetTypeClaimsId = 10
@@ -2113,7 +2103,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 85,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteMaterialType",
                             ClaimValue = "DeleteMaterialType",
                             RoleId = "2",
                             AspNetTypeClaimsId = 10
@@ -2121,7 +2111,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 86,
-                            ClaimType = "Create",
+                            ClaimType = "CreateNotification",
                             ClaimValue = "CreateNotification",
                             RoleId = "2",
                             AspNetTypeClaimsId = 11
@@ -2129,7 +2119,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 87,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateNotification",
                             ClaimValue = "UpdateNotification",
                             RoleId = "2",
                             AspNetTypeClaimsId = 11
@@ -2137,7 +2127,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 88,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteNotification",
                             ClaimValue = "DeleteNotification",
                             RoleId = "2",
                             AspNetTypeClaimsId = 11
@@ -2145,7 +2135,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 89,
-                            ClaimType = "Create",
+                            ClaimType = "CreateRole",
                             ClaimValue = "CreateRole",
                             RoleId = "2",
                             AspNetTypeClaimsId = 12
@@ -2153,7 +2143,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 90,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateRole",
                             ClaimValue = "UpdateRole",
                             RoleId = "2",
                             AspNetTypeClaimsId = 12
@@ -2161,7 +2151,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 91,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteRole",
                             ClaimValue = "DeleteRole",
                             RoleId = "2",
                             AspNetTypeClaimsId = 12
@@ -2169,7 +2159,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 92,
-                            ClaimType = "Create",
+                            ClaimType = "CreateOrder",
                             ClaimValue = "CreateOrder",
                             RoleId = "2",
                             AspNetTypeClaimsId = 13
@@ -2177,7 +2167,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 93,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateOrder",
                             ClaimValue = "UpdateOrder",
                             RoleId = "2",
                             AspNetTypeClaimsId = 13
@@ -2185,7 +2175,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 94,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteOrder",
                             ClaimValue = "DeleteOrder",
                             RoleId = "2",
                             AspNetTypeClaimsId = 13
@@ -2193,7 +2183,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 95,
-                            ClaimType = "Create",
+                            ClaimType = "CreateProduct",
                             ClaimValue = "CreateProduct",
                             RoleId = "2",
                             AspNetTypeClaimsId = 14
@@ -2201,7 +2191,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 96,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateProduct",
                             ClaimValue = "UpdateProduct",
                             RoleId = "2",
                             AspNetTypeClaimsId = 14
@@ -2209,7 +2199,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 97,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteProduct",
                             ClaimValue = "DeleteProduct",
                             RoleId = "2",
                             AspNetTypeClaimsId = 14
@@ -2217,7 +2207,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 98,
-                            ClaimType = "Create",
+                            ClaimType = "CreateQuestion",
                             ClaimValue = "CreateQuestion",
                             RoleId = "2",
                             AspNetTypeClaimsId = 15
@@ -2225,7 +2215,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 99,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateQuestion",
                             ClaimValue = "UpdateQuestion",
                             RoleId = "2",
                             AspNetTypeClaimsId = 15
@@ -2233,7 +2223,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 100,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteQuestion",
                             ClaimValue = "DeleteQuestion",
                             RoleId = "2",
                             AspNetTypeClaimsId = 15
@@ -2241,7 +2231,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 101,
-                            ClaimType = "Create",
+                            ClaimType = "CreateReply",
                             ClaimValue = "CreateReply",
                             RoleId = "2",
                             AspNetTypeClaimsId = 16
@@ -2249,7 +2239,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 102,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateReply",
                             ClaimValue = "UpdateReply",
                             RoleId = "2",
                             AspNetTypeClaimsId = 16
@@ -2257,7 +2247,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 103,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteReply",
                             ClaimValue = "DeleteReply",
                             RoleId = "2",
                             AspNetTypeClaimsId = 16
@@ -2265,7 +2255,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 104,
-                            ClaimType = "Create",
+                            ClaimType = "CreateReview",
                             ClaimValue = "CreateReview",
                             RoleId = "2",
                             AspNetTypeClaimsId = 17
@@ -2273,7 +2263,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 105,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateReview",
                             ClaimValue = "UpdateReview",
                             RoleId = "2",
                             AspNetTypeClaimsId = 17
@@ -2281,7 +2271,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 106,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteReview",
                             ClaimValue = "DeleteReview",
                             RoleId = "2",
                             AspNetTypeClaimsId = 17
@@ -2289,7 +2279,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 107,
-                            ClaimType = "Create",
+                            ClaimType = "CreateRoomSpace",
                             ClaimValue = "CreateRoomSpace",
                             RoleId = "2",
                             AspNetTypeClaimsId = 18
@@ -2297,7 +2287,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 108,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateRoomSpace",
                             ClaimValue = "UpdateRoomSpace",
                             RoleId = "2",
                             AspNetTypeClaimsId = 18
@@ -2305,7 +2295,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 109,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteRoomSpace",
                             ClaimValue = "DeleteRoomSpace",
                             RoleId = "2",
                             AspNetTypeClaimsId = 18
@@ -2313,7 +2303,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 110,
-                            ClaimType = "Create",
+                            ClaimType = "CreateReport",
                             ClaimValue = "CreateReport",
                             RoleId = "2",
                             AspNetTypeClaimsId = 19
@@ -2321,7 +2311,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 111,
-                            ClaimType = "Create",
+                            ClaimType = "CreateOrder",
                             ClaimValue = "CreateOrder",
                             RoleId = "3",
                             AspNetTypeClaimsId = 13
@@ -2329,7 +2319,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 112,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateOrder",
                             ClaimValue = "UpdateOrder",
                             RoleId = "3",
                             AspNetTypeClaimsId = 13
@@ -2337,7 +2327,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 113,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteOrder",
                             ClaimValue = "DeleteOrder",
                             RoleId = "3",
                             AspNetTypeClaimsId = 13
@@ -2345,7 +2335,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 114,
-                            ClaimType = "Create",
+                            ClaimType = "CreateQuestion",
                             ClaimValue = "CreateQuestion",
                             RoleId = "3",
                             AspNetTypeClaimsId = 15
@@ -2353,7 +2343,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 115,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateQuestion",
                             ClaimValue = "UpdateQuestion",
                             RoleId = "3",
                             AspNetTypeClaimsId = 15
@@ -2361,7 +2351,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 116,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteQuestion",
                             ClaimValue = "DeleteQuestion",
                             RoleId = "3",
                             AspNetTypeClaimsId = 15
@@ -2369,7 +2359,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 117,
-                            ClaimType = "Create",
+                            ClaimType = "CreateReply",
                             ClaimValue = "CreateReply",
                             RoleId = "3",
                             AspNetTypeClaimsId = 16
@@ -2377,7 +2367,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 118,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateReply",
                             ClaimValue = "UpdateReply",
                             RoleId = "3",
                             AspNetTypeClaimsId = 16
@@ -2385,7 +2375,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 119,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteReply",
                             ClaimValue = "DeleteReply",
                             RoleId = "3",
                             AspNetTypeClaimsId = 16
@@ -2393,7 +2383,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 120,
-                            ClaimType = "Create",
+                            ClaimType = "CreateReview",
                             ClaimValue = "CreateReview",
                             RoleId = "3",
                             AspNetTypeClaimsId = 17
@@ -2401,7 +2391,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 121,
-                            ClaimType = "Update",
+                            ClaimType = "UpdateReview",
                             ClaimValue = "UpdateReview",
                             RoleId = "3",
                             AspNetTypeClaimsId = 17
@@ -2409,7 +2399,7 @@ namespace FurnitureStoreBE.Migrations
                         new
                         {
                             Id = 122,
-                            ClaimType = "Delete",
+                            ClaimType = "DeleteReview",
                             ClaimValue = "DeleteReview",
                             RoleId = "3",
                             AspNetTypeClaimsId = 17

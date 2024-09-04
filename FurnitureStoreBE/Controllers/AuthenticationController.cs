@@ -1,12 +1,12 @@
-﻿using Azure;
-using FurnitureStoreBE.Data;
+﻿using FurnitureStoreBE.Data;
 using FurnitureStoreBE.DTOs.Request.Auth;
 using FurnitureStoreBE.DTOs.Request.AuthRequest;
 using FurnitureStoreBE.Services.Authentication;
 using FurnitureStoreBE.Utils;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Net;
 
 namespace FurnitureStoreBE.Controllers
@@ -67,6 +67,26 @@ namespace FurnitureStoreBE.Controllers
         {
             _authenticationService.Signout(userId);
             return new SuccessfulResponse<object>(null, (int)HttpStatusCode.OK, "Signout successfully").GetResponse();
+        }
+        [HttpPost("sendOtp/{email}")]
+        public async Task<IActionResult> ForgotPassword(string email = "sonle102003@gmail.com")
+        {
+            
+            return new SuccessfulResponse<object>(await _authenticationService.ForgotPassword(email), (int)HttpStatusCode.OK, "Send otp successfully").GetResponse();
+        }
+        [HttpPost("resetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest resetPasswordRequest)
+        {
+            await _authenticationService.ResetPassword(resetPasswordRequest);
+            return new SuccessfulResponse<object>(null, (int)HttpStatusCode.OK, "Reset password successfully").GetResponse();
+        }
+
+        [HttpPost("changePassword")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest changePasswordRequest)
+        {
+            await _authenticationService.ChangePassword(changePasswordRequest);
+            return new SuccessfulResponse<object>(null, (int)HttpStatusCode.OK, "Change password successfully").GetResponse();
         }
     }
 }

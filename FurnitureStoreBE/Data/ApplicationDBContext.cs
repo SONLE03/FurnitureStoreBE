@@ -1,6 +1,5 @@
 ﻿using FurnitureStoreBE.Models;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 namespace FurnitureStoreBE.Data

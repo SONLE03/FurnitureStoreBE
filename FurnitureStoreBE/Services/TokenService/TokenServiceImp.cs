@@ -37,7 +37,7 @@ namespace FurnitureStoreBE.Services.Token
             }
             else
             {
-                throw new BusinessException("Logout failed");
+                throw new BusinessException("Delete token failed");
             }
         }
 

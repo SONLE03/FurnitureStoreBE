@@ -1,4 +1,4 @@
-using FurnitureStoreBE.Data;
+ using FurnitureStoreBE.Data;
 using FurnitureStoreBE.Exceptions;
 using FurnitureStoreBE.Services.Authentication;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +10,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using FurnitureStoreBE.Utils;
 using FurnitureStoreBE.Services.Token;
+using FurnitureStoreBE.Services;
+using FurnitureStoreBE.Services.MailService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +20,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
-
+builder.Services.AddDbContext<ApplicationDBContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Web API with Jwt Authentication", Version = "v1" });
@@ -46,8 +49,7 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
-builder.Services.AddDbContext<ApplicationDBContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 
 builder.Services.AddIdentity<User, IdentityRole>(options =>
@@ -56,8 +58,10 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
     options.Password.RequireNonAlphanumeric = true;
-    options.Password.RequiredLength = 12;
-}).AddEntityFrameworkStores<ApplicationDBContext>().AddRoles<IdentityRole>();
+    options.Password.RequiredLength = 8;
+})
+.AddEntityFrameworkStores<ApplicationDBContext>().AddRoles<IdentityRole>()
+.AddDefaultTokenProviders();
 
 
 
@@ -179,6 +183,8 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("CreateReportPolicy", policy => policy.RequireClaim("CreateReport"));
 });
 
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.AddTransient<IMailService, MailServiceImp>();
 
 builder.Services.AddExceptionHandler<DefaultExceptionHandler>();
 
@@ -189,17 +195,19 @@ builder.Services.AddScoped<ITokenService, TokenServiceImp>();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    AppUserSeeder.SeedRootAdminUser(scope, app);
-}
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    //DatabaseMigrationUtil.DataBaseMigrationInstallation(app);
 }
+using (var scope = app.Services.CreateScope())
+{
+    AppUserSeeder.SeedRootAdminUser(scope, app);
+
+}
+
 app.UseHttpsRedirection();
 app.UseCors(x => x
     .AllowAnyOrigin()
