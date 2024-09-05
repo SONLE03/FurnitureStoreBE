@@ -7,6 +7,6 @@ namespace FurnitureStoreBE.Models
     public class Customer
     {
         [Key]
-        public Guid id { get; set; }
+        public string id { get; set; }
     }
 }

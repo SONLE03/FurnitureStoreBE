@@ -1,17 +1,25 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FurnitureStoreBE.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FurnitureStoreBE.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
+        private readonly ApplicationDBContext _context;
+        public UserController(ApplicationDBContext context)
+        {
+            _context = context;
+        }
         [HttpGet()]
+        //[Authorize(Policy = "CreateUserPolicy")]
         public string getVoid()
         {
-            return "10";
+            _context.Colors.Add(new Models.Color { ColorName = "ABC" });
+            _context.SaveChanges();
+            return "OK";
         }
     }
 }

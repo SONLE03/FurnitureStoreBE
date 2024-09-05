@@ -3,8 +3,8 @@ using System;
 using FurnitureStoreBE.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -18,42 +18,43 @@ namespace FurnitureStoreBE.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.8")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("FurnitureStoreBE.Models.Address", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("District")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("IsDefault")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("PostalCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Province")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("SpecificAddress")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Ward")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -64,41 +65,155 @@ namespace FurnitureStoreBE.Migrations
 
             modelBuilder.Entity("FurnitureStoreBE.Models.Admin", b =>
                 {
-                    b.Property<Guid>("id")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("id")
+                        .HasColumnType("text");
 
                     b.HasKey("id");
 
                     b.ToTable("Admin");
                 });
 
+            modelBuilder.Entity("FurnitureStoreBE.Models.AspNetTypeClaims", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AspNetTypeClaims");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "ManageUser"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "ManageBrand"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "ManageCategory"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "ManageColor"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "ManageCoupon"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "ManageCustomer"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "ManageDesigner"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "ManageFurnitureType"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "ManageMaterial"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "ManageMaterialType"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "ManageNotification"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "ManageRole"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Name = "ManageOrder"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Name = "ManageProduct"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Name = "ManageQuestion"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Name = "ManageReply"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Name = "ManageReview"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Name = "ManageRoomSpace"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Name = "ManageReport"
+                        });
+                });
+
             modelBuilder.Entity("FurnitureStoreBE.Models.Asset", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("CloudinaryId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("FolderName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid?>("ProductVariantId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("ReviewId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("URL")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -113,39 +228,38 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("BrandName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AssetId")
-                        .IsUnique()
-                        .HasFilter("[AssetId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Brand");
                 });
@@ -154,10 +268,11 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -170,18 +285,18 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("FurnitureStoreBE.Models.CartItem", b =>
                 {
                     b.Property<Guid>("CartId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ProductVariantId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Color")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Dimension")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -203,36 +318,36 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("FurnitureTypeId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -248,14 +363,14 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ColorCode")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ColorName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -266,29 +381,29 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("DiscountValue")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ECouponApplyType")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("ECouponStatus")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("ECouponType")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("MinOrderValue")
                         .HasColumnType("decimal(18,2)");
@@ -297,7 +412,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("UsageCount")
                         .HasColumnType("bigint");
@@ -305,8 +420,7 @@ namespace FurnitureStoreBE.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AssetId")
-                        .IsUnique()
-                        .HasFilter("[AssetId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("Code")
                         .IsUnique();
@@ -316,8 +430,8 @@ namespace FurnitureStoreBE.Migrations
 
             modelBuilder.Entity("FurnitureStoreBE.Models.Customer", b =>
                 {
-                    b.Property<Guid>("id")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("id")
+                        .HasColumnType("text");
 
                     b.HasKey("id");
 
@@ -328,50 +442,49 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AssetId")
-                        .IsUnique()
-                        .HasFilter("[AssetId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Desginer");
                 });
 
             modelBuilder.Entity("FurnitureStoreBE.Models.Favorite", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
 
                     b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("UserId", "ProductId");
 
@@ -384,42 +497,41 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("RoomSpaceId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AssetId")
-                        .IsUnique()
-                        .HasFilter("[AssetId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("RoomSpaceId");
 
@@ -430,27 +542,26 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("MaterialTypeId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AssetId")
-                        .IsUnique()
-                        .HasFilter("[AssetId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("MaterialTypeId");
 
@@ -461,39 +572,38 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AssetId")
-                        .IsUnique()
-                        .HasFilter("[AssetId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("MaterialType");
                 });
@@ -502,40 +612,40 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("ENotificationType")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<bool>("Read")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("RedirectUrl")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -546,48 +656,48 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("AddressId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CanceledAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("CompletedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("CouponId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("DeliveredAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<int>("OrderStatus")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("PaymentMethod")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("ShippingFee")
                         .HasColumnType("decimal(18,2)");
@@ -602,13 +712,14 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -624,18 +735,18 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("FurnitureStoreBE.Models.OrderItem", b =>
                 {
                     b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ProductVariantId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Color")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Dimension")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -657,29 +768,29 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("BrandId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("Discount")
                         .HasColumnType("decimal(18,2)");
@@ -692,19 +803,19 @@ namespace FurnitureStoreBE.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<long>("Sold")
                         .HasColumnType("bigint");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -722,23 +833,23 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ColorId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("DisplayDimension")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("Height")
                         .HasColumnType("decimal(18,2)");
@@ -750,16 +861,16 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<long>("Quantity")
                         .HasColumnType("bigint");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("Width")
                         .HasColumnType("decimal(18,2)");
@@ -777,32 +888,33 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -813,39 +925,72 @@ namespace FurnitureStoreBE.Migrations
                     b.ToTable("Question");
                 });
 
+            modelBuilder.Entity("FurnitureStoreBE.Models.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("ExpiredDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserAgent")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Token");
+                });
+
             modelBuilder.Entity("FurnitureStoreBE.Models.Reply", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("QuestionId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("ReviewId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -862,35 +1007,36 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<int>("Rate")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -905,145 +1051,139 @@ namespace FurnitureStoreBE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AssetId")
-                        .IsUnique()
-                        .HasFilter("[AssetId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("RoomSpace");
                 });
 
             modelBuilder.Entity("FurnitureStoreBE.Models.Staff", b =>
                 {
-                    b.Property<Guid>("id")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("id")
+                        .HasColumnType("text");
 
                     b.Property<string>("Position")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("id");
 
                     b.ToTable("Staff");
                 });
 
-            modelBuilder.Entity("FurnitureStoreBE.Models.Token", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("ExpiredDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("RefreshToken")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Token");
-                });
-
             modelBuilder.Entity("FurnitureStoreBE.Models.User", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("integer");
 
                     b.Property<Guid?>("AssetId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid?>("CouponId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("DateOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("boolean");
 
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AssetId")
+                        .IsUnique();
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasFilter("[AssetId] IS NOT NULL");
+                        .HasDatabaseName("UserNameIndex");
 
-                    b.HasIndex("CouponId");
-
-                    b.ToTable("User");
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("FurnitureStoreBE.Models.UserUsedCoupon", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
 
                     b.Property<Guid>("CouponId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<long>("Quantity")
                         .HasColumnType("bigint");
@@ -1055,13 +1195,174 @@ namespace FurnitureStoreBE.Migrations
                     b.ToTable("UserUsedCoupon");
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            Name = "Owner",
+                            NormalizedName = "OWNER"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            Name = "Staff",
+                            NormalizedName = "STAFF"
+                        },
+                        new
+                        {
+                            Id = "3",
+                            Name = "Customer",
+                            NormalizedName = "CUSTOMER"
+                        });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(34)
+                        .HasColumnType("character varying(34)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+
+                    b.HasDiscriminator().HasValue("IdentityRoleClaim<string>");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("text");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("text");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
+
             modelBuilder.Entity("ProductApplied", b =>
                 {
                     b.Property<Guid>("CouponId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("CouponId", "ProductId");
 
@@ -1073,10 +1374,10 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("ProductDesigner", b =>
                 {
                     b.Property<Guid>("DesignerId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("DesignerId", "ProductId");
 
@@ -1088,10 +1389,10 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("ProductMaterial", b =>
                 {
                     b.Property<Guid>("MaterialId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("MaterialId", "ProductId");
 
@@ -1103,16 +1404,1006 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("UserNotification", b =>
                 {
                     b.Property<Guid>("NotificationId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
 
                     b.HasKey("NotificationId", "UserId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("UserNotification");
+                });
+
+            modelBuilder.Entity("FurnitureStoreBE.Models.AspNetRoleClaims<string>", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>");
+
+                    b.Property<int?>("AspNetTypeClaimsId")
+                        .HasColumnType("integer");
+
+                    b.HasIndex("AspNetTypeClaimsId");
+
+                    b.HasDiscriminator().HasValue("AspNetRoleClaims<string>");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ClaimType = "CreateUser",
+                            ClaimValue = "CreateUser",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ClaimType = "UpdateUser",
+                            ClaimValue = "UpdateUser",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ClaimType = "DeleteUser",
+                            ClaimValue = "DeleteUser",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ClaimType = "CreateBrand",
+                            ClaimValue = "CreateBrand",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ClaimType = "UpdateBrand",
+                            ClaimValue = "UpdateBrand",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 2
+                        },
+                        new
+                        {
+                            Id = 6,
+                            ClaimType = "DeleteBrand",
+                            ClaimValue = "DeleteBrand",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 2
+                        },
+                        new
+                        {
+                            Id = 7,
+                            ClaimType = "CreateCategory",
+                            ClaimValue = "CreateCategory",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 3
+                        },
+                        new
+                        {
+                            Id = 8,
+                            ClaimType = "UpdateCategory",
+                            ClaimValue = "UpdateCategory",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 3
+                        },
+                        new
+                        {
+                            Id = 9,
+                            ClaimType = "DeleteCategory",
+                            ClaimValue = "DeleteCategory",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 3
+                        },
+                        new
+                        {
+                            Id = 10,
+                            ClaimType = "CreateColor",
+                            ClaimValue = "CreateColor",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 4
+                        },
+                        new
+                        {
+                            Id = 11,
+                            ClaimType = "UpdateColor",
+                            ClaimValue = "UpdateColor",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 4
+                        },
+                        new
+                        {
+                            Id = 12,
+                            ClaimType = "DeleteColor",
+                            ClaimValue = "DeleteColor",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 4
+                        },
+                        new
+                        {
+                            Id = 13,
+                            ClaimType = "CreateCoupon",
+                            ClaimValue = "CreateCoupon",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 5
+                        },
+                        new
+                        {
+                            Id = 14,
+                            ClaimType = "UpdateCoupon",
+                            ClaimValue = "UpdateCoupon",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 5
+                        },
+                        new
+                        {
+                            Id = 15,
+                            ClaimType = "DeleteCoupon",
+                            ClaimValue = "DeleteCoupon",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 5
+                        },
+                        new
+                        {
+                            Id = 16,
+                            ClaimType = "CreateCustomer",
+                            ClaimValue = "CreateCustomer",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 6
+                        },
+                        new
+                        {
+                            Id = 17,
+                            ClaimType = "UpdateCustomer",
+                            ClaimValue = "UpdateCustomer",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 6
+                        },
+                        new
+                        {
+                            Id = 18,
+                            ClaimType = "DeleteCustomer",
+                            ClaimValue = "DeleteCustomer",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 6
+                        },
+                        new
+                        {
+                            Id = 19,
+                            ClaimType = "CreateDesigner",
+                            ClaimValue = "CreateDesigner",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 7
+                        },
+                        new
+                        {
+                            Id = 20,
+                            ClaimType = "UpdateDesigner",
+                            ClaimValue = "UpdateDesigner",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 7
+                        },
+                        new
+                        {
+                            Id = 21,
+                            ClaimType = "DeleteDesigner",
+                            ClaimValue = "DeleteDesigner",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 7
+                        },
+                        new
+                        {
+                            Id = 22,
+                            ClaimType = "CreateFurnitureType",
+                            ClaimValue = "CreateFurnitureType",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 8
+                        },
+                        new
+                        {
+                            Id = 23,
+                            ClaimType = "UpdateFurnitureType",
+                            ClaimValue = "UpdateFurnitureType",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 8
+                        },
+                        new
+                        {
+                            Id = 24,
+                            ClaimType = "DeleteFurnitureType",
+                            ClaimValue = "DeleteFurnitureType",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 8
+                        },
+                        new
+                        {
+                            Id = 25,
+                            ClaimType = "CreateMaterial",
+                            ClaimValue = "CreateMaterial",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 9
+                        },
+                        new
+                        {
+                            Id = 26,
+                            ClaimType = "UpdateMaterial",
+                            ClaimValue = "UpdateMaterial",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 9
+                        },
+                        new
+                        {
+                            Id = 27,
+                            ClaimType = "DeleteMaterial",
+                            ClaimValue = "DeleteMaterial",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 9
+                        },
+                        new
+                        {
+                            Id = 28,
+                            ClaimType = "CreateMaterialType",
+                            ClaimValue = "CreateMaterialType",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 10
+                        },
+                        new
+                        {
+                            Id = 29,
+                            ClaimType = "UpdateMaterialType",
+                            ClaimValue = "UpdateMaterialType",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 10
+                        },
+                        new
+                        {
+                            Id = 30,
+                            ClaimType = "DeleteMaterialType",
+                            ClaimValue = "DeleteMaterialType",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 10
+                        },
+                        new
+                        {
+                            Id = 31,
+                            ClaimType = "CreateNotification",
+                            ClaimValue = "CreateNotification",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 11
+                        },
+                        new
+                        {
+                            Id = 32,
+                            ClaimType = "UpdateNotification",
+                            ClaimValue = "UpdateNotification",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 11
+                        },
+                        new
+                        {
+                            Id = 33,
+                            ClaimType = "DeleteNotification",
+                            ClaimValue = "DeleteNotification",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 11
+                        },
+                        new
+                        {
+                            Id = 34,
+                            ClaimType = "CreateRole",
+                            ClaimValue = "CreateRole",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 12
+                        },
+                        new
+                        {
+                            Id = 35,
+                            ClaimType = "UpdateRole",
+                            ClaimValue = "UpdateRole",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 12
+                        },
+                        new
+                        {
+                            Id = 36,
+                            ClaimType = "DeleteRole",
+                            ClaimValue = "DeleteRole",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 12
+                        },
+                        new
+                        {
+                            Id = 37,
+                            ClaimType = "CreateOrder",
+                            ClaimValue = "CreateOrder",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 13
+                        },
+                        new
+                        {
+                            Id = 38,
+                            ClaimType = "UpdateOrder",
+                            ClaimValue = "UpdateOrder",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 13
+                        },
+                        new
+                        {
+                            Id = 39,
+                            ClaimType = "DeleteOrder",
+                            ClaimValue = "DeleteOrder",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 13
+                        },
+                        new
+                        {
+                            Id = 40,
+                            ClaimType = "CreateProduct",
+                            ClaimValue = "CreateProduct",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 14
+                        },
+                        new
+                        {
+                            Id = 41,
+                            ClaimType = "UpdateProduct",
+                            ClaimValue = "UpdateProduct",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 14
+                        },
+                        new
+                        {
+                            Id = 42,
+                            ClaimType = "DeleteProduct",
+                            ClaimValue = "DeleteProduct",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 14
+                        },
+                        new
+                        {
+                            Id = 43,
+                            ClaimType = "CreateQuestion",
+                            ClaimValue = "CreateQuestion",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 15
+                        },
+                        new
+                        {
+                            Id = 44,
+                            ClaimType = "UpdateQuestion",
+                            ClaimValue = "UpdateQuestion",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 15
+                        },
+                        new
+                        {
+                            Id = 45,
+                            ClaimType = "DeleteQuestion",
+                            ClaimValue = "DeleteQuestion",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 15
+                        },
+                        new
+                        {
+                            Id = 46,
+                            ClaimType = "CreateReply",
+                            ClaimValue = "CreateReply",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 16
+                        },
+                        new
+                        {
+                            Id = 47,
+                            ClaimType = "UpdateReply",
+                            ClaimValue = "UpdateReply",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 16
+                        },
+                        new
+                        {
+                            Id = 48,
+                            ClaimType = "DeleteReply",
+                            ClaimValue = "DeleteReply",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 16
+                        },
+                        new
+                        {
+                            Id = 49,
+                            ClaimType = "CreateReview",
+                            ClaimValue = "CreateReview",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 17
+                        },
+                        new
+                        {
+                            Id = 50,
+                            ClaimType = "UpdateReview",
+                            ClaimValue = "UpdateReview",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 17
+                        },
+                        new
+                        {
+                            Id = 51,
+                            ClaimType = "DeleteReview",
+                            ClaimValue = "DeleteReview",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 17
+                        },
+                        new
+                        {
+                            Id = 52,
+                            ClaimType = "CreateRoomSpace",
+                            ClaimValue = "CreateRoomSpace",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 18
+                        },
+                        new
+                        {
+                            Id = 53,
+                            ClaimType = "UpdateRoomSpace",
+                            ClaimValue = "UpdateRoomSpace",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 18
+                        },
+                        new
+                        {
+                            Id = 54,
+                            ClaimType = "DeleteRoomSpace",
+                            ClaimValue = "DeleteRoomSpace",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 18
+                        },
+                        new
+                        {
+                            Id = 55,
+                            ClaimType = "CreateReport",
+                            ClaimValue = "CreateReport",
+                            RoleId = "1",
+                            AspNetTypeClaimsId = 19
+                        },
+                        new
+                        {
+                            Id = 56,
+                            ClaimType = "CreateUser",
+                            ClaimValue = "CreateUser",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 1
+                        },
+                        new
+                        {
+                            Id = 57,
+                            ClaimType = "UpdateUser",
+                            ClaimValue = "UpdateUser",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 1
+                        },
+                        new
+                        {
+                            Id = 58,
+                            ClaimType = "DeleteUser",
+                            ClaimValue = "DeleteUser",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 1
+                        },
+                        new
+                        {
+                            Id = 59,
+                            ClaimType = "CreateBrand",
+                            ClaimValue = "CreateBrand",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 2
+                        },
+                        new
+                        {
+                            Id = 60,
+                            ClaimType = "UpdateBrand",
+                            ClaimValue = "UpdateBrand",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 2
+                        },
+                        new
+                        {
+                            Id = 61,
+                            ClaimType = "DeleteBrand",
+                            ClaimValue = "DeleteBrand",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 2
+                        },
+                        new
+                        {
+                            Id = 62,
+                            ClaimType = "CreateCategory",
+                            ClaimValue = "CreateCategory",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 3
+                        },
+                        new
+                        {
+                            Id = 63,
+                            ClaimType = "UpdateCategory",
+                            ClaimValue = "UpdateCategory",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 3
+                        },
+                        new
+                        {
+                            Id = 64,
+                            ClaimType = "DeleteCategory",
+                            ClaimValue = "DeleteCategory",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 3
+                        },
+                        new
+                        {
+                            Id = 65,
+                            ClaimType = "CreateColor",
+                            ClaimValue = "CreateColor",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 4
+                        },
+                        new
+                        {
+                            Id = 66,
+                            ClaimType = "UpdateColor",
+                            ClaimValue = "UpdateColor",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 4
+                        },
+                        new
+                        {
+                            Id = 67,
+                            ClaimType = "DeleteColor",
+                            ClaimValue = "DeleteColor",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 4
+                        },
+                        new
+                        {
+                            Id = 68,
+                            ClaimType = "CreateCoupon",
+                            ClaimValue = "CreateCoupon",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 5
+                        },
+                        new
+                        {
+                            Id = 69,
+                            ClaimType = "UpdateCoupon",
+                            ClaimValue = "UpdateCoupon",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 5
+                        },
+                        new
+                        {
+                            Id = 70,
+                            ClaimType = "DeleteCoupon",
+                            ClaimValue = "DeleteCoupon",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 5
+                        },
+                        new
+                        {
+                            Id = 71,
+                            ClaimType = "CreateCustomer",
+                            ClaimValue = "CreateCustomer",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 6
+                        },
+                        new
+                        {
+                            Id = 72,
+                            ClaimType = "UpdateCustomer",
+                            ClaimValue = "UpdateCustomer",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 6
+                        },
+                        new
+                        {
+                            Id = 73,
+                            ClaimType = "DeleteCustomer",
+                            ClaimValue = "DeleteCustomer",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 6
+                        },
+                        new
+                        {
+                            Id = 74,
+                            ClaimType = "CreateDesigner",
+                            ClaimValue = "CreateDesigner",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 7
+                        },
+                        new
+                        {
+                            Id = 75,
+                            ClaimType = "UpdateDesigner",
+                            ClaimValue = "UpdateDesigner",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 7
+                        },
+                        new
+                        {
+                            Id = 76,
+                            ClaimType = "DeleteDesigner",
+                            ClaimValue = "DeleteDesigner",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 7
+                        },
+                        new
+                        {
+                            Id = 77,
+                            ClaimType = "CreateFurnitureType",
+                            ClaimValue = "CreateFurnitureType",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 8
+                        },
+                        new
+                        {
+                            Id = 78,
+                            ClaimType = "UpdateFurnitureType",
+                            ClaimValue = "UpdateFurnitureType",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 8
+                        },
+                        new
+                        {
+                            Id = 79,
+                            ClaimType = "DeleteFurnitureType",
+                            ClaimValue = "DeleteFurnitureType",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 8
+                        },
+                        new
+                        {
+                            Id = 80,
+                            ClaimType = "CreateMaterial",
+                            ClaimValue = "CreateMaterial",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 9
+                        },
+                        new
+                        {
+                            Id = 81,
+                            ClaimType = "UpdateMaterial",
+                            ClaimValue = "UpdateMaterial",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 9
+                        },
+                        new
+                        {
+                            Id = 82,
+                            ClaimType = "DeleteMaterial",
+                            ClaimValue = "DeleteMaterial",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 9
+                        },
+                        new
+                        {
+                            Id = 83,
+                            ClaimType = "CreateMaterialType",
+                            ClaimValue = "CreateMaterialType",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 10
+                        },
+                        new
+                        {
+                            Id = 84,
+                            ClaimType = "UpdateMaterialType",
+                            ClaimValue = "UpdateMaterialType",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 10
+                        },
+                        new
+                        {
+                            Id = 85,
+                            ClaimType = "DeleteMaterialType",
+                            ClaimValue = "DeleteMaterialType",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 10
+                        },
+                        new
+                        {
+                            Id = 86,
+                            ClaimType = "CreateNotification",
+                            ClaimValue = "CreateNotification",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 11
+                        },
+                        new
+                        {
+                            Id = 87,
+                            ClaimType = "UpdateNotification",
+                            ClaimValue = "UpdateNotification",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 11
+                        },
+                        new
+                        {
+                            Id = 88,
+                            ClaimType = "DeleteNotification",
+                            ClaimValue = "DeleteNotification",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 11
+                        },
+                        new
+                        {
+                            Id = 89,
+                            ClaimType = "CreateRole",
+                            ClaimValue = "CreateRole",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 12
+                        },
+                        new
+                        {
+                            Id = 90,
+                            ClaimType = "UpdateRole",
+                            ClaimValue = "UpdateRole",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 12
+                        },
+                        new
+                        {
+                            Id = 91,
+                            ClaimType = "DeleteRole",
+                            ClaimValue = "DeleteRole",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 12
+                        },
+                        new
+                        {
+                            Id = 92,
+                            ClaimType = "CreateOrder",
+                            ClaimValue = "CreateOrder",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 13
+                        },
+                        new
+                        {
+                            Id = 93,
+                            ClaimType = "UpdateOrder",
+                            ClaimValue = "UpdateOrder",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 13
+                        },
+                        new
+                        {
+                            Id = 94,
+                            ClaimType = "DeleteOrder",
+                            ClaimValue = "DeleteOrder",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 13
+                        },
+                        new
+                        {
+                            Id = 95,
+                            ClaimType = "CreateProduct",
+                            ClaimValue = "CreateProduct",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 14
+                        },
+                        new
+                        {
+                            Id = 96,
+                            ClaimType = "UpdateProduct",
+                            ClaimValue = "UpdateProduct",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 14
+                        },
+                        new
+                        {
+                            Id = 97,
+                            ClaimType = "DeleteProduct",
+                            ClaimValue = "DeleteProduct",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 14
+                        },
+                        new
+                        {
+                            Id = 98,
+                            ClaimType = "CreateQuestion",
+                            ClaimValue = "CreateQuestion",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 15
+                        },
+                        new
+                        {
+                            Id = 99,
+                            ClaimType = "UpdateQuestion",
+                            ClaimValue = "UpdateQuestion",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 15
+                        },
+                        new
+                        {
+                            Id = 100,
+                            ClaimType = "DeleteQuestion",
+                            ClaimValue = "DeleteQuestion",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 15
+                        },
+                        new
+                        {
+                            Id = 101,
+                            ClaimType = "CreateReply",
+                            ClaimValue = "CreateReply",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 16
+                        },
+                        new
+                        {
+                            Id = 102,
+                            ClaimType = "UpdateReply",
+                            ClaimValue = "UpdateReply",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 16
+                        },
+                        new
+                        {
+                            Id = 103,
+                            ClaimType = "DeleteReply",
+                            ClaimValue = "DeleteReply",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 16
+                        },
+                        new
+                        {
+                            Id = 104,
+                            ClaimType = "CreateReview",
+                            ClaimValue = "CreateReview",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 17
+                        },
+                        new
+                        {
+                            Id = 105,
+                            ClaimType = "UpdateReview",
+                            ClaimValue = "UpdateReview",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 17
+                        },
+                        new
+                        {
+                            Id = 106,
+                            ClaimType = "DeleteReview",
+                            ClaimValue = "DeleteReview",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 17
+                        },
+                        new
+                        {
+                            Id = 107,
+                            ClaimType = "CreateRoomSpace",
+                            ClaimValue = "CreateRoomSpace",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 18
+                        },
+                        new
+                        {
+                            Id = 108,
+                            ClaimType = "UpdateRoomSpace",
+                            ClaimValue = "UpdateRoomSpace",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 18
+                        },
+                        new
+                        {
+                            Id = 109,
+                            ClaimType = "DeleteRoomSpace",
+                            ClaimValue = "DeleteRoomSpace",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 18
+                        },
+                        new
+                        {
+                            Id = 110,
+                            ClaimType = "CreateReport",
+                            ClaimValue = "CreateReport",
+                            RoleId = "2",
+                            AspNetTypeClaimsId = 19
+                        },
+                        new
+                        {
+                            Id = 111,
+                            ClaimType = "CreateOrder",
+                            ClaimValue = "CreateOrder",
+                            RoleId = "3",
+                            AspNetTypeClaimsId = 13
+                        },
+                        new
+                        {
+                            Id = 112,
+                            ClaimType = "UpdateOrder",
+                            ClaimValue = "UpdateOrder",
+                            RoleId = "3",
+                            AspNetTypeClaimsId = 13
+                        },
+                        new
+                        {
+                            Id = 113,
+                            ClaimType = "DeleteOrder",
+                            ClaimValue = "DeleteOrder",
+                            RoleId = "3",
+                            AspNetTypeClaimsId = 13
+                        },
+                        new
+                        {
+                            Id = 114,
+                            ClaimType = "CreateQuestion",
+                            ClaimValue = "CreateQuestion",
+                            RoleId = "3",
+                            AspNetTypeClaimsId = 15
+                        },
+                        new
+                        {
+                            Id = 115,
+                            ClaimType = "UpdateQuestion",
+                            ClaimValue = "UpdateQuestion",
+                            RoleId = "3",
+                            AspNetTypeClaimsId = 15
+                        },
+                        new
+                        {
+                            Id = 116,
+                            ClaimType = "DeleteQuestion",
+                            ClaimValue = "DeleteQuestion",
+                            RoleId = "3",
+                            AspNetTypeClaimsId = 15
+                        },
+                        new
+                        {
+                            Id = 117,
+                            ClaimType = "CreateReply",
+                            ClaimValue = "CreateReply",
+                            RoleId = "3",
+                            AspNetTypeClaimsId = 16
+                        },
+                        new
+                        {
+                            Id = 118,
+                            ClaimType = "UpdateReply",
+                            ClaimValue = "UpdateReply",
+                            RoleId = "3",
+                            AspNetTypeClaimsId = 16
+                        },
+                        new
+                        {
+                            Id = 119,
+                            ClaimType = "DeleteReply",
+                            ClaimValue = "DeleteReply",
+                            RoleId = "3",
+                            AspNetTypeClaimsId = 16
+                        },
+                        new
+                        {
+                            Id = 120,
+                            ClaimType = "CreateReview",
+                            ClaimValue = "CreateReview",
+                            RoleId = "3",
+                            AspNetTypeClaimsId = 17
+                        },
+                        new
+                        {
+                            Id = 121,
+                            ClaimType = "UpdateReview",
+                            ClaimValue = "UpdateReview",
+                            RoleId = "3",
+                            AspNetTypeClaimsId = 17
+                        },
+                        new
+                        {
+                            Id = 122,
+                            ClaimType = "DeleteReview",
+                            ClaimValue = "DeleteReview",
+                            RoleId = "3",
+                            AspNetTypeClaimsId = 17
+                        });
                 });
 
             modelBuilder.Entity("FurnitureStoreBE.Models.Address", b =>
@@ -1143,7 +2434,7 @@ namespace FurnitureStoreBE.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("FurnitureStoreBE.Models.Review", "Review")
-                        .WithMany()
+                        .WithMany("Asset")
                         .HasForeignKey("ReviewId");
 
                     b.Navigation("ProductVariant");
@@ -1408,6 +2699,17 @@ namespace FurnitureStoreBE.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FurnitureStoreBE.Models.RefreshToken", b =>
+                {
+                    b.HasOne("FurnitureStoreBE.Models.User", "User")
+                        .WithMany("Tokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("FurnitureStoreBE.Models.Reply", b =>
                 {
                     b.HasOne("FurnitureStoreBE.Models.Question", "Question")
@@ -1470,26 +2772,11 @@ namespace FurnitureStoreBE.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FurnitureStoreBE.Models.Token", b =>
-                {
-                    b.HasOne("FurnitureStoreBE.Models.User", "User")
-                        .WithMany("Tokens")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("FurnitureStoreBE.Models.User", b =>
                 {
                     b.HasOne("FurnitureStoreBE.Models.Asset", "Asset")
                         .WithOne("User")
                         .HasForeignKey("FurnitureStoreBE.Models.User", "AssetId");
-
-                    b.HasOne("FurnitureStoreBE.Models.Coupon", null)
-                        .WithMany("Users")
-                        .HasForeignKey("CouponId");
 
                     b.Navigation("Asset");
                 });
@@ -1511,6 +2798,57 @@ namespace FurnitureStoreBE.Migrations
                     b.Navigation("Coupon");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("FurnitureStoreBE.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("FurnitureStoreBE.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FurnitureStoreBE.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("FurnitureStoreBE.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ProductApplied", b =>
@@ -1573,9 +2911,24 @@ namespace FurnitureStoreBE.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("FurnitureStoreBE.Models.AspNetRoleClaims<string>", b =>
+                {
+                    b.HasOne("FurnitureStoreBE.Models.AspNetTypeClaims", "AspNetTypeClaims")
+                        .WithMany("RoleClaims")
+                        .HasForeignKey("AspNetTypeClaimsId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("AspNetTypeClaims");
+                });
+
             modelBuilder.Entity("FurnitureStoreBE.Models.Address", b =>
                 {
                     b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("FurnitureStoreBE.Models.AspNetTypeClaims", b =>
+                {
+                    b.Navigation("RoleClaims");
                 });
 
             modelBuilder.Entity("FurnitureStoreBE.Models.Asset", b =>
@@ -1626,8 +2979,6 @@ namespace FurnitureStoreBE.Migrations
                     b.Navigation("Orders");
 
                     b.Navigation("UserUsedCoupon");
-
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("FurnitureStoreBE.Models.FurnitureType", b =>
@@ -1672,6 +3023,8 @@ namespace FurnitureStoreBE.Migrations
 
             modelBuilder.Entity("FurnitureStoreBE.Models.Review", b =>
                 {
+                    b.Navigation("Asset");
+
                     b.Navigation("Reply");
                 });
 

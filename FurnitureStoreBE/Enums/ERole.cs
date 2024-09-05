@@ -2,7 +2,7 @@
 {
     public enum ERole
     {
-        Admin = 0,
+        Owner = 0,
         Staff = 1,
         Customer = 2
     }
