@@ -1,6 +1,9 @@
 ﻿using FurnitureStoreBE.Exceptions;
 using FurnitureStoreBE.Models;
+using FurnitureStoreBE.Services.Caching;
 using Microsoft.AspNetCore.Identity;
+using StackExchange.Redis;
+using System.Text.Json;
 
 namespace FurnitureStoreBE.Data
 {

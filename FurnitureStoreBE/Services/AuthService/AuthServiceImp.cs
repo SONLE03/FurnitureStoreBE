@@ -12,11 +12,8 @@ using FurnitureStoreBE.Enums;
 using FurnitureStoreBE.Services.Token;
 using FurnitureStoreBE.DTOs.Request.AuthRequest;
 using FurnitureStoreBE.DTOs.Request.MailRequest;
-using System.Xml.Linq;
 using FurnitureStoreBE.DTOs.Response.MailResponse;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
-using Org.BouncyCastle.Asn1.Ocsp;
+using FurnitureStoreBE.Services.Caching;
 
 namespace FurnitureStoreBE.Services.Authentication
 {
@@ -32,9 +29,11 @@ namespace FurnitureStoreBE.Services.Authentication
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ITokenService _tokenService;
         private readonly IMailService _mailService;
+        private readonly IRedisCacheService _redisCacheService;
 
         public AuthServiceImp(ILogger<AuthServiceImp> logger, ApplicationDBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor
-            , JwtUtil jwtUtil, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager, ITokenService tokenService, IMailService mailService)
+            , JwtUtil jwtUtil, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager
+            , ITokenService tokenService, IMailService mailService, IRedisCacheService redisCacheService)
         {
             _logger = logger;
             _context = context;
@@ -46,7 +45,7 @@ namespace FurnitureStoreBE.Services.Authentication
             _roleManager = roleManager;
             _tokenService = tokenService;
             _mailService = mailService;
-
+            _redisCacheService = redisCacheService;
         }
         public async Task<User> GetMe(string userId)
         {
@@ -137,14 +136,14 @@ namespace FurnitureStoreBE.Services.Authentication
         public async Task<string> GenerateAccessToken(User user)
         {
             var _role = await _userManager.GetRolesAsync(user);
-            if (_role == null)
+            if (_role is null)
             {
                 throw new ObjectNotFoundException("Role not found");
             }
             IList<Claim> claims = await _userManager.GetClaimsAsync(user);
             _logger.LogInformation("Claims for user {UserId}: {Claims}", user.Id, string.Join(", ", claims.Select(c => $"{c.Type}: {c.Value}")));
 
-            var accessToken = await _jwtUtil.GenerateToken(user, _role.FirstOrDefault(), claims);
+            var accessToken = await _jwtUtil.GenerateToken(user, _role.First(), claims);
             return accessToken;
         }
 
@@ -159,7 +158,7 @@ namespace FurnitureStoreBE.Services.Authentication
             return await GenerateAccessToken(user);
         }
 
-        public async void Signout(string userId)
+        public void Signout(string userId)
         {
             try
             {
@@ -170,8 +169,9 @@ namespace FurnitureStoreBE.Services.Authentication
             }
         }
 
-        public async Task<OtpResponse> ForgotPassword(string email)
+        public async Task<OtpResponse> SendOtp(string email)
         {
+            //The function of this method is to send an OTP to the user.If the email is sent successfully. OTP will be stored in Redis Cache in 5 minutes.
             if (!await _context.Users.AnyAsync(u => u.Email == email))
             {
                 throw new ObjectNotFoundException("User with this email not found.");
@@ -184,14 +184,28 @@ namespace FurnitureStoreBE.Services.Authentication
                  Subject = "Verification code to reset password.",
                  Body = $@"Hi! This is the one-time password (OTP): {randomNumber}. Do not share this OTP with anyone."
              };
+            await _redisCacheService.SetData(email, randomNumber, TimeSpan.FromMinutes(5));
+
             await _mailService.SendEmailAsync(mailRequest);
+
             return new OtpResponse
             {
                 Otp = randomNumber,
                 Email = email
             };
         }
+        public async Task VerifyOtp(OtpRequest request)
+        {
+            string email = request.Email;
+            int otp = request.Otp;
+            var data = await _redisCacheService.GetData<int>(email);
+            if(otp != data)
+            {
+                throw new BusinessException("Invalid OTP provided.");
+            }
+            await _redisCacheService.RemoveData(email);
 
+        }
         public async Task ChangePassword(ChangePasswordRequest changePasswordRequest)
         {
             var user = await _context.Users.Where(u => changePasswordRequest.UserId == u.Id).FirstAsync();

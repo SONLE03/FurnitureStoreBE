@@ -15,7 +15,8 @@ namespace FurnitureStoreBE.Services.Authentication
         Task<User> GetMe(string userId);
         Task<string> HandleRefreshToken(RefreshTokenRequest tokenRequest);
         void Signout(string userId);
-        Task<OtpResponse> ForgotPassword(string email);
+        Task<OtpResponse> SendOtp(string email);
+        Task VerifyOtp(OtpRequest otpRequest);
         Task ChangePassword(ChangePasswordRequest changePasswordRequest);
         Task ResetPassword(ResetPasswordRequest resetPasswordRequest);
     }

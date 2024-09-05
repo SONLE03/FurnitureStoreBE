@@ -12,6 +12,8 @@ using FurnitureStoreBE.Utils;
 using FurnitureStoreBE.Services.Token;
 using FurnitureStoreBE.Services;
 using FurnitureStoreBE.Services.MailService;
+using FurnitureStoreBE.Services.Caching;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -183,6 +185,9 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("CreateReportPolicy", policy => policy.RequireClaim("CreateReport"));
 });
 
+builder.Services.AddSingleton<IRedisCacheService>(provider =>
+    new RedisCacheServiceImp(builder.Configuration.GetConnectionString("Redis")) // Adjust connection string as needed
+);
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddTransient<IMailService, MailServiceImp>();
 
@@ -193,19 +198,18 @@ builder.Services.AddScoped<IAuthService, AuthServiceImp>();
 builder.Services.AddScoped<ITokenService, TokenServiceImp>();
 
 
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    //DatabaseMigrationUtil.DataBaseMigrationInstallation(app);
+    DatabaseMigrationUtil.DataBaseMigrationInstallation(app);
 }
 using (var scope = app.Services.CreateScope())
 {
     AppUserSeeder.SeedRootAdminUser(scope, app);
-
 }
 
 app.UseHttpsRedirection();

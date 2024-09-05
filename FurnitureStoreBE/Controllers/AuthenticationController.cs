@@ -72,7 +72,13 @@ namespace FurnitureStoreBE.Controllers
         public async Task<IActionResult> ForgotPassword(string email = "sonle102003@gmail.com")
         {
             
-            return new SuccessfulResponse<object>(await _authenticationService.ForgotPassword(email), (int)HttpStatusCode.OK, "Send otp successfully").GetResponse();
+            return new SuccessfulResponse<object>(await _authenticationService.SendOtp(email), (int)HttpStatusCode.OK, "Send otp successfully").GetResponse();
+        }
+        [HttpPost("verifyOtp")]
+        public async Task<IActionResult> VerifyOtp([FromBody] OtpRequest otpRequest)
+        {
+            await _authenticationService.VerifyOtp(otpRequest);
+            return new SuccessfulResponse<object>(null, (int)HttpStatusCode.OK, "Verify otp successfully").GetResponse();
         }
         [HttpPost("resetPassword")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest resetPasswordRequest)
