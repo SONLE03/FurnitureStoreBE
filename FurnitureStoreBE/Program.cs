@@ -1,4 +1,4 @@
- using FurnitureStoreBE.Data;
+using FurnitureStoreBE.Data;
 using FurnitureStoreBE.Exceptions;
 using FurnitureStoreBE.Services.Authentication;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +13,10 @@ using FurnitureStoreBE.Services.Token;
 using FurnitureStoreBE.Services;
 using FurnitureStoreBE.Services.MailService;
 using FurnitureStoreBE.Services.Caching;
-using StackExchange.Redis;
+using FurnitureStoreBE.Services.UserService;
+using Microsoft.Extensions.Options;
+using FurnitureStoreBE.Services.FileUploadService;
+using CloudinaryDotNet;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +29,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddSwaggerGen(option =>
 {
-    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Web API with Jwt Authentication", Version = "v1" });
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Furniture Store API", Version = "v1" });
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -188,12 +191,23 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddSingleton<IRedisCacheService>(provider =>
     new RedisCacheServiceImp(builder.Configuration.GetConnectionString("Redis")) // Adjust connection string as needed
 );
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
+builder.Services.AddSingleton(serviceProvider =>
+{
+    var cloudinarySettings = serviceProvider.GetRequiredService<IOptions<CloudinarySettings>>().Value;
+    var account = new Account(cloudinarySettings.CloudName, cloudinarySettings.ApiKey, cloudinarySettings.ApiSecret);
+    return new Cloudinary(account);
+});
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+
+builder.Services.AddSingleton<IFileUploadService, FileUploadServiceImp>();
+
 builder.Services.AddTransient<IMailService, MailServiceImp>();
 
 builder.Services.AddExceptionHandler<DefaultExceptionHandler>();
 
 builder.Services.AddScoped<JwtUtil>();
+builder.Services.AddScoped<IUserService, UserServiceImp>();
 builder.Services.AddScoped<IAuthService, AuthServiceImp>();
 builder.Services.AddScoped<ITokenService, TokenServiceImp>();
 
