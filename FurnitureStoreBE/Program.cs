@@ -17,9 +17,9 @@ using FurnitureStoreBE.Services.UserService;
 using Microsoft.Extensions.Options;
 using FurnitureStoreBE.Services.FileUploadService;
 using CloudinaryDotNet;
+using FurnitureStoreBE.Mapper;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -188,9 +188,12 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("CreateReportPolicy", policy => policy.RequireClaim("CreateReport"));
 });
 
-builder.Services.AddSingleton<IRedisCacheService>(provider =>
+builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
+
+builder.Services.AddSingleton<IRedisCacheService, RedisCacheServiceImp>(provider =>
     new RedisCacheServiceImp(builder.Configuration.GetConnectionString("Redis")) // Adjust connection string as needed
 );
+
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
 builder.Services.AddSingleton(serviceProvider =>
 {
@@ -198,18 +201,17 @@ builder.Services.AddSingleton(serviceProvider =>
     var account = new Account(cloudinarySettings.CloudName, cloudinarySettings.ApiKey, cloudinarySettings.ApiSecret);
     return new Cloudinary(account);
 });
-builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
-
 builder.Services.AddSingleton<IFileUploadService, FileUploadServiceImp>();
 
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddTransient<IMailService, MailServiceImp>();
 
 builder.Services.AddExceptionHandler<DefaultExceptionHandler>();
 
 builder.Services.AddScoped<JwtUtil>();
-builder.Services.AddScoped<IUserService, UserServiceImp>();
 builder.Services.AddScoped<IAuthService, AuthServiceImp>();
 builder.Services.AddScoped<ITokenService, TokenServiceImp>();
+builder.Services.AddScoped<IUserService, UserServiceImp>();
 
 
 

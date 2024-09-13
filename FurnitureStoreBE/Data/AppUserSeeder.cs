@@ -13,6 +13,7 @@ namespace FurnitureStoreBE.Data
         {
             ILogger logger = app.Logger;
             IConfiguration configuration = app.Configuration;
+            ApplicationDBContext applicationDBContext;
             var userName = configuration.GetValue<string>("RootAdminUser:UserName");
             var name = configuration.GetValue<string>("RootAdminUser:Name");
             var email = configuration.GetValue<string>("RootAdminUser:Email");
@@ -20,6 +21,8 @@ namespace FurnitureStoreBE.Data
             var role = configuration.GetValue<string>("RootAdminUser:Role");
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
+
             if (userName == null
                || name == null
                || email == null
@@ -40,21 +43,23 @@ namespace FurnitureStoreBE.Data
             {
                 return;
             }
+            IdentityRole? roleExists = roleManager.FindByNameAsync(role).Result;
+            if (roleExists == null)
+            {
+                throw new ApplicationException($"Role {role} does not exist.");
+            }
             var newUser = new User
             {
                 Email = email,
                 UserName = userName,
-                FullName = name
+                FullName = name,
+                Role = roleExists.Name,
+                Cart = new Cart()
             };
             IdentityResult createResult = userManager.CreateAsync(newUser, password).Result;
             if (!createResult.Succeeded)
             {
                 throw new ApplicationException("Failed to create root user.");
-            }
-            IdentityRole? roleExists = roleManager.FindByNameAsync(role).Result;
-            if (roleExists == null)
-            {
-                throw new ApplicationException($"Role {role} does not exist.");
             }
             IdentityResult roleResult = userManager.AddToRoleAsync(newUser, role).Result;
             if (!roleResult.Succeeded)
@@ -67,7 +72,22 @@ namespace FurnitureStoreBE.Data
             {
                 throw new ApplicationException("Failed to assign claims to root user.");
             }
+            //CreateUserCartIfNotExists(newUser.Id, dbContext);
+
             logger.LogInformation("Created initial root user.");
         }
+        //private static void CreateUserCartIfNotExists(string userId, ApplicationDBContext dbContext)
+        //{
+        //    var existingCart = dbContext.Carts.FirstOrDefault(c => c.UserId == userId);
+        //    if (existingCart == null)
+        //    {
+        //        var newCart = new Cart
+        //        {
+        //            UserId = userId
+        //        };
+        //        dbContext.Carts.Add(newCart);
+        //        dbContext.SaveChanges();
+        //    }
+        //}
     }
 }

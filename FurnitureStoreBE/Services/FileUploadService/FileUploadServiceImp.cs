@@ -18,6 +18,22 @@ namespace FurnitureStoreBE.Services.FileUploadService
             );
             _cloudinary = new Cloudinary(account);
         }
+        private async Task<ImageUploadResult> UploadImage(IFormFile file, string folder)
+        {
+            using var stream = file.OpenReadStream();
+            var uploadParams = new ImageUploadParams
+            {
+                File = new FileDescription(file.FileName, stream),
+                Transformation = new Transformation().Height(500).Width(500).Crop("Fill").Gravity("Face"),
+                Folder = folder
+            };
+
+            return await Task.Run(() => _cloudinary.Upload(uploadParams));
+        }
+        public async Task<ImageUploadResult> UploadFileAsync(IFormFile file, string folder)
+        {
+            return await UploadImage(file, folder);
+        }
         public async Task<List<ImageUploadResult>> UploadFilesAsync(List<IFormFile> files, string folder)
         {
             var uploadResults = new List<ImageUploadResult>();
@@ -26,19 +42,9 @@ namespace FurnitureStoreBE.Services.FileUploadService
             {
                 if (file.Length > 0)
                 {
-                    using var stream = file.OpenReadStream();
-                    var uploadParams = new ImageUploadParams
-                    {
-                        File = new FileDescription(file.FileName, stream),
-                        Transformation = new Transformation().Height(500).Width(500).Crop("Fill").Gravity("Face"),
-                        Folder = folder
-                    };
-
-                    var result = await Task.Run(() => _cloudinary.Upload(uploadParams));
-                    uploadResults.Add(result);
+                    uploadResults.Add(await UploadImage(file,folder));
                 }
             }
-
             return uploadResults;
         }
         public async Task<DeletionResult> DestroyFileAsync(string publicId)

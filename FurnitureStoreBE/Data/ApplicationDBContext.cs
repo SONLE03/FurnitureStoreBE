@@ -20,6 +20,7 @@ namespace FurnitureStoreBE.Data
         public DbSet<Address> Addresss { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Cart> Carts { get; set; }
         public DbSet<Color> Colors { get; set; }
         public DbSet<Coupon> Coupons { get; set; }
         public DbSet<Designer> Designer { get; set; }

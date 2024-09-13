@@ -13,6 +13,9 @@ namespace FurnitureStoreBE.Models
         public DateTime? DateOfBirth { get; set; }
         public Guid? AssetId { get; set; }
         public Asset? Asset { get; set; }
+        public bool? IsDeleted { get; set; } = false;
+        public bool? IsLocked { get; set; } = false;
+        public string Role { get; set; }
         public ICollection<RefreshToken>? Tokens { get; set; }
         public ICollection<Notification>? Notifications { get; set; }
 

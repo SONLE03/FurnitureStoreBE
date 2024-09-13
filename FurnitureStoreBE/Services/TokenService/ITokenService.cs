@@ -9,5 +9,6 @@ namespace FurnitureStoreBE.Services.Token
         Task<bool> FindByToken(string userId, string token);
         bool VerifyExpiration(string refreshToken);
         void DeleteRefreshTokenByUserId(string userId);
+        void DeleteAllTokenByUserId(string userId);
     }
 }
