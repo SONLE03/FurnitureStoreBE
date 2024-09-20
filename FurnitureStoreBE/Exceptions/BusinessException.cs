@@ -11,5 +11,10 @@ namespace FurnitureStoreBE.Exceptions
             this.Message = message;
             this.StatusCode = (int)HttpStatusCode.BadRequest;
         }
+        public BusinessException(string message, int statusCode) : base(message)
+        {
+            this.Message = message;
+            this.StatusCode = statusCode;
+        }
     }
 }

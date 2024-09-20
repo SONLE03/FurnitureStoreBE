@@ -18,6 +18,7 @@ using Microsoft.Extensions.Options;
 using FurnitureStoreBE.Services.FileUploadService;
 using CloudinaryDotNet;
 using Serilog;
+using FurnitureStoreBE.Services.BrandService;
 
 var builder = WebApplication.CreateBuilder(args);
 //Log.Logger = new LoggerConfiguration()
@@ -217,10 +218,10 @@ builder.Services.AddTransient<IMailService, MailServiceImp>();
 builder.Services.AddExceptionHandler<DefaultExceptionHandler>();
 
 builder.Services.AddScoped<JwtUtil>();
+builder.Services.AddScoped<IBrandService, BrandServiceImp>();
 builder.Services.AddScoped<IAuthService, AuthServiceImp>();
 builder.Services.AddScoped<ITokenService, TokenServiceImp>();
 builder.Services.AddScoped<IUserService, UserServiceImp>();
-
 
 
 var app = builder.Build();
@@ -247,7 +248,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.UseExceptionHandler(opt => { });
-
+app.UseMiddleware<HeaderCheckMiddleware>();
 app.Run();
 
 

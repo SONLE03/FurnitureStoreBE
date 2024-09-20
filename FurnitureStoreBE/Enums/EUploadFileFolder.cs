@@ -5,6 +5,7 @@
         Avatar,
         Product,
         Material, 
-        FurnitureType
+        FurnitureType,
+        Brand
     }
 }

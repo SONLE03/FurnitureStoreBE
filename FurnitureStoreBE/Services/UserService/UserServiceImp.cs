@@ -154,7 +154,7 @@ namespace FurnitureStoreBE.Services.UserService
             user.IsDeleted = true;
             await _dbContext.SaveChangesAsync();
             _tokenService.DeleteAllTokenByUserId(userId);
-            
+
         }
 
         public async Task<ClaimsResult> GetClaimsByRole(int role)
@@ -185,12 +185,12 @@ namespace FurnitureStoreBE.Services.UserService
                                 .Where(u => u.UserId == userId)
                                 .Select(u => new UserClaimsResponse
                                 {
-                                    Id =  u.Id, 
-                                    ClaimValue = u.ClaimValue 
+                                    Id = u.Id,
+                                    ClaimValue = u.ClaimValue
                                 })
                                 .ToListAsync();
             return userClaims;
-           
+
         }
 
         public async Task<UserResponse> UpdateUser(string userId, UserRequestUpdate userRequest)
@@ -316,15 +316,94 @@ namespace FurnitureStoreBE.Services.UserService
                 throw;
             }
         }
-
-        public Task AddUserAddress(string userId, AddressRequest addressRequest)
+        public async Task<List<AddressResponse>> GetAddressesByUserId(string userId)
         {
-            throw new NotImplementedException();
+            if (await _dbContext.Users.AnyAsync(u => u.Id == userId))
+            {
+                throw new ObjectNotFoundException("User not found");
+            }
+            return _mapper.Map<List<AddressResponse>>(await _dbContext.Addresss.Where(u => u.UserId == userId && !u.IsDeleted).ToListAsync());
         }
 
-        public Task UpdateUserAddress(string userId, AddressRequest addressRequest)
+        public async Task<AddressResponse> CreateUserAddress(string userId, AddressRequest addressRequest)
         {
-            throw new NotImplementedException();
+            await using var transaction = await _dbContext.Database.BeginTransactionAsync();
+            try
+            {
+                if (await _dbContext.Users.AnyAsync(u => u.Id == userId))
+                {
+                    throw new ObjectNotFoundException("User not found");
+                }
+                var address = new Address
+                {
+                    Province = addressRequest.Province,
+                    District = addressRequest.District,
+                    Ward = addressRequest.Ward,
+                    SpecificAddress = addressRequest.SpecificAddress,
+                    PostalCode = addressRequest.PostalCode,
+                    IsDefault = addressRequest.IsDefault,
+                    UserId = userId,
+                };
+                if (addressRequest.IsDefault == true)
+                {
+                    var sql = "UPDATE Address SET IsDefault = @p0 WHERE UserId = @p1";
+                    await _dbContext.Database.ExecuteSqlRawAsync(sql, false, userId);
+                }
+                await _dbContext.Addresss.AddAsync(address);
+                await _dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return _mapper.Map<AddressResponse>(address);
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
-    }
+
+        public async Task<AddressResponse> UpdateUserAddress(Guid addressId, AddressRequest addressRequest)
+        {
+            await using var transaction = await _dbContext.Database.BeginTransactionAsync();
+            try
+            {
+                var address = await _dbContext.Addresss.FirstOrDefaultAsync(u => u.Id == addressId);
+                if (address == null)
+                {
+                    throw new ObjectNotFoundException("Address not found");
+                }
+                address.Province = addressRequest.Province;
+                address.District = addressRequest.District;
+                address.Ward = addressRequest.Ward;
+                address.SpecificAddress = addressRequest.SpecificAddress;
+                address.PostalCode = addressRequest.PostalCode;
+                address.IsDefault = addressRequest.IsDefault;
+                if (addressRequest.IsDefault == true)
+                {
+                    var sql = "UPDATE Address SET IsDefault = @p0 WHERE UserId = @p1";
+                    await _dbContext.Database.ExecuteSqlRawAsync(sql, false, address.UserId);
+                }
+                _dbContext.Addresss.Update(address);
+                await _dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return _mapper.Map<AddressResponse>(address);
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+        public async Task DeleteUserAddress(Guid addressId)
+        {
+            if (!await _dbContext.Addresss.AnyAsync(ad => ad.Id == addressId)) throw new ObjectNotFoundException("Address not found");
+            var sql = "DELETE FROM Address WHERE Id = @p0";
+            int affectedRows = await _dbContext.Database.ExecuteSqlRawAsync(sql, addressId);
+            if (affectedRows == 0)
+            {
+                throw new BusinessException("Address removal failed");
+            }
+            sql = "UPDATE Address SET IsDeleted = @p0 WHERE Id = @p1";
+            await _dbContext.Database.ExecuteSqlRawAsync(sql, true, addressId);
+        }
+    } 
 }

@@ -32,9 +32,8 @@ namespace FurnitureStoreBE.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("IsDefault")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("PostalCode")
                         .IsRequired()
@@ -237,23 +236,25 @@ namespace FurnitureStoreBE.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
@@ -323,10 +324,10 @@ namespace FurnitureStoreBE.Migrations
                     b.Property<Guid>("AssetId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
@@ -339,14 +340,17 @@ namespace FurnitureStoreBE.Migrations
                     b.Property<Guid>("FurnitureTypeId")
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
@@ -471,19 +475,22 @@ namespace FurnitureStoreBE.Migrations
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("UserId", "ProductId");
@@ -502,10 +509,10 @@ namespace FurnitureStoreBE.Migrations
                     b.Property<Guid?>("AssetId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
@@ -515,6 +522,9 @@ namespace FurnitureStoreBE.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -522,10 +532,10 @@ namespace FurnitureStoreBE.Migrations
                     b.Property<Guid>("RoomSpaceId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
@@ -577,10 +587,10 @@ namespace FurnitureStoreBE.Migrations
                     b.Property<Guid?>("AssetId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
@@ -590,14 +600,17 @@ namespace FurnitureStoreBE.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
@@ -618,10 +631,10 @@ namespace FurnitureStoreBE.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
@@ -629,6 +642,9 @@ namespace FurnitureStoreBE.Migrations
 
                     b.Property<int>("ENotificationType")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("Read")
                         .HasColumnType("boolean");
@@ -641,10 +657,10 @@ namespace FurnitureStoreBE.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
@@ -670,10 +686,10 @@ namespace FurnitureStoreBE.Migrations
                     b.Property<Guid?>("CouponId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
@@ -685,6 +701,9 @@ namespace FurnitureStoreBE.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Note")
                         .HasColumnType("text");
@@ -711,10 +730,10 @@ namespace FurnitureStoreBE.Migrations
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserId")
@@ -779,10 +798,10 @@ namespace FurnitureStoreBE.Migrations
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
@@ -794,6 +813,9 @@ namespace FurnitureStoreBE.Migrations
 
                     b.Property<decimal>("Discount")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<decimal>("MaxPrice")
                         .HasColumnType("decimal(18,2)");
@@ -811,10 +833,10 @@ namespace FurnitureStoreBE.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
@@ -838,10 +860,10 @@ namespace FurnitureStoreBE.Migrations
                     b.Property<Guid>("ColorId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
@@ -853,6 +875,9 @@ namespace FurnitureStoreBE.Migrations
 
                     b.Property<decimal>("Height")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<decimal>("Length")
                         .HasColumnType("decimal(18,2)");
@@ -866,10 +891,10 @@ namespace FurnitureStoreBE.Migrations
                     b.Property<long>("Quantity")
                         .HasColumnType("bigint");
 
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("Width")
@@ -894,22 +919,25 @@ namespace FurnitureStoreBE.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserId")
@@ -967,14 +995,17 @@ namespace FurnitureStoreBE.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<Guid?>("QuestionId")
                         .HasColumnType("uuid");
@@ -982,10 +1013,10 @@ namespace FurnitureStoreBE.Migrations
                     b.Property<Guid?>("ReviewId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserId")
@@ -1013,14 +1044,17 @@ namespace FurnitureStoreBE.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
@@ -1028,10 +1062,10 @@ namespace FurnitureStoreBE.Migrations
                     b.Property<int>("Rate")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserId")
@@ -1056,10 +1090,10 @@ namespace FurnitureStoreBE.Migrations
                     b.Property<Guid?>("AssetId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeleteDate")
@@ -1069,14 +1103,17 @@ namespace FurnitureStoreBE.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Serilog;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Controller;
+using Microsoft.AspNetCore.Authorization;
+using FurnitureStoreBE.DTOs.Request.UserRequest;
 namespace FurnitureStoreBE.Controllers.User
 {
     [ApiController]
@@ -20,6 +22,28 @@ namespace FurnitureStoreBE.Controllers.User
         {
             await _userService.ChangeAvatar(userId, avatar);
             return new SuccessfulResponse<object>(null, (int)HttpStatusCode.OK, "Avatar changed successfully").GetResponse();
-        
+        }
+        [HttpGet("address/{userId}")] 
+        public async Task<IActionResult> GetUserAddress(string userId)
+        {
+            return new SuccessfulResponse<object>(await _userService.GetAddressesByUserId(userId), (int)HttpStatusCode.OK, "Get user address successfully").GetResponse();
+
+        }
+        [HttpPost("address/{userId}")]
+        public async Task<IActionResult> CreateUserAddress(string userId, [FromBody] AddressRequest addressRequest)
+        {
+            return new SuccessfulResponse<object>(await _userService.CreateUserAddress(userId, addressRequest), (int)HttpStatusCode.Created, "Address has been created successfully").GetResponse();
+        }
+        [HttpPut("address/{addressId}")]
+        public async Task<IActionResult> UpdateUserAddress(Guid addressId, [FromBody] AddressRequest addressRequest)
+        {
+            return new SuccessfulResponse<object>(await _userService.UpdateUserAddress(addressId, addressRequest), (int)HttpStatusCode.OK, "Address has been modified successfully").GetResponse();
+        }
+        [HttpDelete("address/{addressId}")]
+        public async Task<IActionResult> DeleteUserAddress(Guid addressId)
+        {
+            await _userService.DeleteUserAddress(addressId);
+            return new SuccessfulResponse<object>(null, (int)HttpStatusCode.OK, "Address has been deleted successfully").GetResponse();
+        }
     }
 }
