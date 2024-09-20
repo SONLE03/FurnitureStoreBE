@@ -33,9 +33,26 @@ namespace FurnitureStoreBE.DTOs.Request.UserRequest
         public string PhoneNumber { get; set; }
         
     }
-    public class  UserClaimsRequest
+    public class UserClaimsRequest
     {
-        [Required(ErrorMessage = "User claims is required.")]
-        public List<int> UserClaims { get; set; }
+        [Required(ErrorMessage = "User claim id is required.")]
+        public int Id { get; set; }
+        [Required(ErrorMessage = "User claim value is required.")]
+        public string ClaimValue { get; set; }
+    }
+    public class AddressRequest
+    {
+        [Required(ErrorMessage = "Province is required.")]
+        public string Province { get; set; }
+        [Required(ErrorMessage = "District is required.")]
+        public string District { get; set; }
+        [Required(ErrorMessage = "Ward is required.")]
+        public string Ward { get; set; }
+        [Required(ErrorMessage = "SpecificAddress is required.")]
+        public string SpecificAddress { get; set; }
+        [Required(ErrorMessage = "PostalCode is required.")]
+        public string PostalCode { get; set; }
+        [Required(ErrorMessage = "IsDefault is required.")]
+        public bool IsDefault { get; set; }
     }
 }

@@ -19,7 +19,7 @@ namespace FurnitureStoreBE.Models
         [Required]
         public string PostalCode { get; set; }
         [Required]
-        public string IsDefault { get; set; }
+        public bool IsDefault { get; set; }
 
 
         public string UserId { get; set; }    

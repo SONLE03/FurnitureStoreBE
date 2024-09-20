@@ -2,8 +2,8 @@
 {
     public enum ERole
     {
-        Owner = 0,
-        Staff = 1,
-        Customer = 2
+        Owner = 1,
+        Staff = 2,
+        Customer = 3
     }
 }

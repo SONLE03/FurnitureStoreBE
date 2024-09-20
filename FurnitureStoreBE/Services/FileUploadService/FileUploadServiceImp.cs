@@ -1,6 +1,8 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using FurnitureStoreBE.Data;
 using FurnitureStoreBE.Utils;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace FurnitureStoreBE.Services.FileUploadService
@@ -8,7 +10,8 @@ namespace FurnitureStoreBE.Services.FileUploadService
     public class FileUploadServiceImp : IFileUploadService
     {
         private readonly Cloudinary _cloudinary;
-        public FileUploadServiceImp(IOptions<CloudinarySettings> config)
+        private readonly ApplicationDBContext _dbContext;
+        public FileUploadServiceImp(IOptions<CloudinarySettings> config, ApplicationDBContext dBContext)
         {
             var account = new Account
             (
@@ -17,6 +20,7 @@ namespace FurnitureStoreBE.Services.FileUploadService
                 config.Value.ApiSecret
             );
             _cloudinary = new Cloudinary(account);
+            _dbContext = dBContext;
         }
         private async Task<ImageUploadResult> UploadImage(IFormFile file, string folder)
         {
@@ -24,7 +28,6 @@ namespace FurnitureStoreBE.Services.FileUploadService
             var uploadParams = new ImageUploadParams
             {
                 File = new FileDescription(file.FileName, stream),
-                Transformation = new Transformation().Height(500).Width(500).Crop("Fill").Gravity("Face"),
                 Folder = folder
             };
 
@@ -47,8 +50,18 @@ namespace FurnitureStoreBE.Services.FileUploadService
             }
             return uploadResults;
         }
-        public async Task<DeletionResult> DestroyFileAsync(string publicId)
+        
+        public async Task<DeletionResult> DestroyFileByPublicIdAsync(string publicId)
         {
+            var deletionParams = new DeletionParams(publicId);
+            return await Task.Run(() => _cloudinary.Destroy(deletionParams));
+        }
+        public async Task<DeletionResult> DestroyFileByAssetIdAsync(Guid assetId)
+        {
+            var publicId = await _dbContext.Assets
+                .Where(a => a.Id == assetId)
+                .Select(a => a.CloudinaryId)
+                .FirstOrDefaultAsync();
             var deletionParams = new DeletionParams(publicId);
             return await Task.Run(() => _cloudinary.Destroy(deletionParams));
         }

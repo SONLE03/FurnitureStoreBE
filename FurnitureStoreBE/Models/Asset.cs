@@ -9,10 +9,10 @@ namespace FurnitureStoreBE.Models
     {
         [Key] 
         public Guid Id { get; set; }
-        public required string Name { get; set; }
-        public required string URL { get; set; }
-        public required string CloudinaryId { get; set; }
-        public required string FolderName { get; set; }
+        public string Name { get; set; }
+        public string URL { get; set; }
+        public string CloudinaryId { get; set; }
+        public string FolderName { get; set; }
 
         public User? User { get; set; }
         public Brand? Brand { get; set; }

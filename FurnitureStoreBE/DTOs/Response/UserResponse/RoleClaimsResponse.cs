@@ -12,6 +12,11 @@
         public string ClaimType { get; set; }
         public int? AspNetTypeClaimsId { get; set; }
     }
+    public class UserClaimsResponse
+    {
+        public int Id { get; set; }
+        public string ClaimValue { get; set; }
+    }
     public class ClaimsResult
     {
         public List<TypeClaimsResponse>? TypeClaims { get; set; } 

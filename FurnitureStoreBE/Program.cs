@@ -17,9 +17,16 @@ using FurnitureStoreBE.Services.UserService;
 using Microsoft.Extensions.Options;
 using FurnitureStoreBE.Services.FileUploadService;
 using CloudinaryDotNet;
-using FurnitureStoreBE.Mapper;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+//Log.Logger = new LoggerConfiguration()
+//    .WriteTo.BetterStack(sourceToken: builder.Configuration["BetterStack:SourceToken"])
+//    .MinimumLevel.Information()
+//    .Enrich.FromLogContext()
+//    .CreateLogger();
+//builder.Host.UseSerilog();
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -187,21 +194,22 @@ builder.Services.AddAuthorization(options =>
     // Report claims policies
     options.AddPolicy("CreateReportPolicy", policy => policy.RequireClaim("CreateReport"));
 });
-
-builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
-
-builder.Services.AddSingleton<IRedisCacheService, RedisCacheServiceImp>(provider =>
-    new RedisCacheServiceImp(builder.Configuration.GetConnectionString("Redis")) // Adjust connection string as needed
-);
-
-builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
 builder.Services.AddSingleton(serviceProvider =>
 {
     var cloudinarySettings = serviceProvider.GetRequiredService<IOptions<CloudinarySettings>>().Value;
     var account = new Account(cloudinarySettings.CloudName, cloudinarySettings.ApiKey, cloudinarySettings.ApiSecret);
     return new Cloudinary(account);
 });
-builder.Services.AddSingleton<IFileUploadService, FileUploadServiceImp>();
+
+builder.Services.AddAutoMapper(typeof(Program));
+
+builder.Services.AddSingleton<IRedisCacheService, RedisCacheServiceImp>(provider =>
+    new RedisCacheServiceImp(builder.Configuration.GetConnectionString("Redis")) // Adjust connection string as needed
+);
+
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
+
+builder.Services.AddScoped<IFileUploadService, FileUploadServiceImp>();
 
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddTransient<IMailService, MailServiceImp>();
@@ -227,6 +235,8 @@ using (var scope = app.Services.CreateScope())
 {
     AppUserSeeder.SeedRootAdminUser(scope, app);
 }
+//app.UseMiddleware<LoggingMiddleware>();
+
 
 app.UseHttpsRedirection();
 app.UseCors(x => x

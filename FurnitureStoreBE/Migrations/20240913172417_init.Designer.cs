@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FurnitureStoreBE.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240912135830_init")]
+    [Migration("20240913172417_init")]
     partial class init
     {
         /// <inheritdoc />
