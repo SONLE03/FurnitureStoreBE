@@ -9,10 +9,17 @@ namespace FurnitureStoreBE.Models
     [Table("User")]
     public class User : IdentityUser
     {
+        [PersonalData]
         public string? FullName { get; set; }
+        [PersonalData]
         public DateTime? DateOfBirth { get; set; }
+        [PersonalData]
         public Guid? AssetId { get; set; }
+        [PersonalData]
         public Asset? Asset { get; set; }
+        public bool? IsDeleted { get; set; } = false;
+        public bool? IsLocked { get; set; } = false;
+        public string Role { get; set; }
         public ICollection<RefreshToken>? Tokens { get; set; }
         public ICollection<Notification>? Notifications { get; set; }
 

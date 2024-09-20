@@ -1,4 +1,4 @@
- using FurnitureStoreBE.Data;
+using FurnitureStoreBE.Data;
 using FurnitureStoreBE.Exceptions;
 using FurnitureStoreBE.Services.Authentication;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +13,19 @@ using FurnitureStoreBE.Services.Token;
 using FurnitureStoreBE.Services;
 using FurnitureStoreBE.Services.MailService;
 using FurnitureStoreBE.Services.Caching;
-using StackExchange.Redis;
+using FurnitureStoreBE.Services.UserService;
+using Microsoft.Extensions.Options;
+using FurnitureStoreBE.Services.FileUploadService;
+using CloudinaryDotNet;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+//Log.Logger = new LoggerConfiguration()
+//    .WriteTo.BetterStack(sourceToken: builder.Configuration["BetterStack:SourceToken"])
+//    .MinimumLevel.Information()
+//    .Enrich.FromLogContext()
+//    .CreateLogger();
+//builder.Host.UseSerilog();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -26,7 +36,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddSwaggerGen(option =>
 {
-    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Web API with Jwt Authentication", Version = "v1" });
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Furniture Store API", Version = "v1" });
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -184,10 +194,23 @@ builder.Services.AddAuthorization(options =>
     // Report claims policies
     options.AddPolicy("CreateReportPolicy", policy => policy.RequireClaim("CreateReport"));
 });
+builder.Services.AddSingleton(serviceProvider =>
+{
+    var cloudinarySettings = serviceProvider.GetRequiredService<IOptions<CloudinarySettings>>().Value;
+    var account = new Account(cloudinarySettings.CloudName, cloudinarySettings.ApiKey, cloudinarySettings.ApiSecret);
+    return new Cloudinary(account);
+});
 
-builder.Services.AddSingleton<IRedisCacheService>(provider =>
+builder.Services.AddAutoMapper(typeof(Program));
+
+builder.Services.AddSingleton<IRedisCacheService, RedisCacheServiceImp>(provider =>
     new RedisCacheServiceImp(builder.Configuration.GetConnectionString("Redis")) // Adjust connection string as needed
 );
+
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
+
+builder.Services.AddScoped<IFileUploadService, FileUploadServiceImp>();
+
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddTransient<IMailService, MailServiceImp>();
 
@@ -196,6 +219,7 @@ builder.Services.AddExceptionHandler<DefaultExceptionHandler>();
 builder.Services.AddScoped<JwtUtil>();
 builder.Services.AddScoped<IAuthService, AuthServiceImp>();
 builder.Services.AddScoped<ITokenService, TokenServiceImp>();
+builder.Services.AddScoped<IUserService, UserServiceImp>();
 
 
 
@@ -211,6 +235,8 @@ using (var scope = app.Services.CreateScope())
 {
     AppUserSeeder.SeedRootAdminUser(scope, app);
 }
+//app.UseMiddleware<LoggingMiddleware>();
+
 
 app.UseHttpsRedirection();
 app.UseCors(x => x

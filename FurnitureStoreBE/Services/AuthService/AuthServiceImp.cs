@@ -14,6 +14,8 @@ using FurnitureStoreBE.DTOs.Request.AuthRequest;
 using FurnitureStoreBE.DTOs.Request.MailRequest;
 using FurnitureStoreBE.DTOs.Response.MailResponse;
 using FurnitureStoreBE.Services.Caching;
+using FurnitureStoreBE.DTOs.Response.UserResponse;
+using NuGet.Protocol;
 
 namespace FurnitureStoreBE.Services.Authentication
 {
@@ -73,7 +75,8 @@ namespace FurnitureStoreBE.Services.Authentication
                 var newUser = new User
                 {
                     Email = email,
-                    UserName = email
+                    UserName = email,
+                    Role = defaultRoleRegister
                 };
 
                 var createdUserResult = await _userManager.CreateAsync(newUser, password);
@@ -120,16 +123,37 @@ namespace FurnitureStoreBE.Services.Authentication
         }
         public async Task<SigninResponse> Signin(SigninRequest loginRequest)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginRequest.Email.ToLower());
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginRequest.Email);
             if (user == null) throw new ObjectNotFoundException("User not found");
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginRequest.Password, false);
             if (!result.Succeeded) throw new WrongPasswordException();
+            if(user.Role != ERole.Customer.ToString())
+            {
+                var roleClaims = await _context.RoleClaims
+                  .Select(rc => new RoleClaimsResponse
+                  {
+                      Id = rc.Id,
+                      ClaimType = rc.ClaimType,
+                      RoleId = rc.RoleId,
+                      AspNetTypeClaimsId = rc.AspNetTypeClaimsId
+                  })
+                  .ToListAsync();
+                await _redisCacheService.SetData(ERedisKey.roleClaims.ToString(), roleClaims, null);
+                var typeClaims = await _context.TypeClaims
+                    .Select(tc => new TypeClaimsResponse
+                    {
+                        Id = tc.Id,
+                        Name = tc.Name
+                    })
+                    .ToListAsync();
+                await _redisCacheService.SetData(ERedisKey.typeClaims.ToString(), typeClaims, null);
+            }
             return new SigninResponse
             {
                 AccessToken = await GenerateAccessToken(user),
                 RefreshToken = await _tokenService.GenerateRefreshToken(user),
                 UserId = user.Id,
-            };
+            }; 
         }
 
 
@@ -163,6 +187,7 @@ namespace FurnitureStoreBE.Services.Authentication
             try
             {
                 _tokenService.DeleteRefreshTokenByUserId(userId);
+                _redisCacheService.RemoveAllData();
             }catch (BusinessException ex)
             {
                 throw new BusinessException(ex.Message);

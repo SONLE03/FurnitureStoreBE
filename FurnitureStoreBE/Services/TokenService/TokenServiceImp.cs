@@ -4,6 +4,7 @@ using FurnitureStoreBE.Models;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Common;
 using NuGet.Protocol.Core.Types;
+using Org.BouncyCastle.Utilities.Net;
 using System.Net;
 using System.Text;
 
@@ -21,6 +22,18 @@ namespace FurnitureStoreBE.Services.Token
             _httpContextAccessor = httpContextAccessor;
         }
 
+        public void DeleteAllTokenByUserId(string userId)
+        {
+            var refreshTokens = _context.Tokens
+               .Where(token => token.User.Id == userId)
+               .ToList();
+            if (refreshTokens.Any())
+            {
+                _context.Tokens.RemoveRange(refreshTokens);
+                _context.SaveChanges();
+            }
+        }
+
         public void DeleteRefreshTokenByUserId(string userId)
         {
             var ipAddress = _httpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString();
@@ -34,10 +47,6 @@ namespace FurnitureStoreBE.Services.Token
             {
                 _context.Tokens.RemoveRange(refreshTokens);
                 _context.SaveChanges();
-            }
-            else
-            {
-                throw new BusinessException("Delete token failed");
             }
         }
 
