@@ -19,6 +19,7 @@ using FurnitureStoreBE.Services.FileUploadService;
 using CloudinaryDotNet;
 using Serilog;
 using FurnitureStoreBE.Services.BrandService;
+using FurnitureStoreBE.Services.DesignerService;
 
 var builder = WebApplication.CreateBuilder(args);
 //Log.Logger = new LoggerConfiguration()
@@ -222,6 +223,7 @@ builder.Services.AddScoped<IBrandService, BrandServiceImp>();
 builder.Services.AddScoped<IAuthService, AuthServiceImp>();
 builder.Services.AddScoped<ITokenService, TokenServiceImp>();
 builder.Services.AddScoped<IUserService, UserServiceImp>();
+builder.Services.AddScoped<IDesignerService, DesignerServiceImp>();
 
 
 var app = builder.Build();

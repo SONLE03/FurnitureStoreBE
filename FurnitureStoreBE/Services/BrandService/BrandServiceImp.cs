@@ -52,11 +52,11 @@ namespace FurnitureStoreBE.Services.BrandService
                     await _fileUploadService.DestroyFileByAssetIdAsync(brandImage.Id);
                 }
 
-                var avatarUploadResult = await _fileUploadService.UploadFileAsync(formFile, EUploadFileFolder.Avatar.ToString());
-                brandImage.Name = avatarUploadResult.OriginalFilename;
-                brandImage.URL = avatarUploadResult.Url.ToString();
-                brandImage.CloudinaryId = avatarUploadResult.PublicId;
-                brandImage.FolderName = EUploadFileFolder.Avatar.ToString();
+                var brandImageUploadResult = await _fileUploadService.UploadFileAsync(formFile, EUploadFileFolder.Brand.ToString());
+                brandImage.Name = brandImageUploadResult.OriginalFilename;
+                brandImage.URL = brandImageUploadResult.Url.ToString();
+                brandImage.CloudinaryId = brandImageUploadResult.PublicId;
+                brandImage.FolderName = EUploadFileFolder.Brand.ToString();
                 if (brand.AssetId == null)
                 {
                     await _dbContext.Assets.AddAsync(brandImage);

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FurnitureStoreBE.DTOs.Response.BrandResponse;
+using FurnitureStoreBE.DTOs.Response.ProductResponse;
 using FurnitureStoreBE.DTOs.Response.UserResponse;
 using FurnitureStoreBE.Models;
 namespace FurnitureStoreBE.Mapper
@@ -12,6 +13,7 @@ namespace FurnitureStoreBE.Mapper
             CreateMap<User,  UserResponse>();
             CreateMap<Address, AddressResponse>();
             CreateMap<Brand, BrandResponse>().ForMember(dest => dest.ImageSource, opt => opt.MapFrom(src => src.Asset.URL));
+            CreateMap<Designer, DesignerResponse>().ForMember(dest => dest.ImageSource, opt => opt.MapFrom(src => src.Asset.URL));
 
 
         }

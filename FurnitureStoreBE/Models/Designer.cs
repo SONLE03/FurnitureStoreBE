@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace FurnitureStoreBE.Models
 {
     [Table("Desginer")]
-    public class Designer
+    public class Designer : BaseEntity
     {
         [Key]
         public Guid Id { get; set; }

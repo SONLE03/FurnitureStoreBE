@@ -6,6 +6,7 @@
         Product,
         Material, 
         FurnitureType,
-        Brand
+        Brand,
+        Designer
     }
 }
