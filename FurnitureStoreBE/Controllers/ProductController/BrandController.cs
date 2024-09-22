@@ -1,15 +1,16 @@
 ﻿using FurnitureStoreBE.Common.Pagination;
+using FurnitureStoreBE.Constants;
 using FurnitureStoreBE.DTOs.Request.BrandRequest;
-using FurnitureStoreBE.Services.BrandService;
+using FurnitureStoreBE.Services.ProductService.BrandService;
 using FurnitureStoreBE.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace FurnitureStoreBE.Controllers
+namespace FurnitureStoreBE.Controllers.ProductController
 {
     [ApiController]
-    [Route("brand")]
+    [Route(Routes.BRAND)]
     public class BrandController : ControllerBase
     {
         private readonly IBrandService _brandService;
@@ -17,7 +18,7 @@ namespace FurnitureStoreBE.Controllers
         {
             _brandService = brandService;
         }
-        [HttpGet]
+        [HttpGet()]
         public async Task<IActionResult> GetBrands([FromQuery] PageInfo pageInfo)
         {
             return new SuccessfulResponse<object>(await _brandService.GetAllBrands(pageInfo), (int)HttpStatusCode.OK, "Get brand successfully").GetResponse();

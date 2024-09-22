@@ -2,14 +2,12 @@
 using FurnitureStoreBE.Utils;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using Serilog;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Controller;
-using Microsoft.AspNetCore.Authorization;
 using FurnitureStoreBE.DTOs.Request.UserRequest;
+using FurnitureStoreBE.Constants;
 namespace FurnitureStoreBE.Controllers.User
 {
     [ApiController]
-    [Route("user")]
+    [Route(Routes.USER)]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;

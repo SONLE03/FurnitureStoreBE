@@ -11,7 +11,7 @@ using FurnitureStoreBE.Enums;
 using FurnitureStoreBE.Exceptions;
 using FurnitureStoreBE.Models;
 
-namespace FurnitureStoreBE.Services.DesignerService
+namespace FurnitureStoreBE.Services.ProductService.DesignerService
 {
     public class DesignerServiceImp : IDesignerService
     {
@@ -79,7 +79,7 @@ namespace FurnitureStoreBE.Services.DesignerService
                     CloudinaryId = designerImageUploadResult.PublicId,
                     FolderName = EUploadFileFolder.Designer.ToString(),
                 };
-                var designer = new Designer { Name = designerRequest.Name, Description = designerRequest.Description, Asset = asset };
+                var designer = new Designer { DesignerName = designerRequest.DesignerName, Description = designerRequest.Description, Asset = asset };
                 designer.setCommonCreate(UserSession.GetUserId());
                 await _dbContext.Designer.AddAsync(designer);
                 await _dbContext.SaveChangesAsync();
@@ -95,17 +95,23 @@ namespace FurnitureStoreBE.Services.DesignerService
 
         public async Task DeleteDesigner(Guid id)
         {
-            if (!await _dbContext.Designer.AnyAsync(b => b.Id == id)) throw new ObjectNotFoundException("Designer not found");
-            var sql = "DELETE FROM Designer WHERE Id = @p0";
-            int affectedRows = await _dbContext.Database.ExecuteSqlRawAsync(sql, id);
-            if (affectedRows == 0)
+            try
+            {
+                if (!await _dbContext.Designer.AnyAsync(b => b.Id == id)) throw new ObjectNotFoundException("Designer not found");
+                var sql = "DELETE FROM \"Designer\" WHERE \"Id\" = @p0";
+                int affectedRows = await _dbContext.Database.ExecuteSqlRawAsync(sql, id);
+                if (affectedRows == 0)
+                {
+                    sql = "UPDATE \"Designer\" SET \"IsDeleted\" = @p0 WHERE \"Id\" = @p1";
+                    await _dbContext.Database.ExecuteSqlRawAsync(sql, true, id);                 
+                }              
+            }
+            catch
             {
                 throw new BusinessException("Designer removal failed");
             }
-            sql = "UPDATE Designer SET IsDeleted = @p0 WHERE Id = @p1";
-            await _dbContext.Database.ExecuteSqlRawAsync(sql, true, id);
+           
         }
-
         public async Task<PaginatedList<DesignerResponse>> GetAllDesigners(PageInfo pageInfo)
         {
             var designerQuery = _dbContext.Designer
@@ -120,7 +126,7 @@ namespace FurnitureStoreBE.Services.DesignerService
         {
             var desiner = await _dbContext.Designer.FirstAsync(b => b.Id == id);
             if (desiner == null) throw new ObjectNotFoundException("Designer not found");
-            desiner.Name = designerRequest.Name;
+            desiner.DesignerName = designerRequest.DesignerName;
             desiner.Description = designerRequest.Description;
             desiner.setCommonUpdate(UserSession.GetUserId());
             _dbContext.Designer.Update(desiner);

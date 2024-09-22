@@ -7,6 +7,8 @@
         Material, 
         FurnitureType,
         Brand,
-        Designer
+        Designer,
+        RoomSpace,
+        Category
     }
 }

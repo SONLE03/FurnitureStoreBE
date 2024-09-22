@@ -11,7 +11,7 @@ using FurnitureStoreBE.Models;
 using FurnitureStoreBE.Services.FileUploadService;
 using Microsoft.EntityFrameworkCore;
 
-namespace FurnitureStoreBE.Services.BrandService
+namespace FurnitureStoreBE.Services.ProductService.BrandService
 {
     public class BrandServiceImp : IBrandService
     {
@@ -88,7 +88,7 @@ namespace FurnitureStoreBE.Services.BrandService
                     CloudinaryId = brandImageUploadResult.PublicId,
                     FolderName = EUploadFileFolder.Brand.ToString(),
                 };
-                var brand = new Brand { BrandName = brandRequest.BrandName, Description = brandRequest.Description, Asset = asset};
+                var brand = new Brand { BrandName = brandRequest.BrandName, Description = brandRequest.Description, Asset = asset };
                 brand.setCommonCreate(UserSession.GetUserId());
                 await _dbContext.Brands.AddAsync(brand);
                 await _dbContext.SaveChangesAsync();
@@ -104,15 +104,23 @@ namespace FurnitureStoreBE.Services.BrandService
 
         public async Task DeleteBrand(Guid id)
         {
-            if (!await _dbContext.Brands.AnyAsync(b => b.Id == id)) throw new ObjectNotFoundException("Brand not found");
-            var sql = "DELETE FROM Brand WHERE Id = @p0";
-            int affectedRows = await _dbContext.Database.ExecuteSqlRawAsync(sql, id);
-            if (affectedRows == 0)
-            {  
-                throw new BusinessException("Brand removal failed");
+            try
+            {
+                if (!await _dbContext.Brands.AnyAsync(b => b.Id == id)) throw new ObjectNotFoundException("Brand not found");
+                var sqlDelete = "DELETE FROM \"Brand\" WHERE \"Id\" = @p0";
+                int affectedRows = await _dbContext.Database.ExecuteSqlRawAsync(sqlDelete, id);
+                if (affectedRows == 0)
+                {
+                    var sqlUpdate = "UPDATE \"Brand\" SET \"IsDeleted\" = @p0 WHERE \"Id\" = @p1"; // Sử dụng dấu ngoặc kép
+                    await _dbContext.Database.ExecuteSqlRawAsync(sqlUpdate, true, id);
+                }
             }
-            sql = "UPDATE Brand SET IsDeleted = @p0 WHERE Id = @p1";
-            await _dbContext.Database.ExecuteSqlRawAsync(sql, true, id);
+            catch
+            {
+                throw new BusinessException("Brand removal failed");
+
+            }
+
         }
 
         public async Task<BrandResponse> UpdateBrand(Guid id, BrandRequest brandRequest)

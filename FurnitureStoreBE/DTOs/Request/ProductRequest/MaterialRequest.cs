@@ -2,10 +2,10 @@
 
 namespace FurnitureStoreBE.DTOs.Request.ProductRequest
 {
-    public class DesignerRequest
+    public class MaterialRequest
     {
-        [Required(ErrorMessage = "Designer name is required.")]
-        public string DesignerName { get; set; }
+        [Required(ErrorMessage = "Material name is required.")]
+        public string MaterialName { get; set; }
         public string? Description { get; set; }
     }
 }

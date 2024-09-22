@@ -1,16 +1,15 @@
 ﻿using FurnitureStoreBE.Common.Pagination;
-using FurnitureStoreBE.DTOs.Request.BrandRequest;
+using FurnitureStoreBE.Constants;
 using FurnitureStoreBE.DTOs.Request.ProductRequest;
-using FurnitureStoreBE.Services.BrandService;
-using FurnitureStoreBE.Services.DesignerService;
+using FurnitureStoreBE.Services.ProductService.DesignerService;
 using FurnitureStoreBE.Utils;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace FurnitureStoreBE.Controllers
+namespace FurnitureStoreBE.Controllers.ProductController
 {
     [ApiController]
-    [Route("designer")]
+    [Route(Routes.DESIGNER)]
     public class DesignerController : ControllerBase
     {
         private readonly IDesignerService _designerService;

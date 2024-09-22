@@ -3,7 +3,7 @@ using FurnitureStoreBE.Common;
 using FurnitureStoreBE.DTOs.Request.ProductRequest;
 using FurnitureStoreBE.DTOs.Response.ProductResponse;
 
-namespace FurnitureStoreBE.Services.DesignerService
+namespace FurnitureStoreBE.Services.ProductService.DesignerService
 {
     public interface IDesignerService
     {

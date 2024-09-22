@@ -10,14 +10,14 @@ namespace FurnitureStoreBE.Models
         [Key]
         public Guid Id { get; set; }
         public required string Name { get; set; }
-        public required string Description { get; set; }
+        public string? Description { get; set; }
         [Column(TypeName = "decimal(18,2)")]
-        public required decimal MinPrice { get; set; }
+        public decimal MinPrice { get; set; }
         [Column(TypeName = "decimal(18,2)")]
-        public required decimal MaxPrice { get; set; }
+        public decimal MaxPrice { get; set; }
         [Column(TypeName = "decimal(18,2)")]
-        public required decimal Discount { get; set; } = 0;
-        public required long Sold { set; get; } = 0;
+        public decimal Discount { get; set; } = 0;
+        public long Sold { set; get; } = 0;
 
         public EProductStatus Status { get; set; } = EProductStatus.ACTIVE;
         public Guid AssetId { get; set; }

@@ -346,7 +346,7 @@ namespace FurnitureStoreBE.Services.UserService
                 };
                 if (addressRequest.IsDefault == true)
                 {
-                    var sql = "UPDATE Address SET IsDefault = @p0 WHERE UserId = @p1";
+                    var sql = "UPDATE \"Address\" SET \"IsDefault\" = @p0 WHERE \"UserId\" = @p1";
                     await _dbContext.Database.ExecuteSqlRawAsync(sql, false, userId);
                 }
                 await _dbContext.Addresss.AddAsync(address);
@@ -379,7 +379,7 @@ namespace FurnitureStoreBE.Services.UserService
                 address.IsDefault = addressRequest.IsDefault;
                 if (addressRequest.IsDefault == true)
                 {
-                    var sql = "UPDATE Address SET IsDefault = @p0 WHERE UserId = @p1";
+                    var sql = "UPDATE \"Address\" SET \"IsDefault\" = @p0 WHERE \"UserId\" = @p1";
                     await _dbContext.Database.ExecuteSqlRawAsync(sql, false, address.UserId);
                 }
                 _dbContext.Addresss.Update(address);
@@ -395,15 +395,21 @@ namespace FurnitureStoreBE.Services.UserService
         }
         public async Task DeleteUserAddress(Guid addressId)
         {
-            if (!await _dbContext.Addresss.AnyAsync(ad => ad.Id == addressId)) throw new ObjectNotFoundException("Address not found");
-            var sql = "DELETE FROM Address WHERE Id = @p0";
-            int affectedRows = await _dbContext.Database.ExecuteSqlRawAsync(sql, addressId);
-            if (affectedRows == 0)
+            try
+            {
+                if (!await _dbContext.Addresss.AnyAsync(ad => ad.Id == addressId)) throw new ObjectNotFoundException("Address not found");
+                var sql = "DELETE FROM \"Address\" WHERE \"Id\" = @p0";
+                int affectedRows = await _dbContext.Database.ExecuteSqlRawAsync(sql, addressId);
+                if (affectedRows == 0)
+                {
+                    sql = "UPDATE \"Address\" SET \"IsDeleted\" = @p0 WHERE \"Id\" = @p1";
+                    await _dbContext.Database.ExecuteSqlRawAsync(sql, true, addressId);
+                }
+            }
+            catch
             {
                 throw new BusinessException("Address removal failed");
             }
-            sql = "UPDATE Address SET IsDeleted = @p0 WHERE Id = @p1";
-            await _dbContext.Database.ExecuteSqlRawAsync(sql, true, addressId);
         }
     } 
 }

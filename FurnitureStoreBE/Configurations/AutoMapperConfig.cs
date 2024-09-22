@@ -14,6 +14,11 @@ namespace FurnitureStoreBE.Mapper
             CreateMap<Address, AddressResponse>();
             CreateMap<Brand, BrandResponse>().ForMember(dest => dest.ImageSource, opt => opt.MapFrom(src => src.Asset.URL));
             CreateMap<Designer, DesignerResponse>().ForMember(dest => dest.ImageSource, opt => opt.MapFrom(src => src.Asset.URL));
+            CreateMap<RoomSpace, RoomSpaceResponse>().ForMember(dest => dest.ImageSource, opt => opt.MapFrom(src => src.Asset.URL));
+            CreateMap<FurnitureType, FurnitureTypeResponse>().ForMember(dest => dest.ImageSource, opt => opt.MapFrom(src => src.Asset.URL));
+            CreateMap<Material, MaterialResponse>().ForMember(dest => dest.ImageSource, opt => opt.MapFrom(src => src.Asset.URL));
+            CreateMap<Category, CategoryResponse>().ForMember(dest => dest.ImageSource, opt => opt.MapFrom(src => src.Asset.URL));
+            CreateMap<Color, ColorResponse>();
 
 
         }

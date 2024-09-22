@@ -4,18 +4,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace FurnitureStoreBE.Models
 {
     [Table("Material")]
-    public class Material
+    public class Material : BaseEntity
     {
         [Key]
         public Guid Id { get; set; }
-        public required string Name { get; set; }
-        public required string Description { get; set; }
+        public required string MaterialName { get; set; }
+        public string? Description { get; set; }
 
         public Guid? AssetId { get; set; }
         public Asset? Asset { get; set; }
-        public Guid MaterialTypeId { get; set; }
-        public MaterialType MaterialType { get; set; }
-
         public ICollection<Product>? Products { get; set; } 
     }
 }

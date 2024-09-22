@@ -27,7 +27,6 @@ namespace FurnitureStoreBE.Data
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<RoomSpace> RoomSpaces { get; set; }
         public DbSet<FurnitureType> FurnitureTypes  { get; set; }
-        public DbSet<MaterialType> MaterialTypes { get; set; }
         public DbSet<Material> Materials { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductVariant> ProductVariants { get; set; }
@@ -161,21 +160,8 @@ namespace FurnitureStoreBE.Data
                 .HasMany(p => p.Categories)
                 .WithOne(p => p.FurnitureType)
                 .HasForeignKey(p => p.FurnitureTypeId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            // MaterialType relationship
-            modelBuilder.Entity<Asset>()
-              .HasOne(p => p.MaterialType)
-              .WithOne(p => p.Asset)
-              .HasForeignKey<MaterialType>(p => p.AssetId);
-
-            modelBuilder.Entity<MaterialType>()
-              .HasMany(p => p.Materials)
-              .WithOne(p => p.MaterialType)
-              .HasForeignKey(p => p.MaterialTypeId)
-              .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict);        
             
-
             // Material relationship
             modelBuilder.Entity<Asset>()
               .HasOne(p => p.Material)

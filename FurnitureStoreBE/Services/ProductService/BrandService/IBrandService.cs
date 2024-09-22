@@ -3,7 +3,7 @@ using FurnitureStoreBE.Common.Pagination;
 using FurnitureStoreBE.DTOs.Request.BrandRequest;
 using FurnitureStoreBE.DTOs.Response.BrandResponse;
 
-namespace FurnitureStoreBE.Services.BrandService
+namespace FurnitureStoreBE.Services.ProductService.BrandService
 {
     public interface IBrandService
     {
