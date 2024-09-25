@@ -75,20 +75,31 @@ namespace FurnitureStoreBE.Services.ProductService.BrandService
             }
         }
 
-        public async Task<BrandResponse> CreateBrand(BrandRequest brandRequest, IFormFile file)
+        public async Task<BrandResponse> CreateBrand(BrandRequest brandRequest)
         {
             await using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var brandImageUploadResult = await _fileUploadService.UploadFileAsync(file, EUploadFileFolder.Brand.ToString());
-                var asset = new Asset
+                Asset asset = null;
+                if (brandRequest.Image != null)
                 {
-                    Name = brandImageUploadResult.OriginalFilename,
-                    URL = brandImageUploadResult.Url.ToString(),
-                    CloudinaryId = brandImageUploadResult.PublicId,
-                    FolderName = EUploadFileFolder.Brand.ToString(),
+                    var brandImageUploadResult = await _fileUploadService.UploadFileAsync(brandRequest.Image, EUploadFileFolder.Brand.ToString());
+                    asset = new Asset
+                    {
+                        Name = brandImageUploadResult.OriginalFilename,
+                        URL = brandImageUploadResult.Url.ToString(),
+                        CloudinaryId = brandImageUploadResult.PublicId,
+                        FolderName = EUploadFileFolder.Brand.ToString(),
+                    };
+                }
+
+                var brand = new Brand
+                {
+                    BrandName = brandRequest.BrandName,
+                    Description = brandRequest.Description,
+                    Asset = asset
                 };
-                var brand = new Brand { BrandName = brandRequest.BrandName, Description = brandRequest.Description, Asset = asset };
+
                 brand.setCommonCreate(UserSession.GetUserId());
                 await _dbContext.Brands.AddAsync(brand);
                 await _dbContext.SaveChangesAsync();

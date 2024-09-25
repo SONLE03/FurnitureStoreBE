@@ -7,6 +7,8 @@ namespace FurnitureStoreBE.DTOs.Request.ProductRequest
         [Required(ErrorMessage = "Category name is required.")]
         public string CategoryName { get; set; }
         public string? Description { get; set; }
+        public IFormFile? Image { get; set; }
+
         public Guid FurnitureTypeId { get; set; }
     }
 }

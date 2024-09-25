@@ -7,5 +7,7 @@ namespace FurnitureStoreBE.DTOs.Request.ProductRequest
         [Required(ErrorMessage = "Material name is required.")]
         public string MaterialName { get; set; }
         public string? Description { get; set; }
+        public IFormFile? Image { get; set; }
+
     }
 }

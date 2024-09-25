@@ -24,14 +24,14 @@ namespace FurnitureStoreBE.Services.ProductService.CategoryService
             _fileUploadService = fileUploadService;
             _mapper = mapper;
         }
-        public async Task<PaginatedList<CategoryResponse>> GetAllCategories(PageInfo pageInfo)
+        public async Task<PaginatedList<Category>> GetAllCategories(PageInfo pageInfo)
         {
             var categoryQuery = _dbContext.Categories
                 .Where(b => !b.IsDeleted)
-                .OrderByDescending(b => b.CreatedDate)
-                .ProjectTo<CategoryResponse>(_mapper.ConfigurationProvider);
+                .OrderByDescending(b => b.CreatedDate);
+                //.ProjectTo<CategoryResponse>(_mapper.ConfigurationProvider);
             var count = await _dbContext.Categories.CountAsync();
-            return await Task.FromResult(PaginatedList<CategoryResponse>.ToPagedList(categoryQuery, pageInfo.PageNumber, pageInfo.PageSize));
+            return await Task.FromResult(PaginatedList<Category>.ToPagedList(categoryQuery, pageInfo.PageNumber, pageInfo.PageSize));
         }
 
         public async Task ChangeCategoryImage(Guid id, IFormFile formFile)
@@ -75,20 +75,34 @@ namespace FurnitureStoreBE.Services.ProductService.CategoryService
             }
         }
 
-        public async Task<CategoryResponse> CreateCategory(CategoryRequest categoryRequest, IFormFile file)
+        public async Task<CategoryResponse> CreateCategory(CategoryRequest categoryRequest)
         {
             await using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var categoryImageUploadResult = await _fileUploadService.UploadFileAsync(file, EUploadFileFolder.Category.ToString());
-                var asset = new Asset
+                if(!await _dbContext.FurnitureTypes.AnyAsync(ft => categoryRequest.FurnitureTypeId == ft.Id))
                 {
-                    Name = categoryImageUploadResult.OriginalFilename,
-                    URL = categoryImageUploadResult.Url.ToString(),
-                    CloudinaryId = categoryImageUploadResult.PublicId,
-                    FolderName = EUploadFileFolder.Category.ToString(),
+                    throw new ObjectNotFoundException("Furniture type not found");
+                }
+                Asset asset = null;
+                if (categoryRequest.Image != null)
+                {
+                    var categoryImageUploadResult = await _fileUploadService.UploadFileAsync(categoryRequest.Image, EUploadFileFolder.Category.ToString());
+                    asset = new Asset
+                    {
+                        Name = categoryImageUploadResult.OriginalFilename,
+                        URL = categoryImageUploadResult.Url.ToString(),
+                        CloudinaryId = categoryImageUploadResult.PublicId,
+                        FolderName = EUploadFileFolder.Category.ToString(),
+                    };
+                }
+                var category = new Category 
+                { 
+                    CategoryName = categoryRequest.CategoryName, 
+                    Description = categoryRequest.Description, 
+                    Asset = asset,
+                    FurnitureTypeId = categoryRequest.FurnitureTypeId,
                 };
-                var category = new Category { CategoryName = categoryRequest.CategoryName, Description = categoryRequest.Description, Asset = asset };
                 category.setCommonCreate(UserSession.GetUserId());
                 await _dbContext.Categories.AddAsync(category);
                 await _dbContext.SaveChangesAsync();

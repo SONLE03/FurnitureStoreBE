@@ -23,9 +23,9 @@ namespace FurnitureStoreBE.Controllers.ProductController
             return new SuccessfulResponse<object>(await _materialService.GetAllMaterials(pageInfo), (int)HttpStatusCode.OK, "Get Material successfully").GetResponse();
         }
         [HttpPost()]
-        public async Task<IActionResult> CreateMaterial([FromForm] MaterialRequest materialRequest, [FromForm] IFormFile materialImage)
+        public async Task<IActionResult> CreateMaterial([FromForm] MaterialRequest materialRequest)
         {
-            return new SuccessfulResponse<object>(await _materialService.CreateMaterial(materialRequest, materialImage), (int)HttpStatusCode.Created, "Material created successfully").GetResponse();
+            return new SuccessfulResponse<object>(await _materialService.CreateMaterial(materialRequest), (int)HttpStatusCode.Created, "Material created successfully").GetResponse();
         }
         [HttpPut("{materialId}")]
         public async Task<IActionResult> UpdateMaterial(Guid materialId, [FromBody] MaterialRequest materialRequest)

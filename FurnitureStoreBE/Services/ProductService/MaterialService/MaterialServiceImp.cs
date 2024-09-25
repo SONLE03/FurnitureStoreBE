@@ -75,19 +75,23 @@ namespace FurnitureStoreBE.Services.ProductService.MaterialService
             }
         }
 
-        public async Task<MaterialResponse> CreateMaterial(MaterialRequest materialRequest, IFormFile file)
+        public async Task<MaterialResponse> CreateMaterial(MaterialRequest materialRequest)
         {
             await using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var materialImageUploadResult = await _fileUploadService.UploadFileAsync(file, EUploadFileFolder.Material.ToString());
-                var asset = new Asset
+                Asset asset = null;
+                if(materialRequest.Image != null)
                 {
-                    Name = materialImageUploadResult.OriginalFilename,
-                    URL = materialImageUploadResult.Url.ToString(),
-                    CloudinaryId = materialImageUploadResult.PublicId,
-                    FolderName = EUploadFileFolder.Material.ToString(),
-                };
+                    var materialImageUploadResult = await _fileUploadService.UploadFileAsync(materialRequest.Image, EUploadFileFolder.Material.ToString());
+                    asset = new Asset
+                    {
+                        Name = materialImageUploadResult.OriginalFilename,
+                        URL = materialImageUploadResult.Url.ToString(),
+                        CloudinaryId = materialImageUploadResult.PublicId,
+                        FolderName = EUploadFileFolder.Material.ToString(),
+                    };
+                }
                 var material = new Material { MaterialName = materialRequest.MaterialName, Description = materialRequest.Description, Asset = asset };
                 material.setCommonCreate(UserSession.GetUserId());
                 await _dbContext.Materials.AddAsync(material);

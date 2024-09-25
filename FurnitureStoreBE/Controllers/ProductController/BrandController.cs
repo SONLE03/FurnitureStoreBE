@@ -24,9 +24,9 @@ namespace FurnitureStoreBE.Controllers.ProductController
             return new SuccessfulResponse<object>(await _brandService.GetAllBrands(pageInfo), (int)HttpStatusCode.OK, "Get brand successfully").GetResponse();
         }
         [HttpPost()]
-        public async Task<IActionResult> CreateBrand([FromForm] BrandRequest brandRequest, [FromForm] IFormFile brandImage)
+        public async Task<IActionResult> CreateBrand([FromForm] BrandRequest brandRequest)
         {
-            return new SuccessfulResponse<object>(await _brandService.CreateBrand(brandRequest, brandImage), (int)HttpStatusCode.Created, "Brand created successfully").GetResponse();
+            return new SuccessfulResponse<object>(await _brandService.CreateBrand(brandRequest), (int)HttpStatusCode.Created, "Brand created successfully").GetResponse();
         }
         [HttpPut("{brandId}")]
         public async Task<IActionResult> UpdateBrand(Guid brandId, [FromBody] BrandRequest brandRequest)

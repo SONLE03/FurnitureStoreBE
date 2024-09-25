@@ -8,9 +8,9 @@ namespace FurnitureStoreBE.Models
     {
         [Key]
         public Guid Id { get; set; }
-        public required string CategoryName { get; set; }
+        public string CategoryName { get; set; }
         public string? Description { get; set; }
-        public Guid AssetId { get; set; }
+        public Guid? AssetId { get; set; }
         public Asset? Asset { get; set; }
         public Guid FurnitureTypeId { get; set; }
         public FurnitureType FurnitureType { get; set; }

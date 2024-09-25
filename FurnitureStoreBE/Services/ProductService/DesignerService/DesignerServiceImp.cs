@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using FurnitureStoreBE.Enums;
 using FurnitureStoreBE.Exceptions;
 using FurnitureStoreBE.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace FurnitureStoreBE.Services.ProductService.DesignerService
 {
@@ -66,19 +67,23 @@ namespace FurnitureStoreBE.Services.ProductService.DesignerService
             }
         }
 
-        public async Task<DesignerResponse> CreateDesigner(DesignerRequest designerRequest, IFormFile formFile)
+        public async Task<DesignerResponse> CreateDesigner(DesignerRequest designerRequest)
         {
             await using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var designerImageUploadResult = await _fileUploadService.UploadFileAsync(formFile, EUploadFileFolder.Designer.ToString());
-                var asset = new Asset
+                Asset asset = null;
+                if (designerRequest.Image != null)
                 {
-                    Name = designerImageUploadResult.OriginalFilename,
-                    URL = designerImageUploadResult.Url.ToString(),
-                    CloudinaryId = designerImageUploadResult.PublicId,
-                    FolderName = EUploadFileFolder.Designer.ToString(),
-                };
+                    var designerImageUploadResult = await _fileUploadService.UploadFileAsync(designerRequest.Image, EUploadFileFolder.Designer.ToString());
+                    asset = new Asset
+                    {
+                        Name = designerImageUploadResult.OriginalFilename,
+                        URL = designerImageUploadResult.Url.ToString(),
+                        CloudinaryId = designerImageUploadResult.PublicId,
+                        FolderName = EUploadFileFolder.Designer.ToString(),
+                    };
+                }
                 var designer = new Designer { DesignerName = designerRequest.DesignerName, Description = designerRequest.Description, Asset = asset };
                 designer.setCommonCreate(UserSession.GetUserId());
                 await _dbContext.Designer.AddAsync(designer);

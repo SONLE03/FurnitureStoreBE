@@ -76,7 +76,8 @@ namespace FurnitureStoreBE.Services.Authentication
                 {
                     Email = email,
                     UserName = email,
-                    Role = defaultRoleRegister
+                    Role = defaultRoleRegister,
+                    Cart = new Cart()
                 };
 
                 var createdUserResult = await _userManager.CreateAsync(newUser, password);
@@ -103,9 +104,6 @@ namespace FurnitureStoreBE.Services.Authentication
                 {
                     throw new BusinessException("Failed to assign claims to user.");
                 }
-
-                var customer = new Customer { id = newUser.Id };
-                _context.Customers.Add(customer);
                 await _context.SaveChangesAsync();
 
                 await transaction.CommitAsync();

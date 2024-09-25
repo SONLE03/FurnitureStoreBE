@@ -7,5 +7,7 @@ namespace FurnitureStoreBE.DTOs.Request.ProductRequest
         [Required(ErrorMessage = "Room space name is required.")]
         public string RoomSpaceName { get; set; }
         public string? Description { get; set; }
+        public IFormFile? Image { get; set; }
+
     }
 }

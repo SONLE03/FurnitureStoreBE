@@ -25,6 +25,7 @@ using FurnitureStoreBE.Services.ProductService.MaterialService;
 using FurnitureStoreBE.Services.ProductService.FurnitureTypeService;
 using FurnitureStoreBE.Services.ProductService.CategoryService;
 using FurnitureStoreBE.Services.ProductService.ColorService;
+using FurnitureStoreBE.Services.ProductService.ProductService;
 
 var builder = WebApplication.CreateBuilder(args);
 //Log.Logger = new LoggerConfiguration()
@@ -234,7 +235,7 @@ builder.Services.AddScoped<IMaterialService, MaterialServiceImp>();
 builder.Services.AddScoped<IFurnitureTypeService, FurnitureTypeServiceImp>();
 builder.Services.AddScoped<ICategoryService, CategoryServiceImp>();
 builder.Services.AddScoped<IColorService, ColorServiceImp>();
-
+builder.Services.AddScoped<IProductService, ProductServiceImp>();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

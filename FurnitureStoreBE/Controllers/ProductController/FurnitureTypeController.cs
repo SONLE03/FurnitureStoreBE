@@ -23,9 +23,9 @@ namespace FurnitureStoreBE.Controllers.ProductController
             return new SuccessfulResponse<object>(await _furnitureTypeService.GetAllFurnitureTypes(pageInfo), (int)HttpStatusCode.OK, "Get FurnitureType successfully").GetResponse();
         }
         [HttpPost()]
-        public async Task<IActionResult> CreateFurnitureType([FromForm] FurnitureTypeRequest furnitureTypeRequest, [FromForm] IFormFile furnitureTypeImage)
+        public async Task<IActionResult> CreateFurnitureType([FromForm] FurnitureTypeRequest furnitureTypeRequest)
         {
-            return new SuccessfulResponse<object>(await _furnitureTypeService.CreateFurnitureType(furnitureTypeRequest, furnitureTypeImage), (int)HttpStatusCode.Created, "FurnitureType created successfully").GetResponse();
+            return new SuccessfulResponse<object>(await _furnitureTypeService.CreateFurnitureType(furnitureTypeRequest), (int)HttpStatusCode.Created, "FurnitureType created successfully").GetResponse();
         }
         [HttpPut("{furnitureTypeId}")]
         public async Task<IActionResult> UpdateFurnitureType(Guid furnitureTypeId, [FromBody] FurnitureTypeRequest furnitureTypeRequest)

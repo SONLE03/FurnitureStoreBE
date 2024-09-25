@@ -19,6 +19,9 @@
         public const string MATERIAL = VERSION + "/material";
         public const string CATEGORY = VERSION + "/category";
         public const string COLOR = VERSION + "/color";
+        public const string PRODUCT = VERSION + "/product";
+        public const string PRODUCTVARIANT = VERSION + "/productVariant";
+
 
 
     }

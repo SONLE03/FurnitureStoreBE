@@ -23,19 +23,19 @@ namespace FurnitureStoreBE.Controllers.ProductController
             return new SuccessfulResponse<object>(await _roomSpaceService.GetAllRoomSpaces(pageInfo), (int)HttpStatusCode.OK, "Get RoomSpace successfully").GetResponse();
         }
         [HttpPost()]
-        public async Task<IActionResult> CreateRoomSpace([FromForm] RoomSpaceRequest RoomSpaceRequest, [FromForm] IFormFile RoomSpaceImage)
+        public async Task<IActionResult> CreateRoomSpace([FromForm] RoomSpaceRequest roomSpaceRequest)
         {
-            return new SuccessfulResponse<object>(await _roomSpaceService.CreateRoomSpace(RoomSpaceRequest, RoomSpaceImage), (int)HttpStatusCode.Created, "RoomSpace created successfully").GetResponse();
+            return new SuccessfulResponse<object>(await _roomSpaceService.CreateRoomSpace(roomSpaceRequest), (int)HttpStatusCode.Created, "RoomSpace created successfully").GetResponse();
         }
         [HttpPut("{roomSpaceId}")]
-        public async Task<IActionResult> UpdateRoomSpace(Guid roomSpaceId, [FromBody] RoomSpaceRequest RoomSpaceRequest)
+        public async Task<IActionResult> UpdateRoomSpace(Guid roomSpaceId, [FromBody] RoomSpaceRequest roomSpaceRequest)
         {
-            return new SuccessfulResponse<object>(await _roomSpaceService.UpdateRoomSpace(roomSpaceId, RoomSpaceRequest), (int)HttpStatusCode.OK, "RoomSpace modified successfully").GetResponse();
+            return new SuccessfulResponse<object>(await _roomSpaceService.UpdateRoomSpace(roomSpaceId, roomSpaceRequest), (int)HttpStatusCode.OK, "RoomSpace modified successfully").GetResponse();
         }
         [HttpPost("image/{roomSpaceId}")]
-        public async Task<IActionResult> ChangeRoomSpaceImage(Guid roomSpaceId, [FromForm] IFormFile RoomSpaceImage)
+        public async Task<IActionResult> ChangeRoomSpaceImage(Guid roomSpaceId, [FromForm] IFormFile roomSpaceRequest)
         {
-            await _roomSpaceService.ChangeRoomSpaceImage(roomSpaceId, RoomSpaceImage);
+            await _roomSpaceService.ChangeRoomSpaceImage(roomSpaceId, roomSpaceRequest);
             return new SuccessfulResponse<object>(null, (int)HttpStatusCode.OK, "RoomSpace image changed successfully").GetResponse();
         }
         [HttpDelete("{roomSpaceId}")]

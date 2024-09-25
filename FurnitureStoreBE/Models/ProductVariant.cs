@@ -10,16 +10,16 @@ namespace FurnitureStoreBE.Models
         public Guid Id { get; set; }
         public Guid ProductId { get; set; }
         public Product Product { get; set; }
-        public Guid ColorId { get; set; }
-        public Color Color { get; set; }
-        public required string DisplayDimension { get; set; }
+        public Guid? ColorId { get; set; }
+        public Color? Color { get; set; }
+        public string DisplayDimension { get; set; }
         [Column(TypeName = "decimal(18,2)")]
-        public required decimal Length { get; set; } = 0;
+        public decimal Length { get; set; } = 0;
         [Column(TypeName = "decimal(18,2)")]
-        public required decimal Width { get; set; } = 0;
+        public decimal Width { get; set; } = 0;
      
         [Column(TypeName = "decimal(18,2)")]
-        public required decimal Height { get; set; } = 0;
+        public decimal Height { get; set; } = 0;
 
         public required long Quantity { get; set; } = 0;
         [Column(TypeName = "decimal(18,2)")]

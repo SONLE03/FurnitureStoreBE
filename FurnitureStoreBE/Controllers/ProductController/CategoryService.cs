@@ -23,9 +23,9 @@ namespace FurnitureStoreBE.Controllers.ProductController
             return new SuccessfulResponse<object>(await _categoryService.GetAllCategories(pageInfo), (int)HttpStatusCode.OK, "Get Categories successfully").GetResponse();
         }
         [HttpPost()]
-        public async Task<IActionResult> CreateCategory([FromForm] CategoryRequest categoryRequest, [FromForm] IFormFile categoryImage)
+        public async Task<IActionResult> CreateCategory([FromForm] CategoryRequest categoryRequest)
         {
-            return new SuccessfulResponse<object>(await _categoryService.CreateCategory(categoryRequest, categoryImage), (int)HttpStatusCode.Created, "Category created successfully").GetResponse();
+            return new SuccessfulResponse<object>(await _categoryService.CreateCategory(categoryRequest), (int)HttpStatusCode.Created, "Category created successfully").GetResponse();
         }
         [HttpPut("{categoryId}")]
         public async Task<IActionResult> UpdateCategory(Guid categoryId, [FromBody] CategoryRequest categoryRequest)

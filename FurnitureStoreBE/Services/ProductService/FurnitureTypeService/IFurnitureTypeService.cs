@@ -8,7 +8,7 @@ namespace FurnitureStoreBE.Services.ProductService.FurnitureTypeService
     public interface IFurnitureTypeService
     {
         Task<PaginatedList<FurnitureTypeResponse>> GetAllFurnitureTypes(PageInfo pageInfo);
-        Task<FurnitureTypeResponse> CreateFurnitureType(FurnitureTypeRequest furnitureTypeRequest, IFormFile formFile);
+        Task<FurnitureTypeResponse> CreateFurnitureType(FurnitureTypeRequest furnitureTypeRequest);
         Task<FurnitureTypeResponse> UpdateFurnitureType(Guid id, FurnitureTypeRequest furnitureTypeRequest);
         Task DeleteFurnitureType(Guid id);
         Task ChangeFurnitureTypeImage(Guid id, IFormFile formFile);

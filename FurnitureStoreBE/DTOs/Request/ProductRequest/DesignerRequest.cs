@@ -7,5 +7,7 @@ namespace FurnitureStoreBE.DTOs.Request.ProductRequest
         [Required(ErrorMessage = "Designer name is required.")]
         public string DesignerName { get; set; }
         public string? Description { get; set; }
+        public IFormFile? Image { get; set; }
+
     }
 }

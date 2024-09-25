@@ -8,7 +8,7 @@ namespace FurnitureStoreBE.Services.ProductService.DesignerService
     public interface IDesignerService
     {
         Task<PaginatedList<DesignerResponse>> GetAllDesigners(PageInfo pageInfo);
-        Task<DesignerResponse> CreateDesigner(DesignerRequest designerRequest, IFormFile formFile);
+        Task<DesignerResponse> CreateDesigner(DesignerRequest designerRequest);
         Task<DesignerResponse> UpdateDesigner(Guid id, DesignerRequest designerRequest);
         Task DeleteDesigner(Guid id);
         Task ChangeDesignerImage(Guid id, IFormFile formFile);

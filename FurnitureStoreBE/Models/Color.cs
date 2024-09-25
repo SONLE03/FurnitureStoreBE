@@ -8,7 +8,7 @@ namespace FurnitureStoreBE.Models
     {
         [Key]
         public Guid Id { get; set; }
-        public required string ColorName {  get; set; }
+        public string ColorName {  get; set; }
         public string? ColorCode { get; set; }
         public ICollection<ProductVariant>? ProductVariants { get; set; }
     }

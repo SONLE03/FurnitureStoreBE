@@ -75,20 +75,35 @@ namespace FurnitureStoreBE.Services.ProductService.FurnitureTypeService
             }
         }
 
-        public async Task<FurnitureTypeResponse> CreateFurnitureType(FurnitureTypeRequest furnitureTypeRequest, IFormFile file)
+        public async Task<FurnitureTypeResponse> CreateFurnitureType(FurnitureTypeRequest furnitureTypeRequest)
         {
             await using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var furnitureTypeImageUploadResult = await _fileUploadService.UploadFileAsync(file, EUploadFileFolder.FurnitureType.ToString());
-                var asset = new Asset
+                if(!await _dbContext.RoomSpaces.AnyAsync(r => furnitureTypeRequest.RoomSpaceId == r.Id))
                 {
-                    Name = furnitureTypeImageUploadResult.OriginalFilename,
-                    URL = furnitureTypeImageUploadResult.Url.ToString(),
-                    CloudinaryId = furnitureTypeImageUploadResult.PublicId,
-                    FolderName = EUploadFileFolder.FurnitureType.ToString(),
+                    throw new ObjectNotFoundException("Room space not found");
+                }
+                Asset asset = null;
+                if(furnitureTypeRequest.Image != null)
+                {
+                    var furnitureTypeImageUploadResult = await _fileUploadService.UploadFileAsync(furnitureTypeRequest.Image, EUploadFileFolder.FurnitureType.ToString());
+                    asset = new Asset
+                    {
+                        Name = furnitureTypeImageUploadResult.OriginalFilename,
+                        URL = furnitureTypeImageUploadResult.Url.ToString(),
+                        CloudinaryId = furnitureTypeImageUploadResult.PublicId,
+                        FolderName = EUploadFileFolder.FurnitureType.ToString(),
+                    };
+                }
+                var furnitureType = new FurnitureType 
+                { 
+                    FurnitureTypeName = furnitureTypeRequest.FurnitureTypeName, 
+                    Description = furnitureTypeRequest.Description, 
+                    Asset = asset,
+                    RoomSpaceId = furnitureTypeRequest.RoomSpaceId,
                 };
-                var furnitureType = new FurnitureType { FurnitureTypeName = furnitureTypeRequest.FurnitureTypeName, Description = furnitureTypeRequest.Description, Asset = asset };
+
                 furnitureType.setCommonCreate(UserSession.GetUserId());
                 await _dbContext.FurnitureTypes.AddAsync(furnitureType);
                 await _dbContext.SaveChangesAsync();

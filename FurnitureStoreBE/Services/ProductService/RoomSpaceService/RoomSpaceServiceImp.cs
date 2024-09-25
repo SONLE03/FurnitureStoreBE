@@ -39,31 +39,31 @@ namespace FurnitureStoreBE.Services.ProductService.RoomSpaceService
             await using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var RoomSpace = await _dbContext.RoomSpaces.FirstOrDefaultAsync(b => b.Id == id);
-                if (RoomSpace == null) throw new ObjectNotFoundException("RoomSpace not found");
-                Asset RoomSpaceImage = new Asset();
-                if (RoomSpace.AssetId == null)
+                var roomSpace = await _dbContext.RoomSpaces.FirstOrDefaultAsync(b => b.Id == id);
+                if (roomSpace == null) throw new ObjectNotFoundException("RoomSpace not found");
+                Asset roomSpaceImage = new Asset();
+                if (roomSpace.AssetId == null)
                 {
-                    RoomSpaceImage.RoomSpace = RoomSpace;
+                    roomSpaceImage.RoomSpace = roomSpace;
                 }
                 else
                 {
-                    RoomSpaceImage.Id = (Guid)RoomSpace.AssetId;
-                    await _fileUploadService.DestroyFileByAssetIdAsync(RoomSpaceImage.Id);
+                    roomSpaceImage.Id = (Guid)roomSpace.AssetId;
+                    await _fileUploadService.DestroyFileByAssetIdAsync(roomSpaceImage.Id);
                 }
 
-                var RoomSpaceImageUploadResult = await _fileUploadService.UploadFileAsync(formFile, EUploadFileFolder.RoomSpace.ToString());
-                RoomSpaceImage.Name = RoomSpaceImageUploadResult.OriginalFilename;
-                RoomSpaceImage.URL = RoomSpaceImageUploadResult.Url.ToString();
-                RoomSpaceImage.CloudinaryId = RoomSpaceImageUploadResult.PublicId;
-                RoomSpaceImage.FolderName = EUploadFileFolder.RoomSpace.ToString();
-                if (RoomSpace.AssetId == null)
+                var roomSpaceImageUploadResult = await _fileUploadService.UploadFileAsync(formFile, EUploadFileFolder.RoomSpace.ToString());
+                roomSpaceImage.Name = roomSpaceImageUploadResult.OriginalFilename;
+                roomSpaceImage.URL = roomSpaceImageUploadResult.Url.ToString();
+                roomSpaceImage.CloudinaryId = roomSpaceImageUploadResult.PublicId;
+                roomSpaceImage.FolderName = EUploadFileFolder.RoomSpace.ToString();
+                if (roomSpace.AssetId == null)
                 {
-                    await _dbContext.Assets.AddAsync(RoomSpaceImage);
+                    await _dbContext.Assets.AddAsync(roomSpaceImage);
                 }
                 else
                 {
-                    _dbContext.Assets.Update(RoomSpaceImage);
+                    _dbContext.Assets.Update(roomSpaceImage);
                 }
                 await _dbContext.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -75,25 +75,29 @@ namespace FurnitureStoreBE.Services.ProductService.RoomSpaceService
             }
         }
 
-        public async Task<RoomSpaceResponse> CreateRoomSpace(RoomSpaceRequest RoomSpaceRequest, IFormFile file)
+        public async Task<RoomSpaceResponse> CreateRoomSpace(RoomSpaceRequest roomSpaceRequest)
         {
             await using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var roomSpaceImageUploadResult = await _fileUploadService.UploadFileAsync(file, EUploadFileFolder.RoomSpace.ToString());
-                var asset = new Asset
+                Asset asset = null;
+                if(roomSpaceRequest.Image != null)
                 {
-                    Name = roomSpaceImageUploadResult.OriginalFilename,
-                    URL = roomSpaceImageUploadResult.Url.ToString(),
-                    CloudinaryId = roomSpaceImageUploadResult.PublicId,
-                    FolderName = EUploadFileFolder.RoomSpace.ToString(),
-                };
-                var RoomSpace = new RoomSpace { RoomSpaceName = RoomSpaceRequest.RoomSpaceName, Description = RoomSpaceRequest.Description, Asset = asset };
-                RoomSpace.setCommonCreate(UserSession.GetUserId());
-                await _dbContext.RoomSpaces.AddAsync(RoomSpace);
+                    var roomSpaceImageUploadResult = await _fileUploadService.UploadFileAsync(roomSpaceRequest.Image, EUploadFileFolder.RoomSpace.ToString());
+                    asset = new Asset
+                    {
+                        Name = roomSpaceImageUploadResult.OriginalFilename,
+                        URL = roomSpaceImageUploadResult.Url.ToString(),
+                        CloudinaryId = roomSpaceImageUploadResult.PublicId,
+                        FolderName = EUploadFileFolder.RoomSpace.ToString(),
+                    };
+                }
+                var roomSpace = new RoomSpace { RoomSpaceName = roomSpaceRequest.RoomSpaceName, Description = roomSpaceRequest.Description, Asset = asset };
+                roomSpace.setCommonCreate(UserSession.GetUserId());
+                await _dbContext.RoomSpaces.AddAsync(roomSpace);
                 await _dbContext.SaveChangesAsync();
                 await transaction.CommitAsync();
-                return _mapper.Map<RoomSpaceResponse>(RoomSpace);
+                return _mapper.Map<RoomSpaceResponse>(roomSpace);
             }
             catch
             {
@@ -120,12 +124,12 @@ namespace FurnitureStoreBE.Services.ProductService.RoomSpaceService
                 throw new BusinessException("RoomSpace removal failed");
             }
         }
-        public async Task<RoomSpaceResponse> UpdateRoomSpace(Guid id, RoomSpaceRequest RoomSpaceRequest)
+        public async Task<RoomSpaceResponse> UpdateRoomSpace(Guid id, RoomSpaceRequest roomSpaceRequest)
         {
             var roomSpace = await _dbContext.RoomSpaces.FirstAsync(b => b.Id == id);
             if (roomSpace == null) throw new ObjectNotFoundException("RoomSpace not found");
-            roomSpace.RoomSpaceName = RoomSpaceRequest.RoomSpaceName;
-            roomSpace.Description = RoomSpaceRequest.Description;
+            roomSpace.RoomSpaceName = roomSpaceRequest.RoomSpaceName;
+            roomSpace.Description = roomSpaceRequest.Description;
             roomSpace.setCommonUpdate(UserSession.GetUserId());
             _dbContext.RoomSpaces.Update(roomSpace);
             await _dbContext.SaveChangesAsync();
