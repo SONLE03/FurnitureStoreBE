@@ -1,4 +1,5 @@
 ﻿using FurnitureStoreBE.Common.Pagination;
+using FurnitureStoreBE.Constants;
 using FurnitureStoreBE.DTOs.Request.UserRequest;
 using FurnitureStoreBE.Enums;
 using FurnitureStoreBE.Services.FileUploadService;
@@ -10,7 +11,7 @@ using System.Net;
 namespace FurnitureStoreBE.Controllers.User
 {
     [ApiController]
-    [Route("staff")]
+    [Route(Routes.STAFF)]
     public class StaffController : ControllerBase
     {
         private readonly IUserService _userService;

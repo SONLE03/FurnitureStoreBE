@@ -13,9 +13,6 @@ namespace FurnitureStoreBE.Data
         }
         public DbSet<Asset> Assets { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<Admin> Admins { get; set; }
-        public DbSet<Customer> Customers { get; set; }
-        public DbSet<Staff> Staffs { get; set; }
         public DbSet<RefreshToken> Tokens { get; set; }
         public DbSet<Address> Addresss { get; set; }
         public DbSet<Brand> Brands { get; set; }
@@ -27,7 +24,6 @@ namespace FurnitureStoreBE.Data
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<RoomSpace> RoomSpaces { get; set; }
         public DbSet<FurnitureType> FurnitureTypes  { get; set; }
-        public DbSet<MaterialType> MaterialTypes { get; set; }
         public DbSet<Material> Materials { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductVariant> ProductVariants { get; set; }
@@ -52,21 +48,6 @@ namespace FurnitureStoreBE.Data
                 .HasMany(p => p.Tokens)
                 .WithOne(p => p.User)
                 .HasForeignKey(p => p.UserId);
-
-            modelBuilder.Entity<Admin>()
-                .HasOne<User>()
-                .WithOne()
-                .HasForeignKey<Admin>(p => p.id);
-
-            modelBuilder.Entity<Customer>()
-                .HasOne<User>()
-                .WithOne()
-                .HasForeignKey<Customer>(p => p.id);
-
-            modelBuilder.Entity<Staff>()
-                .HasOne<User>()
-                .WithOne()
-                .HasForeignKey<Staff>(p => p.id);
 
             modelBuilder.Entity<User>()
                 .HasMany(p => p.Addresses)
@@ -161,21 +142,8 @@ namespace FurnitureStoreBE.Data
                 .HasMany(p => p.Categories)
                 .WithOne(p => p.FurnitureType)
                 .HasForeignKey(p => p.FurnitureTypeId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            // MaterialType relationship
-            modelBuilder.Entity<Asset>()
-              .HasOne(p => p.MaterialType)
-              .WithOne(p => p.Asset)
-              .HasForeignKey<MaterialType>(p => p.AssetId);
-
-            modelBuilder.Entity<MaterialType>()
-              .HasMany(p => p.Materials)
-              .WithOne(p => p.MaterialType)
-              .HasForeignKey(p => p.MaterialTypeId)
-              .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict);        
             
-
             // Material relationship
             modelBuilder.Entity<Asset>()
               .HasOne(p => p.Material)

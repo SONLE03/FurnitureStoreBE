@@ -1,4 +1,5 @@
-﻿using FurnitureStoreBE.Data;
+﻿using FurnitureStoreBE.Constants;
+using FurnitureStoreBE.Data;
 using FurnitureStoreBE.DTOs.Request.Auth;
 using FurnitureStoreBE.DTOs.Request.AuthRequest;
 using FurnitureStoreBE.Services.Authentication;
@@ -9,10 +10,10 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pag
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Net;
 
-namespace FurnitureStoreBE.Controllers
+namespace FurnitureStoreBE.Controllers.AuthController
 {
     [ApiController]
-    [Route("auth")]
+    [Route(Routes.AUTH)]
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthService _authenticationService;
@@ -71,7 +72,7 @@ namespace FurnitureStoreBE.Controllers
         [HttpPost("sendOtp/{email}")]
         public async Task<IActionResult> ForgotPassword(string email = "sonle102003@gmail.com")
         {
-            
+
             return new SuccessfulResponse<object>(await _authenticationService.SendOtp(email), (int)HttpStatusCode.OK, "Send otp successfully").GetResponse();
         }
         [HttpPost("verifyOtp")]

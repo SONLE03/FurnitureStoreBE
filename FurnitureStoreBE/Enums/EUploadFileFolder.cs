@@ -5,6 +5,10 @@
         Avatar,
         Product,
         Material, 
-        FurnitureType
+        FurnitureType,
+        Brand,
+        Designer,
+        RoomSpace,
+        Category
     }
 }

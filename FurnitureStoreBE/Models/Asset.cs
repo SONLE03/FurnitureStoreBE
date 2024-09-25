@@ -20,7 +20,6 @@ namespace FurnitureStoreBE.Models
         public RoomSpace? RoomSpace { get; set; }
         public FurnitureType? FurnitureType { get; set; }
         public Category? Category { get; set; }
-        public MaterialType? MaterialType { get; set; }
         public Material? Material { get; set; }
         public Guid? ProductVariantId { get; set; }
         public ProductVariant? ProductVariant { get; set; }

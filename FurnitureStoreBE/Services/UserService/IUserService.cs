@@ -18,7 +18,9 @@ namespace FurnitureStoreBE.Services.UserService
         Task UnbanUser(string userId);
         Task UpdateUserClaims(string userId, List<UserClaimsRequest> userClaimsRequest);
         Task ChangeAvatar(string userId, IFormFile avatar);
-        Task AddUserAddress(string userId, AddressRequest addressRequest);
-        Task UpdateUserAddress(string userId, AddressRequest addressRequest);
+        Task<List<AddressResponse>> GetAddressesByUserId(string userId);
+        Task<AddressResponse> CreateUserAddress(string userId, AddressRequest addressRequest);
+        Task<AddressResponse> UpdateUserAddress(Guid addressId, AddressRequest addressRequest);
+        Task DeleteUserAddress(Guid addressId);
     }
 }
