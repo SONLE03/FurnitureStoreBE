@@ -23,6 +23,8 @@ namespace FurnitureStoreBE.DTOs.Request.ProductRequest
         public HashSet<Guid>? MaterialsId { get; set; }
         [Required(ErrorMessage = "Product variants are required.")]
         public HashSet<ProductVariantRequest>? ProductVariants { get; set; }
+        [MinValue(0.0)]
+        public decimal? Discount { get; set; }
     }
     public class ProductVariantRequest
     {

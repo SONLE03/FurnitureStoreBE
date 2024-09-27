@@ -25,7 +25,5 @@ namespace FurnitureStoreBE.Models
         [Column(TypeName = "decimal(18,2)")]
         public required decimal Price { get; set; } = 0;
         public ICollection<Asset>? Assets { get; set; }
-        public ICollection<OrderItem>? OrderItems { get; set; }
-        public ICollection<CartItem>? CartItems { get; set; }
     }
 }

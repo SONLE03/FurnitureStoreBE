@@ -30,6 +30,8 @@ namespace FurnitureStoreBE.Models
         public ICollection<Address>? Addresses { get; set; }
         public ICollection<Order>? Orders { get; set; }
         public ICollection<Favorite>? Favorites { get; set; }
+        public ICollection<OrderItem>? OrderItems { get; set; }
+
         public Cart Cart { get; set; }
     }
 }

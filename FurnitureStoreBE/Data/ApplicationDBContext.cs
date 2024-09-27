@@ -26,6 +26,7 @@ namespace FurnitureStoreBE.Data
         public DbSet<FurnitureType> FurnitureTypes  { get; set; }
         public DbSet<Material> Materials { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<ProductVariant> ProductVariants { get; set; }
         public DbSet<Question> Question { get; set; }
         public DbSet<Review> Reviews { get; set; }
@@ -253,19 +254,25 @@ namespace FurnitureStoreBE.Data
                    j => j.HasOne<Notification>().WithMany().HasForeignKey("NotificationId").OnDelete(DeleteBehavior.Restrict));
 
             // Order relationship
-            modelBuilder.Entity<OrderItem>()
-               .HasKey(uc => new { uc.OrderId, uc.ProductVariantId });
-            modelBuilder.Entity<ProductVariant>()
+            modelBuilder.Entity<Product>()
                 .HasMany(p => p.OrderItems)
-                .WithOne(p => p.ProductVariant)
-                .HasForeignKey(p => p.ProductVariantId)
+                .WithOne(p => p.Product)
+                .HasForeignKey(p => p.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<User>()
+                .HasMany(p => p.OrderItems)
+                .WithOne(p => p.User)
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(p => p.Color)
+                .WithMany()
+                .HasForeignKey(p => p.ColorId)
                 .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Order>()
-                .HasMany(p => p.OrderItems)
-                .WithOne(p => p.Order)
-                .HasForeignKey(p => p.OrderId)
-                .OnDelete(DeleteBehavior.Restrict);
-
+               .HasMany(p => p.OrderItems)
+               .WithOne()
+               .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Order>()
                 .HasOne(p => p.Coupon)
                 .WithMany(p => p.Orders)
@@ -281,19 +288,8 @@ namespace FurnitureStoreBE.Data
                 .WithMany(p => p.Orders)
                 .HasForeignKey(p => p.AddressId)
                 .OnDelete(DeleteBehavior.Restrict);
-            // Cart relationship
-            modelBuilder.Entity<CartItem>()
-             .HasKey(uc => new { uc.CartId, uc.ProductVariantId });
-            modelBuilder.Entity<ProductVariant>()
-                .HasMany(p => p.CartItems)
-                .WithOne(p => p.ProductVariant)
-                .HasForeignKey(p => p.ProductVariantId)
-                .OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<Cart>()
-                .HasMany(p => p.CartItems)
-                .WithOne(p => p.Cart)
-                .HasForeignKey(p => p.CartId)
-                .OnDelete(DeleteBehavior.Restrict);
+
+            
 
             modelBuilder.Entity<Cart>()
               .HasOne(p => p.User)

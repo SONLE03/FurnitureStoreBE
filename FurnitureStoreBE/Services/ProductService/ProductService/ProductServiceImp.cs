@@ -65,6 +65,7 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
                     BrandName = product.Brand != null ? product.Brand.BrandName : null, // Ternary operator for Brand
                     CategoryName = product.Category != null ? product.Category.CategoryName : null, // Ternary operator for Category
                     DisplayPrice = $"{product.MinPrice} - {product.MaxPrice}",
+                    Discount = product.Discount,
                     Materials = product.Materials.Select(m => m.MaterialName).ToList(),
                     Designers = product.Designers.Select(d => d.DesignerName).ToList(),
                     ProductVariants = product.ProductVariants
@@ -172,7 +173,7 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
                     CloudinaryId = productImageUploadResult.PublicId,
                     FolderName = EUploadFileFolder.Product.ToString()
                 };
-
+                decimal discount = productRequest.Discount.HasValue? productRequest.Discount.Value : 0;
                 var product = new Product
                 {
                     ProductName = productRequest.ProductName,
@@ -180,6 +181,7 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
                     Category = category,
                     MinPrice = minPrice,
                     MaxPrice = maxPrice,
+                    Discount = discount,
                     ProductVariants = productVariants,
                     Description = productRequest.Description,
                     Asset = asset,
@@ -258,6 +260,8 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
                     .Where(m => productRequest.MaterialsId
                     .Contains(m.Id))
                     .ToListAsync();
+                decimal discount = productRequest.Discount.HasValue ? productRequest.Discount.Value : 0;
+                product.Discount = discount;
                 product.Designers = designers;
                 product.Materials = materials;
                 product.Description = productRequest.Description;
@@ -436,14 +440,7 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
             await using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var product = await _dbContext.Products
-                .Where(p => p.Id == productId)
-                .Select(p => new
-                {
-                    p.Id,
-                    p.AssetId
-                })
-                .SingleOrDefaultAsync();
+                var product = await _dbContext.Products.Where(p => p.Id == productId).SingleOrDefaultAsync();
                 if (product == null)
                 {
                     throw new ObjectNotFoundException("Product not found.");
@@ -453,6 +450,10 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
                 {
                     productImage.Id = (Guid)product.AssetId;
                     await _fileUploadService.DestroyFileByAssetIdAsync((Guid)product.AssetId);
+                }
+                else
+                {
+                    productImage.Product = product;
                 }
 
                 var productThumbnailUploadResult = await _fileUploadService.UploadFileAsync(file, EUploadFileFolder.Product.ToString());
@@ -480,9 +481,69 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
         }
         public async Task<List<(Guid imageId, string imageUrl)>> ChangeProductVariantImages(Guid productVariantId, List<IFormFile> files)
         {
+            //await using var transaction = await _dbContext.Database.BeginTransactionAsync();
+            //try
+            //{
+            //    var productVariant = await _dbContext.ProductVariants.Where(p => p.Id == productVariantId).SingleOrDefaultAsync();
+            //    if (productVariant == null)
+            //    {
+            //        throw new ObjectNotFoundException("Product variant not found.");
+            //    }
+            //    Asset productVariantImage = new Asset();
+            //    if (productVariant.AssetId != null)
+            //    {
+            //        productVariantImage.Id = (Guid)productVariant.AssetId;
+            //        await _fileUploadService.DestroyFileByAssetIdAsync((Guid)product.AssetId);
+            //    }
+            //    else
+            //    {
+            //        productImage.Product = product;
+            //    }
 
+            //var productThumbnailUploadResult = await _fileUploadService.UploadFileAsync(file, EUploadFileFolder.Product.ToString());
+            //productImage.Name = productThumbnailUploadResult.OriginalFilename;
+            //productImage.URL = productThumbnailUploadResult.Url.ToString();
+            //productImage.CloudinaryId = productThumbnailUploadResult.PublicId;
+            //productImage.FolderName = EUploadFileFolder.Product.ToString();
+            //if (product.AssetId == null)
+            //{
+            //    await _dbContext.Assets.AddAsync(productImage);
+            //}
+            //else
+            //{
+            //    _dbContext.Assets.Update(productImage);
+            //}
+            //await _dbContext.SaveChangesAsync();
+            //await transaction.CommitAsync();
+            //return (productImage.Id, productImage.URL);
+            //    return null;
+            //}
+            //catch
+            //{
+            //    await transaction.RollbackAsync();
+            //    throw;
+            //}
             return null;
         }
-
+        public async Task UpdateDiscountValueForProducts(List<Guid> productIds, decimal discountValue)
+        {
+            if(discountValue < 0)
+            {
+                throw new BusinessException("Discount value must be greater than 0");
+            }
+            if (!await _dbContext.Products.AnyAsync(p => productIds.Contains(p.Id)))
+            {
+                throw new ObjectNotFoundException("No matching products found for the provided IDs.");
+            }
+            var productsToUpdate = await _dbContext.Products
+                .Where(product => productIds.Contains(product.Id))
+                .ToListAsync();
+            foreach (var product in productsToUpdate)
+            {
+                product.Discount = discountValue;
+            }
+            _dbContext.Products.UpdateRange(productsToUpdate);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }
