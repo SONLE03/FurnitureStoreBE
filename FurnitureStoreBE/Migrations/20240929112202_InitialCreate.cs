@@ -341,6 +341,7 @@ namespace FurnitureStoreBE.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Code = table.Column<string>(type: "text", nullable: false),
                     AssetId = table.Column<Guid>(type: "uuid", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
                     Quantity = table.Column<long>(type: "bigint", nullable: false),
                     UsageCount = table.Column<long>(type: "bigint", nullable: false),
                     MinOrderValue = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
@@ -349,7 +350,12 @@ namespace FurnitureStoreBE.Migrations
                     EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ECouponType = table.Column<int>(type: "integer", nullable: false),
                     ECouponStatus = table.Column<int>(type: "integer", nullable: false),
-                    ECouponApplyType = table.Column<int>(type: "integer", nullable: false)
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedBy = table.Column<string>(type: "text", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "text", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleteDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -550,7 +556,7 @@ namespace FurnitureStoreBE.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     CategoryName = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    AssetId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AssetId = table.Column<Guid>(type: "uuid", nullable: true),
                     FurnitureTypeId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -566,8 +572,7 @@ namespace FurnitureStoreBE.Migrations
                         name: "FK_Category_Asset_AssetId",
                         column: x => x.AssetId,
                         principalTable: "Asset",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Category_FurnitureType_FurnitureTypeId",
                         column: x => x.FurnitureTypeId,
@@ -589,9 +594,9 @@ namespace FurnitureStoreBE.Migrations
                     Sold = table.Column<long>(type: "bigint", nullable: false),
                     Unit = table.Column<string>(type: "text", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
-                    AssetId = table.Column<Guid>(type: "uuid", nullable: false),
-                    BrandId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CategoryId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AssetId = table.Column<Guid>(type: "uuid", nullable: true),
+                    BrandId = table.Column<Guid>(type: "uuid", nullable: true),
+                    CategoryId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
@@ -606,8 +611,7 @@ namespace FurnitureStoreBE.Migrations
                         name: "FK_Product_Asset_AssetId",
                         column: x => x.AssetId,
                         principalTable: "Asset",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Product_Brand_BrandId",
                         column: x => x.BrandId,
@@ -653,23 +657,49 @@ namespace FurnitureStoreBE.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductApplied",
+                name: "OrderItem",
                 columns: table => new
                 {
-                    CouponId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uuid", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    Dimension = table.Column<string>(type: "text", nullable: false),
+                    ColorId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Price = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    Quantity = table.Column<long>(type: "bigint", nullable: false),
+                    SubTotal = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    CartId = table.Column<Guid>(type: "uuid", nullable: true),
+                    OrderId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductApplied", x => new { x.CouponId, x.ProductId });
+                    table.PrimaryKey("PK_OrderItem", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductApplied_Coupon_CouponId",
-                        column: x => x.CouponId,
-                        principalTable: "Coupon",
+                        name: "FK_OrderItem_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ProductApplied_Product_ProductId",
+                        name: "FK_OrderItem_Cart_CartId",
+                        column: x => x.CartId,
+                        principalTable: "Cart",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderItem_Color_ColorId",
+                        column: x => x.ColorId,
+                        principalTable: "Color",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderItem_Order_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Order",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderItem_Product_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Product",
                         principalColumn: "Id",
@@ -822,64 +852,6 @@ namespace FurnitureStoreBE.Migrations
                         name: "FK_Review_Product_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Product",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CartItem",
-                columns: table => new
-                {
-                    CartId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductVariantId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Dimension = table.Column<string>(type: "text", nullable: false),
-                    Color = table.Column<string>(type: "text", nullable: false),
-                    Price = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    Quantity = table.Column<long>(type: "bigint", nullable: false),
-                    SubTotal = table.Column<decimal>(type: "numeric(18,2)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CartItem", x => new { x.CartId, x.ProductVariantId });
-                    table.ForeignKey(
-                        name: "FK_CartItem_Cart_CartId",
-                        column: x => x.CartId,
-                        principalTable: "Cart",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_CartItem_ProductVariant_ProductVariantId",
-                        column: x => x.ProductVariantId,
-                        principalTable: "ProductVariant",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OrderItem",
-                columns: table => new
-                {
-                    OrderId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductVariantId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Dimension = table.Column<string>(type: "text", nullable: false),
-                    Color = table.Column<string>(type: "text", nullable: false),
-                    Price = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    Quantity = table.Column<long>(type: "bigint", nullable: false),
-                    SubTotal = table.Column<decimal>(type: "numeric(18,2)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OrderItem", x => new { x.OrderId, x.ProductVariantId });
-                    table.ForeignKey(
-                        name: "FK_OrderItem_Order_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "Order",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_OrderItem_ProductVariant_ProductVariantId",
-                        column: x => x.ProductVariantId,
-                        principalTable: "ProductVariant",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -1164,11 +1136,6 @@ namespace FurnitureStoreBE.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_CartItem_ProductVariantId",
-                table: "CartItem",
-                column: "ProductVariantId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Category_AssetId",
                 table: "Category",
                 column: "AssetId",
@@ -1235,9 +1202,29 @@ namespace FurnitureStoreBE.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItem_ProductVariantId",
+                name: "IX_OrderItem_CartId",
                 table: "OrderItem",
-                column: "ProductVariantId");
+                column: "CartId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItem_ColorId",
+                table: "OrderItem",
+                column: "ColorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItem_OrderId",
+                table: "OrderItem",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItem_ProductId",
+                table: "OrderItem",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItem_UserId",
+                table: "OrderItem",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Product_AssetId",
@@ -1254,11 +1241,6 @@ namespace FurnitureStoreBE.Migrations
                 name: "IX_Product_CategoryId",
                 table: "Product",
                 column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductApplied_ProductId",
-                table: "ProductApplied",
-                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductDesigner_ProductId",
@@ -1434,16 +1416,10 @@ namespace FurnitureStoreBE.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "CartItem");
-
-            migrationBuilder.DropTable(
                 name: "Favorite");
 
             migrationBuilder.DropTable(
                 name: "OrderItem");
-
-            migrationBuilder.DropTable(
-                name: "ProductApplied");
 
             migrationBuilder.DropTable(
                 name: "ProductDesigner");

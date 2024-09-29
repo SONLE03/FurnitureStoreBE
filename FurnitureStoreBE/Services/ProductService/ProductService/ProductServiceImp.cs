@@ -32,8 +32,8 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
         public async Task<PaginatedList<ProductResponse>> GetAllProduct(PageInfo pageInfo, ProductSearchRequest productSearchRequest)
         {
             var productQuery = _dbContext.Products
-            .Where(b => !b.IsDeleted)
-            .Where(product => product.ProductVariants.Any(pv => !pv.IsDeleted));
+                .Where(b => !b.IsDeleted)
+                .Where(product => product.ProductVariants.Any(pv => !pv.IsDeleted));
             if(productSearchRequest.BrandIds != null)
             {
                 if (await _dbContext.Brands.AnyAsync(b => productSearchRequest.BrandIds.Contains(b.Id)))
@@ -65,6 +65,7 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
                     BrandName = product.Brand != null ? product.Brand.BrandName : null, // Ternary operator for Brand
                     CategoryName = product.Category != null ? product.Category.CategoryName : null, // Ternary operator for Category
                     DisplayPrice = $"{product.MinPrice} - {product.MaxPrice}",
+                    Discount = product.Discount,
                     Materials = product.Materials.Select(m => m.MaterialName).ToList(),
                     Designers = product.Designers.Select(d => d.DesignerName).ToList(),
                     ProductVariants = product.ProductVariants
@@ -72,6 +73,7 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
                         .Select(v => new ProductVariantResponse
                         {
                             Id = v.Id,
+                            ColorId = v.ColorId,
                             ColorName = v.Color != null ? v.Color.ColorName : null, // Ternary operator for Color
                             DisplayDimension = v.DisplayDimension,
                             Quantity = v.Quantity,
@@ -111,7 +113,7 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
                 {
                     throw new ObjectNotFoundException("Variable product must have at least one attribute");
                 }
-
+                
                 var minPrice = variants.Min(p => p.Price);
                 var maxPrice = variants.Max(p => p.Price);
 
@@ -130,6 +132,8 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
                     .Contains(m.Id))
                     .ToListAsync();
 
+                var uniqueVariants = new HashSet<string>();
+
                 // Tải lên ảnh của từng biến thể sản phẩm
                 var productVariants = new List<ProductVariant>();
                 foreach (var item in variants)
@@ -140,6 +144,13 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
                     {
                         // If the color doesn't exist, throw an exception
                         throw new ObjectNotFoundException($"Color with ID {item.ColorId} not found");
+                    }
+                    var variantKey = $"{item.ColorId}-{item.Height}-{item.Length}-{item.Width}";
+
+                    // Check if this combination already exists in the HashSet
+                    if (!uniqueVariants.Add(variantKey))
+                    {
+                        throw new Exception($"Duplicate variant found with combination: ColorId={item.ColorId}, Height={item.Height}, Weight={item.Length}, Width={item.Width}");
                     }
 
                     var productVariantImagesUploadResult = await _fileUploadService.UploadFilesAsync(item.Images, EUploadFileFolder.Product.ToString());
@@ -172,7 +183,7 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
                     CloudinaryId = productImageUploadResult.PublicId,
                     FolderName = EUploadFileFolder.Product.ToString()
                 };
-
+                decimal discount = productRequest.Discount.HasValue? productRequest.Discount.Value : 0;
                 var product = new Product
                 {
                     ProductName = productRequest.ProductName,
@@ -180,6 +191,7 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
                     Category = category,
                     MinPrice = minPrice,
                     MaxPrice = maxPrice,
+                    Discount = discount,
                     ProductVariants = productVariants,
                     Description = productRequest.Description,
                     Asset = asset,
@@ -227,11 +239,18 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
             await using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var product = await _dbContext.Products.SingleOrDefaultAsync(b => b.Id == productId);
-                if (product == null)
+                if (!await _dbContext.Products.AnyAsync(p => p.Id == productId))
                 {
                     throw new ObjectNotFoundException("Product not found");
                 }
+                var product = await _dbContext.Products
+                    .Include(a => a.Asset)
+                    .Include(b => b.Brand)
+                    .Include(c => c.Category)
+                    .Include(d => d.Designers)
+                    .Include(m => m.Materials)
+                    .SingleOrDefaultAsync(b => b.Id == productId);
+
                 if (productRequest.BrandId != product.BrandId)
                 {
                     var brand = await _dbContext.Brands.SingleOrDefaultAsync(b => b.Id == productRequest.BrandId);
@@ -258,6 +277,8 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
                     .Where(m => productRequest.MaterialsId
                     .Contains(m.Id))
                     .ToListAsync();
+                decimal discount = productRequest.Discount.HasValue ? productRequest.Discount.Value : 0;
+                product.Discount = discount;
                 product.Designers = designers;
                 product.Materials = materials;
                 product.Description = productRequest.Description;
@@ -278,11 +299,17 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
             await using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var product = await _dbContext.Products.SingleOrDefaultAsync(p => p.Id == productId);
-                if (product == null)
-                {
+                if(!await _dbContext.Products.AnyAsync(p => p.Id == productId)){
                     throw new ObjectNotFoundException("Product not found");
                 }
+                var product = await _dbContext.Products
+                    .Include(a => a.Asset)
+                    .Include(b => b.Brand)
+                    .Include(c => c.Category)
+                    .Include(d => d.Designers)
+                    .Include(m => m.Materials)
+                    .SingleOrDefaultAsync(p => p.Id == productId);
+               
                 var variants = productVariantsRequest;
 
                 if (variants == null || !variants.Any())
@@ -298,6 +325,7 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
                 var colors = await _dbContext.Colors
                     .Where(c => colorIds.Contains(c.Id))
                     .ToListAsync();
+                var uniqueVariants = new HashSet<string>();
                 var productVariants = new List<ProductVariant>();
                 foreach (var item in variants)
                 {
@@ -307,6 +335,13 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
                     {
                         // If the color doesn't exist, throw an exception
                         throw new ObjectNotFoundException($"Color with ID {item.ColorId} not found");
+                    }
+                    var variantKey = $"{item.ColorId}-{item.Height}-{item.Length}-{item.Width}";
+
+                    // Check if this combination already exists in the HashSet
+                    if (!uniqueVariants.Add(variantKey))
+                    {
+                        throw new BusinessException($"Duplicate variant found with combination: ColorId={item.ColorId}, Height={item.Height}, Weight={item.Length}, Width={item.Width}");
                     }
 
                     var productVariantImagesUploadResult = await _fileUploadService.UploadFilesAsync(item.Images, EUploadFileFolder.Product.ToString());
@@ -320,6 +355,7 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
 
                     productVariants.Add(new ProductVariant
                     {
+                        ProductId = product.Id,
                         Color = color,
                         Length = item.Length,
                         Width = item.Width,
@@ -361,28 +397,37 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
             await using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var productVariant = await _dbContext.ProductVariants.SingleOrDefaultAsync(p => p.Id == productVariantId);
+
+                var productVariant = await _dbContext.ProductVariants
+                    .Include(c => c.Color)
+                    .SingleOrDefaultAsync(p => p.Id == productVariantId);
                 if (productVariant == null)
                 {
                     throw new ObjectNotFoundException("Product variant not found");
                 }
+                var dimension = $"{productVariantRequest.Length} x {productVariantRequest.Width} x {productVariantRequest.Height}";
+
+                if (!await _dbContext.ProductVariants.AnyAsync(pv => pv.ProductId == productVariant.ProductId && pv.DisplayDimension.Equals(dimension)))
+                {
+                    throw new BusinessException("Duplicate variant found");
+                }
+
                 var productVariantPrice = productVariantRequest.Price;
                 var minPrice = Math.Min(productVariant.Product.MinPrice, productVariantPrice);
                 var maxPrice = Math.Max(productVariant.Product.MaxPrice, productVariantPrice);
-
-                if(productVariantRequest.ColorId != productVariant.ColorId)
+                var colorId = productVariantRequest.ColorId;
+                if(colorId != productVariant.ColorId)
                 {
-                    var color = await _dbContext.Colors.SingleOrDefaultAsync(c => c.Id == productVariantRequest.ColorId);
-                    if (color == null)
+                    if (!await _dbContext.Colors.AnyAsync(c => c.Id == colorId))
                     {
                         throw new ObjectNotFoundException("Color not found");
                     }
-                    productVariant.Color = color;
+                    productVariant.ColorId = colorId;
                 }
                 productVariant.Length = productVariantRequest.Length;
                 productVariant.Width = productVariantRequest.Width;
                 productVariant.Height = productVariantRequest.Height;
-                productVariant.DisplayDimension = $"{productVariantRequest.Length} x {productVariantRequest.Width} x {productVariantRequest.Height}";
+                productVariant.DisplayDimension = dimension;
                 productVariant.Quantity = productVariantRequest.Quantity;
                 productVariant.Price = productVariantRequest.Price;
 
@@ -436,14 +481,7 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
             await using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var product = await _dbContext.Products
-                .Where(p => p.Id == productId)
-                .Select(p => new
-                {
-                    p.Id,
-                    p.AssetId
-                })
-                .SingleOrDefaultAsync();
+                var product = await _dbContext.Products.Where(p => p.Id == productId).SingleOrDefaultAsync();
                 if (product == null)
                 {
                     throw new ObjectNotFoundException("Product not found.");
@@ -453,6 +491,10 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
                 {
                     productImage.Id = (Guid)product.AssetId;
                     await _fileUploadService.DestroyFileByAssetIdAsync((Guid)product.AssetId);
+                }
+                else
+                {
+                    productImage.Product = product;
                 }
 
                 var productThumbnailUploadResult = await _fileUploadService.UploadFileAsync(file, EUploadFileFolder.Product.ToString());
@@ -480,9 +522,69 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
         }
         public async Task<List<(Guid imageId, string imageUrl)>> ChangeProductVariantImages(Guid productVariantId, List<IFormFile> files)
         {
+            //await using var transaction = await _dbContext.Database.BeginTransactionAsync();
+            //try
+            //{
+            //    var productVariant = await _dbContext.ProductVariants.Where(p => p.Id == productVariantId).SingleOrDefaultAsync();
+            //    if (productVariant == null)
+            //    {
+            //        throw new ObjectNotFoundException("Product variant not found.");
+            //    }
+            //    Asset productVariantImage = new Asset();
+            //    if (productVariant.AssetId != null)
+            //    {
+            //        productVariantImage.Id = (Guid)productVariant.AssetId;
+            //        await _fileUploadService.DestroyFileByAssetIdAsync((Guid)product.AssetId);
+            //    }
+            //    else
+            //    {
+            //        productImage.Product = product;
+            //    }
 
+            //var productThumbnailUploadResult = await _fileUploadService.UploadFileAsync(file, EUploadFileFolder.Product.ToString());
+            //productImage.Name = productThumbnailUploadResult.OriginalFilename;
+            //productImage.URL = productThumbnailUploadResult.Url.ToString();
+            //productImage.CloudinaryId = productThumbnailUploadResult.PublicId;
+            //productImage.FolderName = EUploadFileFolder.Product.ToString();
+            //if (product.AssetId == null)
+            //{
+            //    await _dbContext.Assets.AddAsync(productImage);
+            //}
+            //else
+            //{
+            //    _dbContext.Assets.Update(productImage);
+            //}
+            //await _dbContext.SaveChangesAsync();
+            //await transaction.CommitAsync();
+            //return (productImage.Id, productImage.URL);
+            //    return null;
+            //}
+            //catch
+            //{
+            //    await transaction.RollbackAsync();
+            //    throw;
+            //}
             return null;
         }
-
+        public async Task UpdateDiscountValueForProducts(List<Guid> productIds, decimal discountValue)
+        {
+            if(discountValue < 0)
+            {
+                throw new BusinessException("Discount value must be greater than 0");
+            }
+            if (!await _dbContext.Products.AnyAsync(p => productIds.Contains(p.Id)))
+            {
+                throw new ObjectNotFoundException("No matching products found for the provided IDs.");
+            }
+            var productsToUpdate = await _dbContext.Products
+                .Where(product => productIds.Contains(product.Id))
+                .ToListAsync();
+            foreach (var product in productsToUpdate)
+            {
+                product.Discount = discountValue;
+            }
+            _dbContext.Products.UpdateRange(productsToUpdate);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

@@ -21,5 +21,8 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
         Task DeleteProductVariant(Guid productVariantId);
         // Image
         Task<List<(Guid imageId, string imageUrl)>> ChangeProductVariantImages(Guid productVariantId, List<IFormFile> files);
+
+        // Discount
+        Task UpdateDiscountValueForProducts(List<Guid> productIds, decimal discountValue);
     }
 }

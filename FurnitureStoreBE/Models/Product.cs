@@ -33,6 +33,7 @@ namespace FurnitureStoreBE.Models
         public ICollection<Review>? Reviews { get; set; }
         public ICollection<Question>? Questions { get; set; }
         public ICollection<Favorite>? Favorites { get; set; }
-        public ICollection<Coupon>? Coupons { get; set; }
+        public ICollection<OrderItem>? OrderItems { get; set; }
+
     }
 }

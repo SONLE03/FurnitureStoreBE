@@ -10,8 +10,8 @@ namespace FurnitureStoreBE.Models
         public Guid Id { get; set; }
         public Guid ProductId { get; set; }
         public Product Product { get; set; }
-        public Guid? ColorId { get; set; }
-        public Color? Color { get; set; }
+        public Guid ColorId { get; set; }
+        public Color Color { get; set; }
         public string DisplayDimension { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal Length { get; set; } = 0;
@@ -25,7 +25,5 @@ namespace FurnitureStoreBE.Models
         [Column(TypeName = "decimal(18,2)")]
         public required decimal Price { get; set; } = 0;
         public ICollection<Asset>? Assets { get; set; }
-        public ICollection<OrderItem>? OrderItems { get; set; }
-        public ICollection<CartItem>? CartItems { get; set; }
     }
 }
