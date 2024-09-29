@@ -31,6 +31,7 @@ using Hangfire;
 using FurnitureStoreBE.Common;
 using Hangfire.MemoryStorage;
 using FurnitureStoreBE.Services.CouponService;
+using FurnitureStoreBE.Services.ProductService.FavoriteProductService;
 
 var builder = WebApplication.CreateBuilder(args);
 //Log.Logger = new LoggerConfiguration()
@@ -247,6 +248,7 @@ builder.Services.AddScoped<IColorService, ColorServiceImp>();
 builder.Services.AddScoped<IProductService, ProductServiceImp>();
 builder.Services.AddScoped<ICartService, CartServiceImp>();
 builder.Services.AddScoped<ICouponService, CouponServiceImp>();
+builder.Services.AddScoped<IFavoriteProductService, FavoriteProductServiceImp>();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

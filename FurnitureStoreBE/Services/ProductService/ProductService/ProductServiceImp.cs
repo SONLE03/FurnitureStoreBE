@@ -9,10 +9,8 @@ using FurnitureStoreBE.Enums;
 using FurnitureStoreBE.Exceptions;
 using FurnitureStoreBE.Models;
 using FurnitureStoreBE.Services.FileUploadService;
-using Microsoft.AspNetCore.Http;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace FurnitureStoreBE.Services.ProductService.ProductService
 {
@@ -29,6 +27,56 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
             _mapper = mapper;
             _log = log;
         }
+        public IQueryable<ProductResponse> GetProductByLinqQuery(IQueryable<Product> query)
+        {
+            var productList = query
+                .Select(product => new ProductResponse
+                {
+                    Id = product.Id,
+                    ProductName = product.ProductName,
+                    ImageSource = product.Asset != null ? product.Asset.URL : null,
+                    Unit = product.Unit,
+                    Description = product.Description,
+                    BrandName = product.Brand != null ? product.Brand.BrandName : null,
+                    CategoryName = product.Category != null ? product.Category.CategoryName : null,
+                    DisplayPrice = $"{product.MinPrice} - {product.MaxPrice}",
+                    Discount = product.Discount,
+                    Materials = product.Materials.Select(m => m.MaterialName).ToList(),
+                    Designers = product.Designers.Select(d => d.DesignerName).ToList(),
+                    ProductVariants = product.ProductVariants
+                        .Where(pv => !pv.IsDeleted)
+                        .Select(v => new ProductVariantResponse
+                        {
+                            Id = v.Id,
+                            ColorId = v.ColorId,
+                            ColorName = v.Color != null ? v.Color.ColorName : null,
+                            DisplayDimension = v.DisplayDimension,
+                            Quantity = v.Quantity,
+                            Price = v.Price,
+                            ImageSource = v.Assets.Select(a => a.URL).ToList()
+                        }).ToList()
+                });
+
+            return productList;
+        }
+
+        public async Task<List<ProductResponse>> GetProducts(IQueryable<Product> query)
+        {
+            var productList = await GetProductByLinqQuery(query).ToListAsync();
+            return productList;
+        }
+
+        public async Task<ProductResponse> GetProductById(Guid productId)
+        {
+            if(!await _dbContext.Products.AnyAsync(p => p.Id == productId))
+            {
+                throw new ObjectNotFoundException("Product not found");
+            }
+            var productQuery = _dbContext.Products.Where(p => p.Id == productId);
+            var product = await GetProductByLinqQuery(productQuery).SingleOrDefaultAsync();
+            return product;
+        }
+
         public async Task<PaginatedList<ProductResponse>> GetAllProduct(PageInfo pageInfo, ProductSearchRequest productSearchRequest)
         {
             var productQuery = _dbContext.Products

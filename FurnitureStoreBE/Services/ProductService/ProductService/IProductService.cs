@@ -8,7 +8,9 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
 {
     public interface IProductService
     {
+        Task<List<ProductResponse>> GetProducts(IQueryable<Product> query);
         // product
+        Task<ProductResponse> GetProductById(Guid productId);
         Task<PaginatedList<ProductResponse>> GetAllProduct(PageInfo pageInfo, ProductSearchRequest productSearchRequest);
         Task<ProductResponse> CreateProduct(ProductRequest productRequest);
         Task<ProductResponse> UpdateProduct(Guid productId, ProductRequest productRequest);
