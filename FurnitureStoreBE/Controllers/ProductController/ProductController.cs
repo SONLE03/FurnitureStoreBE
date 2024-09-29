@@ -27,32 +27,16 @@ namespace FurnitureStoreBE.Controllers.ProductController
         {
             return new SuccessfulResponse<object>(await _productService.CreateProduct(productRequest), (int)HttpStatusCode.Created, "Product created successfully").GetResponse();
         }
-        [HttpPost("productVariant/{productId}")]
-        public async Task<IActionResult> AddProductVariant(Guid productId, [FromForm] List<ProductVariantRequest> productVariantRequests)
-        {
-            return new SuccessfulResponse<object>(await _productService.AddProductVariants(productId, productVariantRequests), (int)HttpStatusCode.Created, "Product variants created successfully").GetResponse();
-        }
         [HttpPut("{productId}")]
         public async Task<IActionResult> UpdateProduct(Guid productId, [FromForm] ProductRequest productRequest)
         {
             return new SuccessfulResponse<object>(await _productService.UpdateProduct(productId, productRequest), (int)HttpStatusCode.OK, "Product modified successfully").GetResponse();
-        }
-        [HttpPut("productVariant/{productVariantId}")]
-        public async Task<IActionResult> UpdateProductVariant(Guid productVariantId, [FromForm] ProductVariantRequest productVariantRequest)
-        {
-            return new SuccessfulResponse<object>(await _productService.UpdateProductVariant(productVariantId, productVariantRequest), (int)HttpStatusCode.OK, "Product variant modified successfully").GetResponse();
         }
         [HttpDelete("{productId}")]
         public async Task<IActionResult> DeleteProduct(Guid productId)
         {
             await _productService.DeleteProduct(productId);
             return new SuccessfulResponse<object>(null, (int)HttpStatusCode.OK, "Product deleted successfully").GetResponse();
-        }
-        [HttpDelete("productVariant/{productVariantId}")]
-        public async Task<IActionResult> DeleteProductVariant(Guid productVariantId)
-        {
-            await _productService.DeleteProductVariant(productVariantId);
-            return new SuccessfulResponse<object>(null, (int)HttpStatusCode.OK, "Product variants deleted successfully").GetResponse();
         }
     }
 }

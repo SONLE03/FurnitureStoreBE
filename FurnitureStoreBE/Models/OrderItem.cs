@@ -20,6 +20,10 @@ namespace FurnitureStoreBE.Models
         public decimal Price { get; set; }
         public long Quantity { get; set; }
         [Column(TypeName = "decimal(18,2)")]
-        public required decimal SubTotal { get; set; }
+        public decimal SubTotal { get; set; }
+        public Guid? CartId { get; set; }
+        public Cart? Cart { get; set; }
+        public Guid? OrderId { get; set; }
+        public Order? Order { get; set; }
     }
 }

@@ -1,13 +1,12 @@
-﻿using FurnitureStoreBE.Data;
+﻿using AutoMapper;
+using FurnitureStoreBE.Data;
 using FurnitureStoreBE.DTOs.Request.OrderRequest;
 using FurnitureStoreBE.DTOs.Response.OrderResponse;
 using FurnitureStoreBE.Exceptions;
 using FurnitureStoreBE.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System.Drawing;
-using System.Security.AccessControl;
+
 
 namespace FurnitureStoreBE.Services.CartService
 {
@@ -15,31 +14,54 @@ namespace FurnitureStoreBE.Services.CartService
     {
         private readonly ApplicationDBContext _dbContext;
         private readonly ILogger<CartServiceImp> _logger;
-        public CartServiceImp(ApplicationDBContext dbContext, ILogger<CartServiceImp> logger)
+        private readonly IMapper _mapper;
+        public CartServiceImp(ApplicationDBContext dbContext, ILogger<CartServiceImp> logger, IMapper mapper)
         {
             _dbContext = dbContext;
             _logger = logger;
+            _mapper = mapper;
         }
-        public async Task<OrderItemResponse> AddOrderItem(OrderItemRequest orderItemRequest)
+        public async Task<List<OrderItemResponse>> GetCartItemByUser(string userId)
+        {
+            if (!await _dbContext.Users.AnyAsync(u => u.Id == userId))
+            {
+                throw new ObjectNotFoundException("User not found");
+            } 
+            var listCartItem = await _dbContext.OrderItems
+                .Include(ci => ci.Product)
+                .Include(ci => ci.Color)
+                .Where(ci => ci.UserId.Equals(userId) && ci.OrderId == null)
+                //.Select(i => new OrderItemResponse
+                //{
+                //    Id = i.Id,
+                //    ColorId = i.ColorId,
+                //    ColorName = i.Color.ColorName,
+                //    ProductId = i.ProductId,
+                //    ProductName = i.Product.ProductName,                  
+                //    Dimension = i.Dimension,
+                //    Quantity = i.Quantity,
+                //    Price = i.Price,
+                //    SubTotal = i.SubTotal
+                //})
+                .ToListAsync();
+            return _mapper.Map<List<OrderItemResponse>>(listCartItem);
+        }
+        public async Task<OrderItemResponse> AddCartItem(OrderItemRequest orderItemRequest)
         {
             await using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var product = await _dbContext.Products.Where(p => p.Id == orderItemRequest.ProductId).SingleOrDefaultAsync();
-                if (product == null)
-                {
-                    throw new ObjectNotFoundException("Product not found");
-                }
                 var userId = orderItemRequest.UserId;
+                var cart = await _dbContext.Carts.Where(c => c.UserId.Equals(userId)).SingleOrDefaultAsync();
+                if (cart == null)
+                {
+                    throw new ObjectNotFoundException("User not found");
+                }
                 var colorId = orderItemRequest.ColorId;
                 var dimension = orderItemRequest.Dimension;
                 var productId = orderItemRequest.ProductId;
                 var quantity = orderItemRequest.Quantity;
-                var color = await _dbContext.Colors.Where(c => c.Id == colorId).SingleOrDefaultAsync();
-                if(color == null)
-                {
-                    throw new ObjectNotFoundException("Color not found");
-                }
+
                 var existOrderItem = await _dbContext.OrderItems
                     .Where(ot => ot.UserId == userId
                             && ot.ColorId == colorId
@@ -50,10 +72,14 @@ namespace FurnitureStoreBE.Services.CartService
                 {
                     transaction.Commit();
 
-                    return await UpdateOrderItemQuantity(existOrderItem.Id, quantity);
+                    return await UpdateCartItemQuantity(existOrderItem.Id, quantity);
                 }
 
-                var productVariantIndex = await _dbContext.ProductVariants.Where(pv => pv.ProductId == product.Id && pv.ColorId == colorId && pv.DisplayDimension.Equals(dimension)).SingleOrDefaultAsync();
+                var productVariantIndex = await _dbContext.ProductVariants
+                    .Include(p => p.Product)
+                    .Include(c => c.Color)
+                    .Where(pv => pv.ProductId == productId && pv.ColorId == colorId && pv.DisplayDimension.Equals(dimension))
+                    .SingleOrDefaultAsync();
                 if (productVariantIndex == null)
                 {
                     throw new ObjectNotFoundException("Product variant not found");
@@ -64,12 +90,13 @@ namespace FurnitureStoreBE.Services.CartService
                 }
 
                 productVariantIndex.Quantity -= quantity;
-
+                var discountValue = productVariantIndex.Product.Discount;
                 var price = productVariantIndex.Price;
                 var subtotal = price * quantity;
-                if(product.Discount != 0)
+
+                if(discountValue != 0)
                 {
-                    subtotal = subtotal * product.Discount / 100;
+                    subtotal = subtotal * discountValue / 100;
                 }
                 var orderItem = new OrderItem
                 {
@@ -79,7 +106,8 @@ namespace FurnitureStoreBE.Services.CartService
                     Quantity = quantity,
                     Price = productVariantIndex.Price,
                     SubTotal = subtotal,
-                    UserId = userId
+                    UserId = userId,
+                    Cart = cart
                 };
                 await _dbContext.OrderItems.AddAsync(orderItem);
                 _dbContext.ProductVariants.Update(productVariantIndex);
@@ -89,13 +117,13 @@ namespace FurnitureStoreBE.Services.CartService
                 {
                     Id = orderItem.Id,
                     ColorId = colorId,
-                    ColorName = color.ColorName,
+                    ColorName = productVariantIndex.Color.ColorName,
                     ProductId = productId,
-                    ProductName = product.ProductName,
+                    ProductName = productVariantIndex.Product.ProductName,
                     Dimension = dimension,
                     Price = price,
                     SubTotal = subtotal,
-                    Quantity = quantity
+                    Quantity = quantity,
                 };
             }
             catch 
@@ -105,7 +133,9 @@ namespace FurnitureStoreBE.Services.CartService
             }
         }
 
-        public async Task RemoveOrderItem(Guid orderItemId)
+       
+
+        public async Task RemoveCartItem(Guid orderItemId)
         {
             var orderItem = await _dbContext.OrderItems
                   .Where(ot => ot.Id == orderItemId)
@@ -132,14 +162,12 @@ namespace FurnitureStoreBE.Services.CartService
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<OrderItemResponse> UpdateOrderItemQuantity(Guid orderItemId, long quantity)
+        public async Task<OrderItemResponse> UpdateCartItemQuantity(Guid orderItemId, long quantity)
         {
             await using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                _logger.LogInformation(quantity.ToString());
-
-                var existOrderItem = await _dbContext.OrderItems
+                var existOrderItem = await _dbContext.OrderItems   
                        .Where(ot => ot.Id == orderItemId)
                        .SingleOrDefaultAsync();
 
@@ -151,24 +179,18 @@ namespace FurnitureStoreBE.Services.CartService
                 {
                     throw new ObjectNotFoundException("Product not found");
                 }
-                var color = await _dbContext.Colors.Where(c => c.Id == existOrderItem.ColorId).SingleOrDefaultAsync();
-                if (color == null)
-                {
-                    throw new ObjectNotFoundException("Color not found");
-                }
-                var product = await _dbContext.Products.Where(p => p.Id == existOrderItem.ProductId).SingleOrDefaultAsync();
 
                 var productVariantIndex = await _dbContext.ProductVariants
+                    .Include(c => c.Color)
+                    .Include(p => p.Product)
                     .Where(pv => pv.ProductId == existOrderItem.ProductId && pv.ColorId == existOrderItem.ColorId && pv.DisplayDimension.Equals(existOrderItem.Dimension))
                     .SingleOrDefaultAsync();
                 if (productVariantIndex == null)
                 {
                     throw new ObjectNotFoundException("Product variant not found");
                 }
-                _logger.LogInformation(productVariantIndex.Quantity.ToString());
 
                 productVariantIndex.Quantity += existOrderItem.Quantity;
-                _logger.LogInformation(productVariantIndex.Quantity.ToString());
 
                 if (productVariantIndex.Quantity < quantity)
                 {
@@ -176,19 +198,17 @@ namespace FurnitureStoreBE.Services.CartService
                 }
 
                 productVariantIndex.Quantity -= quantity;
-
+                var discountValue = productVariantIndex.Product.Discount;
                 var price = productVariantIndex.Price;
                 var subtotal = price * quantity;
-                if (product.Discount != 0)
+                if (discountValue != 0)
                 {
-                    subtotal = subtotal * product.Discount / 100;
+                    subtotal = subtotal * discountValue / 100;
                 }
 
                 existOrderItem.Quantity = quantity;
                 existOrderItem.Price = price;
                 existOrderItem.SubTotal = subtotal;
-                _logger.LogInformation(existOrderItem.Quantity.ToString());
-                _logger.LogInformation(productVariantIndex.Quantity.ToString());
 
                 _dbContext.OrderItems.Update(existOrderItem);
                 _dbContext.ProductVariants.Update(productVariantIndex);
@@ -199,9 +219,9 @@ namespace FurnitureStoreBE.Services.CartService
                 {
                     Id = existOrderItem.Id,
                     ColorId = existOrderItem.ColorId,
-                    ColorName = color.ColorName,
+                    ColorName = productVariantIndex.Color.ColorName,
                     ProductId = existOrderItem.ProductId,
-                    ProductName = existOrderItem.Product.ProductName,
+                    ProductName = productVariantIndex.Product.ProductName,
                     Dimension = existOrderItem.Dimension,
                     Price = price,
                     SubTotal = subtotal,

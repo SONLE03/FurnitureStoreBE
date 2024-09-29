@@ -20,6 +20,7 @@ namespace FurnitureStoreBE.DTOs.Response.ProductResponse
     public class ProductVariantResponse
     {
         public Guid Id { get; set; }
+        public Guid ColorId { get; set; }
         public string ColorName { get; set; }
         public string DisplayDimension { get; set; }
         public long Quantity { get; set; }

@@ -27,6 +27,10 @@ using FurnitureStoreBE.Services.ProductService.CategoryService;
 using FurnitureStoreBE.Services.ProductService.ColorService;
 using FurnitureStoreBE.Services.ProductService.ProductService;
 using FurnitureStoreBE.Services.CartService;
+using Hangfire;
+using FurnitureStoreBE.Common;
+using Hangfire.MemoryStorage;
+using FurnitureStoreBE.Services.CouponService;
 
 var builder = WebApplication.CreateBuilder(args);
 //Log.Logger = new LoggerConfiguration()
@@ -216,6 +220,10 @@ builder.Services.AddSingleton<IRedisCacheService, RedisCacheServiceImp>(provider
     new RedisCacheServiceImp(builder.Configuration.GetConnectionString("Redis")) // Adjust connection string as needed
 );
 
+builder.Services.AddHangfire(c => c.UseMemoryStorage());
+builder.Services.AddHangfireServer(); 
+
+
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
 
 builder.Services.AddScoped<IFileUploadService, FileUploadServiceImp>();
@@ -224,7 +232,7 @@ builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailS
 builder.Services.AddTransient<IMailService, MailServiceImp>();
 
 builder.Services.AddExceptionHandler<DefaultExceptionHandler>();
-
+builder.Services.AddScoped<ScheduledTasks>();
 builder.Services.AddScoped<JwtUtil>();
 builder.Services.AddScoped<IAuthService, AuthServiceImp>();
 builder.Services.AddScoped<ITokenService, TokenServiceImp>();
@@ -238,6 +246,7 @@ builder.Services.AddScoped<ICategoryService, CategoryServiceImp>();
 builder.Services.AddScoped<IColorService, ColorServiceImp>();
 builder.Services.AddScoped<IProductService, ProductServiceImp>();
 builder.Services.AddScoped<ICartService, CartServiceImp>();
+builder.Services.AddScoped<ICouponService, CouponServiceImp>();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -249,9 +258,18 @@ if (app.Environment.IsDevelopment())
 using (var scope = app.Services.CreateScope())
 {
     AppUserSeeder.SeedRootAdminUser(scope, app);
-}
-//app.UseMiddleware<LoggingMiddleware>();
+    var recurringJobManager = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
+    var scheduledTasks = scope.ServiceProvider.GetRequiredService<ScheduledTasks>();
 
+    recurringJobManager.AddOrUpdate("CouponStatusUpdate",
+        () => scheduledTasks.UpdateCouponStatus(),
+        Cron.Daily(3));
+    //recurringJobManager.AddOrUpdate("BackupDatabase",
+    //    () => scheduledTasks.BackupDatabase(),
+    //    Cron.Minutely);
+}
+
+//app.UseMiddleware<LoggingMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseCors(x => x
@@ -263,6 +281,7 @@ app.UseAuthorization();
 app.MapControllers();
 app.UseExceptionHandler(opt => { });
 app.UseMiddleware<HeaderCheckMiddleware>();
+app.UseHangfireDashboard();
 app.Run();
 
 

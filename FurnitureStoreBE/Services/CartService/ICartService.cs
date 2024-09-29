@@ -5,8 +5,9 @@ namespace FurnitureStoreBE.Services.CartService
 {
     public interface ICartService
     {
-        Task<OrderItemResponse> AddOrderItem(OrderItemRequest orderItemRequest);
-        Task RemoveOrderItem(Guid orderItemId);
-        Task<OrderItemResponse> UpdateOrderItemQuantity(Guid orderItemId, long quantity);
+        Task<List<OrderItemResponse>> GetCartItemByUser(string userId);
+        Task<OrderItemResponse> AddCartItem(OrderItemRequest orderItemRequest);
+        Task RemoveCartItem(Guid orderItemId);
+        Task<OrderItemResponse> UpdateCartItemQuantity(Guid orderItemId, long quantity);
     }
 }

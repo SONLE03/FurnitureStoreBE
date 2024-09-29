@@ -187,13 +187,6 @@ namespace FurnitureStoreBE.Data
                     j => j.HasOne<Designer>().WithMany().HasForeignKey("DesignerId").OnDelete(DeleteBehavior.Restrict),
                     j => j.HasOne<Product>().WithMany().HasForeignKey("ProductId").OnDelete(DeleteBehavior.Restrict));
 
-            modelBuilder.Entity<Product>()
-                .HasMany(p => p.Coupons)
-                .WithMany(p => p.ProductApplied)
-                .UsingEntity<Dictionary<string, object>>(
-                    "ProductApplied",
-                    j => j.HasOne<Coupon>().WithMany().HasForeignKey("CouponId").OnDelete(DeleteBehavior.Restrict),
-                    j => j.HasOne<Product>().WithMany().HasForeignKey("ProductId").OnDelete(DeleteBehavior.Restrict));
 
             modelBuilder.Entity<Product>()
                 .HasMany(p => p.ProductVariants)
@@ -271,7 +264,8 @@ namespace FurnitureStoreBE.Data
                 .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Order>()
                .HasMany(p => p.OrderItems)
-               .WithOne()
+               .WithOne(p => p.Order)
+               .HasForeignKey(p => p.OrderId)
                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Order>()
                 .HasOne(p => p.Coupon)
@@ -289,8 +283,12 @@ namespace FurnitureStoreBE.Data
                 .HasForeignKey(p => p.AddressId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            
 
+            modelBuilder.Entity<Cart>()
+              .HasMany(p => p.OrderItems)
+              .WithOne(p => p.Cart)
+              .HasForeignKey(p => p.CartId)
+              .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Cart>()
               .HasOne(p => p.User)
               .WithOne(p => p.Cart)

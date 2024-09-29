@@ -10,8 +10,8 @@ namespace FurnitureStoreBE.Models
         public Guid Id { get; set; }
         public Guid ProductId { get; set; }
         public Product Product { get; set; }
-        public Guid? ColorId { get; set; }
-        public Color? Color { get; set; }
+        public Guid ColorId { get; set; }
+        public Color Color { get; set; }
         public string DisplayDimension { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal Length { get; set; } = 0;

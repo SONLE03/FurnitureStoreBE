@@ -2,6 +2,7 @@
 {
     public enum ECouponType
     {
-        Percentage
+        Percentage,
+        Value
     }
 }

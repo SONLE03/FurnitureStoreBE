@@ -341,6 +341,7 @@ namespace FurnitureStoreBE.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Code = table.Column<string>(type: "text", nullable: false),
                     AssetId = table.Column<Guid>(type: "uuid", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
                     Quantity = table.Column<long>(type: "bigint", nullable: false),
                     UsageCount = table.Column<long>(type: "bigint", nullable: false),
                     MinOrderValue = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
@@ -349,7 +350,12 @@ namespace FurnitureStoreBE.Migrations
                     EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ECouponType = table.Column<int>(type: "integer", nullable: false),
                     ECouponStatus = table.Column<int>(type: "integer", nullable: false),
-                    ECouponApplyType = table.Column<int>(type: "integer", nullable: false)
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedBy = table.Column<string>(type: "text", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "text", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleteDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -678,7 +684,8 @@ namespace FurnitureStoreBE.Migrations
                         name: "FK_OrderItem_Cart_CartId",
                         column: x => x.CartId,
                         principalTable: "Cart",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_OrderItem_Color_ColorId",
                         column: x => x.ColorId,
@@ -693,30 +700,6 @@ namespace FurnitureStoreBE.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_OrderItem_Product_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Product",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductApplied",
-                columns: table => new
-                {
-                    CouponId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductApplied", x => new { x.CouponId, x.ProductId });
-                    table.ForeignKey(
-                        name: "FK_ProductApplied_Coupon_CouponId",
-                        column: x => x.CouponId,
-                        principalTable: "Coupon",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ProductApplied_Product_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Product",
                         principalColumn: "Id",
@@ -777,7 +760,7 @@ namespace FurnitureStoreBE.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ColorId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ColorId = table.Column<Guid>(type: "uuid", nullable: false),
                     DisplayDimension = table.Column<string>(type: "text", nullable: false),
                     Length = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     Width = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
@@ -1260,11 +1243,6 @@ namespace FurnitureStoreBE.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductApplied_ProductId",
-                table: "ProductApplied",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ProductDesigner_ProductId",
                 table: "ProductDesigner",
                 column: "ProductId");
@@ -1442,9 +1420,6 @@ namespace FurnitureStoreBE.Migrations
 
             migrationBuilder.DropTable(
                 name: "OrderItem");
-
-            migrationBuilder.DropTable(
-                name: "ProductApplied");
 
             migrationBuilder.DropTable(
                 name: "ProductDesigner");

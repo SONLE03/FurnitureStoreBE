@@ -2,6 +2,8 @@
 {
     public enum ECouponStatus
     {
-        Active
+        Active,
+        Expired,
+        Disable
     }
 }

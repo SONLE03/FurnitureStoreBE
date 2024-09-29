@@ -9,6 +9,7 @@
         Brand,
         Designer,
         RoomSpace,
-        Category
+        Category,
+        Coupon
     }
 }
