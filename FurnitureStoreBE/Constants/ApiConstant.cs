@@ -23,6 +23,7 @@
         public const string PRODUCTVARIANT = VERSION + "/productVariant";
         public const string CART = VERSION + "/cart";
         public const string COUPON = VERSION + "/coupon";
+        public const string FAVORITE = VERSION + "/favorite";
 
 
 

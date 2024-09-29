@@ -17,10 +17,15 @@ namespace FurnitureStoreBE.Controllers.ProductController
         {
             _productService = productService;
         }
+        [HttpGet("{productId}")]
+        public async Task<IActionResult> GetProducts(Guid productId)
+        {
+            return new SuccessfulResponse<object>(await _productService.GetProductById(productId), (int)HttpStatusCode.OK, "Get product successfully").GetResponse();
+        }
         [HttpGet()]
         public async Task<IActionResult> GetProducts([FromQuery] PageInfo pageInfo, [FromQuery] ProductSearchRequest productSearchRequest)
         {
-            return new SuccessfulResponse<object>(await _productService.GetAllProduct(pageInfo, productSearchRequest), (int)HttpStatusCode.OK, "Product created successfully").GetResponse();
+            return new SuccessfulResponse<object>(await _productService.GetAllProduct(pageInfo, productSearchRequest), (int)HttpStatusCode.OK, "Get products successfully").GetResponse();
         }
         [HttpPost()]
         public async Task<IActionResult> CreateProduct([FromForm] ProductRequest productRequest)
