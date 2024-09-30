@@ -26,11 +26,12 @@ namespace FurnitureStoreBE.Data
         public DbSet<FurnitureType> FurnitureTypes  { get; set; }
         public DbSet<Material> Materials { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<ProductVariant> ProductVariants { get; set; }
         public DbSet<Question> Question { get; set; }
         public DbSet<Review> Reviews { get; set; }
-        public DbSet<Reply> Replys { get; set; }
+        public DbSet<Reply> Replies { get; set; }
         public DbSet<UserUsedCoupon> UserUsedCoupon { get; set; }   
         public DbSet<Notification> Notification { get; set; }
         public DbSet<AspNetTypeClaims> TypeClaims { get; set; }
@@ -211,11 +212,6 @@ namespace FurnitureStoreBE.Data
                 .OnDelete(DeleteBehavior.Restrict);
             // Reply relationship
             modelBuilder.Entity<Reply>()
-                .HasOne(p => p.Review)
-                .WithMany(p => p.Reply)
-                .HasForeignKey(p => p.ReviewId)
-                .OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<Reply>()
                .HasOne(p => p.Question)
                .WithMany(p => p.Reply)
                .HasForeignKey(p => p.QuestionId)
@@ -237,6 +233,16 @@ namespace FurnitureStoreBE.Data
                .WithMany(p => p.Reviews)
                .HasForeignKey(p => p.UserId)
                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Review>()
+                .HasMany(a => a.Asset)
+                .WithOne(r => r.Review)
+                .HasForeignKey(a => a.ReviewId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Reply>()
+               .HasOne(p => p.Review)
+               .WithMany(p => p.Reply)
+               .HasForeignKey(p => p.ReviewId)
+               .OnDelete(DeleteBehavior.SetNull);
             // Notification relationship
             modelBuilder.Entity<Notification>()
                .HasMany(p => p.Users)

@@ -9,7 +9,7 @@ namespace FurnitureStoreBE.Models
     {
         [Key]
         public Guid Id { get; set; }
-        public required string ProductName { get; set; }
+        public string ProductName { get; set; }
         public string? Description { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal MinPrice { get; set; }
@@ -18,8 +18,11 @@ namespace FurnitureStoreBE.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal Discount { get; set; } = 0;
         public long Sold { set; get; } = 0;
-        public string Unit { set; get; } 
+        public string Unit { set; get; }
+        public int RatingCount { get; set; }
 
+        [Range(1, 5, ErrorMessage = "Rate must be between 1 and 5.")]
+        public float RatingValue { get; set; } 
         public EProductStatus Status { get; set; } = EProductStatus.ACTIVE;
         public Guid? AssetId { get; set; }
         public Asset? Asset { get; set; }
