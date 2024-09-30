@@ -10,6 +10,7 @@
         Designer,
         RoomSpace,
         Category,
-        Coupon
+        Coupon,
+        Review
     }
 }

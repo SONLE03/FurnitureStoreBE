@@ -8,6 +8,7 @@ namespace FurnitureStoreBE.Services.FileUploadService
         Task<List<ImageUploadResult>> UploadFilesAsync(List<IFormFile> files, string folder);
         Task<DeletionResult> DestroyFileByPublicIdAsync(string publicId);
         Task<DeletionResult> DestroyFileByAssetIdAsync(Guid assetId);
+        Task<List<DeletionResult>> DestroyFilesByAssetIdsAsync(List<Guid> assetIds);
 
     }
 }

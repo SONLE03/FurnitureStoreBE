@@ -65,5 +65,23 @@ namespace FurnitureStoreBE.Services.FileUploadService
             var deletionParams = new DeletionParams(publicId);
             return await Task.Run(() => _cloudinary.Destroy(deletionParams));
         }
+        public async Task<List<DeletionResult>> DestroyFilesByAssetIdsAsync(List<Guid> assetIds)
+        {
+            var publicIds = await _dbContext.Assets
+                .Where(a => assetIds.Contains(a.Id))
+                .Select(a => a.CloudinaryId)
+                .ToListAsync();
+
+            var deletionResults = new List<DeletionResult>();
+
+            foreach (var publicId in publicIds)
+            {
+                var deletionParams = new DeletionParams(publicId);
+                var result = await Task.Run(() => _cloudinary.Destroy(deletionParams));
+                deletionResults.Add(result);
+            }
+
+            return deletionResults;
+        }
     }
 }

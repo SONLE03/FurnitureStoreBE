@@ -6,6 +6,9 @@ using FurnitureStoreBE.DTOs.Response.UserResponse;
 using FurnitureStoreBE.Models;
 using Microsoft.CodeAnalysis;
 using FurnitureStoreBE.DTOs.Response.CouponResponse;
+using FurnitureStoreBE.DTOs.Response.ReviewResponse;
+using FurnitureStoreBE.DTOs.Response.ReplyResponses;
+using FurnitureStoreBE.DTOs.Response.QuestionResponse;
 namespace FurnitureStoreBE.Mapper
 {
     public class AutoMapperConfig : Profile
@@ -46,6 +49,26 @@ namespace FurnitureStoreBE.Mapper
                 .ForMember(dest => dest.ImageSource, otp => otp.MapFrom(src => src.Asset.URL))
                 .ForMember(dest => dest.ECouponStatus, otp => otp.MapFrom(src => src.ECouponStatus.ToString()))
                 .ForMember(dest => dest.ECouponType, otp => otp.MapFrom(src => src.ECouponType.ToString()));
+           
+            CreateMap<Reply, ReplyResponse>()
+              .ForMember(dest => dest.FullName, otp => otp.MapFrom(src => src.User.FullName))
+              .ForMember(dest => dest.Role, otp => otp.MapFrom(src => src.User.Role));
+            
+            CreateMap<Review, ReviewResponse>()
+                .ForMember(dest => dest.ImagesSource, otp => otp.MapFrom(src => src.Asset.Select(a => a.URL).ToList()))
+                .ForMember(dest => dest.FullName, otp => otp.MapFrom(src => src.User.FullName))
+                .ForMember(dest => dest.Role, otp => otp.MapFrom(src => src.User.Role))
+                .ForMember(dest => dest.UpdatedDate, otp => otp.MapFrom(src => src.UpdatedDate))
+                .ForMember(dest => dest.ReplyResponses, otp => otp.MapFrom(src => src.Reply));
+
+            CreateMap<Question, QuestionResponse>()
+                .ForMember(dest => dest.FullName, otp => otp.MapFrom(src => src.User.FullName))
+                .ForMember(dest => dest.Role, otp => otp.MapFrom(src => src.User.Role))
+                .ForMember(dest => dest.UpdatedDate, otp => otp.MapFrom(src => src.UpdatedDate))
+                .ForMember(dest => dest.ReplyResponses, otp => otp.MapFrom(src => src.Reply));
+
+          
+
         }
     }
 }

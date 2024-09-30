@@ -24,6 +24,8 @@
         public const string CART = VERSION + "/cart";
         public const string COUPON = VERSION + "/coupon";
         public const string FAVORITE = VERSION + "/favorite";
+        public const string REVIEW = VERSION + "/review";
+        public const string QUESTION = VERSION + "/question";
 
 
 
