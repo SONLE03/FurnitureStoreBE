@@ -1,0 +1,7 @@
+[build]
+builder = "dockerfile"
+dockerfilePath = "./FurnitureStoreBE/Dockerfile"
+
+[deploy]
+startCommand = "dotnet FurnitureStoreBE.dll"
+restartPolicyType = "never"
