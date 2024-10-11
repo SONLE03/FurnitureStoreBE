@@ -17,7 +17,6 @@ using FurnitureStoreBE.Services.UserService;
 using Microsoft.Extensions.Options;
 using FurnitureStoreBE.Services.FileUploadService;
 using CloudinaryDotNet;
-using Serilog;
 using FurnitureStoreBE.Services.ProductService.BrandService;
 using FurnitureStoreBE.Services.ProductService.DesignerService;
 using FurnitureStoreBE.Services.ProductService.RoomSpaceService;
@@ -34,6 +33,9 @@ using FurnitureStoreBE.Services.CouponService;
 using FurnitureStoreBE.Services.ProductService.FavoriteProductService;
 using FurnitureStoreBE.Services.ReviewService;
 using FurnitureStoreBE.Services.QuestionService;
+using FurnitureStoreBE.Services.OrderService;
+using FurnitureStoreBE.Configurations;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 //Log.Logger = new LoggerConfiguration()
@@ -48,8 +50,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
+//builder.Services.AddDbContext<ApplicationDBContext>(options =>
+//    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+var databaseConnectionString = ConnectionHelper.GetDatabaseConnectionString(builder.Configuration);
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(databaseConnectionString));
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Furniture Store API", Version = "v1" });
@@ -219,9 +224,25 @@ builder.Services.AddSingleton(serviceProvider =>
 
 builder.Services.AddAutoMapper(typeof(Program));
 
-builder.Services.AddSingleton<IRedisCacheService, RedisCacheServiceImp>(provider =>
-    new RedisCacheServiceImp(builder.Configuration.GetConnectionString("Redis")) // Adjust connection string as needed
-);
+//builder.Services.AddSingleton<IRedisCacheService, RedisCacheServiceImp>(provider =>
+//    new RedisCacheServiceImp(builder.Configuration.GetConnectionString("Redis")) // Adjust connection string as needed
+//);
+var redisConnectionString = ConnectionHelper.GetRedisConnectionString(builder.Configuration);
+var options = ConfigurationOptions.Parse(redisConnectionString);
+options.AbortOnConnectFail = false; // Allow retry if connection fails
+
+try
+{
+    var redisConnection = ConnectionMultiplexer.Connect(options);
+    builder.Services.AddSingleton<IConnectionMultiplexer>(redisConnection);
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Redis connection error: {ex.Message}");
+    throw;
+}
+
+builder.Services.AddHttpClient();
 
 builder.Services.AddHangfire(c => c.UseMemoryStorage());
 builder.Services.AddHangfireServer(); 
@@ -248,22 +269,24 @@ builder.Services.AddScoped<IFurnitureTypeService, FurnitureTypeServiceImp>();
 builder.Services.AddScoped<ICategoryService, CategoryServiceImp>();
 builder.Services.AddScoped<IColorService, ColorServiceImp>();
 builder.Services.AddScoped<IProductService, ProductServiceImp>();
-builder.Services.AddScoped<ICartService, CartServiceImp>();
+builder.Services.AddScoped<IOrderItemService, OrderItemServiceImp>();
 builder.Services.AddScoped<ICouponService, CouponServiceImp>();
 builder.Services.AddScoped<IFavoriteProductService, FavoriteProductServiceImp>();
 builder.Services.AddScoped<IReviewService, ReviewServiceImp>();
 builder.Services.AddScoped<IQuestionService, QuestionServiceImp>();
-
+builder.Services.AddScoped<IOrderService, OrderServiceImp>();
+builder.Services.AddScoped<IRedisCacheService, RedisCacheServiceImp>();
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    DatabaseMigrationUtil.DataBaseMigrationInstallation(app);
+    //DatabaseMigrationUtil.DataBaseMigrationInstallation(app);
 }
 using (var scope = app.Services.CreateScope())
 {
+    await DataHelper.ManageDataAsync(scope.ServiceProvider);
     AppUserSeeder.SeedRootAdminUser(scope, app);
     var recurringJobManager = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
     var scheduledTasks = scope.ServiceProvider.GetRequiredService<ScheduledTasks>();
@@ -276,9 +299,9 @@ using (var scope = app.Services.CreateScope())
     //    Cron.Minutely);
 }
 
-//app.UseMiddleware<LoggingMiddleware>();
 
-app.UseHttpsRedirection();
+
+//app.UseHttpsRedirection();
 app.UseCors(x => x
     .AllowAnyOrigin()
     .AllowAnyMethod()
@@ -287,6 +310,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.UseExceptionHandler(opt => { });
+app.UseMiddleware<LoggingMiddleware>();
 app.UseMiddleware<HeaderCheckMiddleware>();
 app.UseHangfireDashboard();
 app.Run();

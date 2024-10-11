@@ -197,9 +197,9 @@ namespace FurnitureStoreBE.Services.CouponService
             }
         }
 
-        public async Task<CouponResponse> UseCoupon(Guid couponId, string code)
+        public async Task<Coupon> UseCoupon(Guid couponId, string code = null)
         {
-            var coupon = await _dbContext.Coupons.Where(c => c.Code == code).SingleOrDefaultAsync();
+            var coupon = await _dbContext.Coupons.Where(c => c.Id == couponId || c.Code == code).SingleOrDefaultAsync();
             if (coupon == null)
             {
                 throw new ObjectNotFoundException("Coupon not found");
@@ -215,7 +215,7 @@ namespace FurnitureStoreBE.Services.CouponService
             }
             _dbContext.Coupons.Update(coupon);
             await _dbContext.SaveChangesAsync();
-            return _mapper.Map<CouponResponse>(coupon);
+            return coupon;
         }
 
         private async Task<CouponResponse> ModifyCouponStatus(Guid couponId, ECouponStatus eCouponStatus)

@@ -2,6 +2,12 @@
 {
     public enum EOrderStatus
     {
-        Paid
+        Pending,
+        Paid, 
+        Canceled,
+        DeliveryToShipper,
+        Delivering,
+        Completed,
+        ReturnGoods
     }
 }

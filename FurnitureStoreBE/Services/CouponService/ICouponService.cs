@@ -2,6 +2,7 @@
 using FurnitureStoreBE.Common.Pagination;
 using FurnitureStoreBE.DTOs.Request.CouponRequest;
 using FurnitureStoreBE.DTOs.Response.CouponResponse;
+using FurnitureStoreBE.Models;
 
 namespace FurnitureStoreBE.Services.CouponService
 {
@@ -15,7 +16,7 @@ namespace FurnitureStoreBE.Services.CouponService
         Task<CouponResponse> GetCoupon(Guid couponId);
         Task<CouponResponse> ActiveCoupon(Guid couponId);
         Task<CouponResponse> DisableCoupon(Guid couponId);
-        Task<CouponResponse> UseCoupon(Guid couponId, string code);
+        Task<Coupon> UseCoupon(Guid couponId, string code = null);
 
     }
 }

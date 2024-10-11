@@ -11,8 +11,8 @@ namespace FurnitureStoreBE.Controllers.CartController
     [Route(Routes.CART)]
     public class CartController : ControllerBase
     {
-        private readonly ICartService _cartService;
-        public CartController(ICartService cartService)
+        private readonly IOrderItemService _cartService;
+        public CartController(IOrderItemService cartService)
         {
             _cartService = cartService;
         }
@@ -21,10 +21,10 @@ namespace FurnitureStoreBE.Controllers.CartController
         {
             return new SuccessfulResponse<object>(await _cartService.GetCartItemByUser(userId), (int)HttpStatusCode.OK, "Get brand successfully").GetResponse();
         }
-        [HttpPost()]
-        public async Task<IActionResult> AddCartItem([FromBody] OrderItemRequest orderItemRequest)
+        [HttpPost("{userId}")]
+        public async Task<IActionResult> AddCartItem(string userId, [FromBody] OrderItemRequest orderItemRequest)
         {
-            return new SuccessfulResponse<object>(await _cartService.AddCartItem(orderItemRequest), (int)HttpStatusCode.Created, "Cart item added successfully").GetResponse();
+            return new SuccessfulResponse<object>(await _cartService.AddCartItem(orderItemRequest, userId), (int)HttpStatusCode.Created, "Cart item added successfully").GetResponse();
         }
         [HttpPut("{cartItemId}")]
         public async Task<IActionResult> UpdateCartItemQuantity(Guid cartItemId, [FromQuery] long quantity)

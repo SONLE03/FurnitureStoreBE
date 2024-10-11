@@ -10,11 +10,10 @@ namespace FurnitureStoreBE.Services.Caching
         private readonly IDatabase _cache;
         private readonly IServer _server;
 
-        public RedisCacheServiceImp(string connectionString)
+        public RedisCacheServiceImp(IConnectionMultiplexer redis)
         {
-            var redis = ConnectionMultiplexer.Connect(connectionString);
             _cache = redis.GetDatabase();
-            _server = redis.GetServer(redis.GetEndPoints()[0]); // Adjust if needed
+            _server = redis.GetServer(redis.GetEndPoints()[0]);
         }
 
         public async Task<T?> GetData<T>(string key)

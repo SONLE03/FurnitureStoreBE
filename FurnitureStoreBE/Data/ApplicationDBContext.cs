@@ -23,6 +23,7 @@ namespace FurnitureStoreBE.Data
         public DbSet<Designer> Designer { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<RoomSpace> RoomSpaces { get; set; }
+        public DbSet<OrderStatus> OrderStatus { get; set; }
         public DbSet<FurnitureType> FurnitureTypes  { get; set; }
         public DbSet<Material> Materials { get; set; }
         public DbSet<Product> Products { get; set; }
