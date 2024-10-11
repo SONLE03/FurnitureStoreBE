@@ -17,21 +17,27 @@ namespace FurnitureStoreBE.Models
         public DateTime DeliveredAt { get; set; }
         public string? Note { get; set; }
         [Column(TypeName = "decimal(18,2)")]
-        public required decimal ShippingFee { get; set; }
-        public EOrderStatus OrderStatus { get; set; }
+        public decimal ShippingFee { get; set; } = 30000;
+        public EOrderStatus OrderStatus { get; set; } = EOrderStatus.Pending;
         public Guid? CouponId { get; set; }
-        public Coupon Coupon { get; set; }
+        public Coupon? Coupon { get; set; }
         public string UserId { get; set; }
         public User User { get; set; }
         public Guid AddressId { get; set; }
         public Address Address { get; set; }
         [Column(TypeName = "decimal(18,2)")]
-        public required decimal TaxFee { get; set; }
+        public decimal TaxFee { get; set; }
         [Column(TypeName = "decimal(18,2)")]
-        public required decimal SubTotal { get; set; }
+        public decimal SubTotal { get; set; }
         [Column(TypeName = "decimal(18,2)")]
-        public required decimal Total { get; set; }
+        public decimal Total { get; set; }
+        public decimal AccountsReceivable { get; set; } = 0;
         public ICollection<OrderItem> OrderItems { get; set; }
-
+        public ICollection<OrderStatus> OrderStatuses { get; set; }
+    }
+    public class CacheOrder
+    {
+        public Order Order { get; set; }
+        public List<OrderItem> OrderItems { get; set; }
     }
 }

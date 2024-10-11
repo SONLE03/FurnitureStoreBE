@@ -197,6 +197,9 @@ namespace FurnitureStoreBE.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("OrderStatusId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid?>("ProductVariantId")
                         .HasColumnType("uuid");
 
@@ -208,6 +211,8 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderStatusId");
 
                     b.HasIndex("ProductVariantId");
 
@@ -645,6 +650,9 @@ namespace FurnitureStoreBE.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<decimal>("AccountsReceivable")
+                        .HasColumnType("numeric");
+
                     b.Property<Guid>("AddressId")
                         .HasColumnType("uuid");
 
@@ -772,6 +780,54 @@ namespace FurnitureStoreBE.Migrations
                     b.ToTable("OrderItem");
                 });
 
+            modelBuilder.Entity("FurnitureStoreBE.Models.OrderStatus", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeleteDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ShipperId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("OrderStatus");
+                });
+
             modelBuilder.Entity("FurnitureStoreBE.Models.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -814,6 +870,12 @@ namespace FurnitureStoreBE.Migrations
                     b.Property<string>("ProductName")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("RatingCount")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("RatingValue")
+                        .HasColumnType("real");
 
                     b.Property<long>("Sold")
                         .HasColumnType("bigint");
@@ -2428,6 +2490,10 @@ namespace FurnitureStoreBE.Migrations
 
             modelBuilder.Entity("FurnitureStoreBE.Models.Asset", b =>
                 {
+                    b.HasOne("FurnitureStoreBE.Models.OrderStatus", null)
+                        .WithMany("Asset")
+                        .HasForeignKey("OrderStatusId");
+
                     b.HasOne("FurnitureStoreBE.Models.ProductVariant", "ProductVariant")
                         .WithMany("Assets")
                         .HasForeignKey("ProductVariantId")
@@ -2435,7 +2501,8 @@ namespace FurnitureStoreBE.Migrations
 
                     b.HasOne("FurnitureStoreBE.Models.Review", "Review")
                         .WithMany("Asset")
-                        .HasForeignKey("ReviewId");
+                        .HasForeignKey("ReviewId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("ProductVariant");
 
@@ -2609,6 +2676,23 @@ namespace FurnitureStoreBE.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FurnitureStoreBE.Models.OrderStatus", b =>
+                {
+                    b.HasOne("FurnitureStoreBE.Models.Order", "Order")
+                        .WithMany("OrderStatuses")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FurnitureStoreBE.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("FurnitureStoreBE.Models.Product", b =>
                 {
                     b.HasOne("FurnitureStoreBE.Models.Asset", "Asset")
@@ -2691,7 +2775,7 @@ namespace FurnitureStoreBE.Migrations
                     b.HasOne("FurnitureStoreBE.Models.Review", "Review")
                         .WithMany("Reply")
                         .HasForeignKey("ReviewId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("FurnitureStoreBE.Models.User", "User")
                         .WithMany("Reply")
@@ -2934,6 +3018,13 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("FurnitureStoreBE.Models.Order", b =>
                 {
                     b.Navigation("OrderItems");
+
+                    b.Navigation("OrderStatuses");
+                });
+
+            modelBuilder.Entity("FurnitureStoreBE.Models.OrderStatus", b =>
+                {
+                    b.Navigation("Asset");
                 });
 
             modelBuilder.Entity("FurnitureStoreBE.Models.Product", b =>

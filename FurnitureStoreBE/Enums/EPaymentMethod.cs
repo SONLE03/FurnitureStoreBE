@@ -2,7 +2,7 @@
 {
     public enum EPaymentMethod
     {
-        COD
-
+        COD,
+        VNPAY
     }
 }

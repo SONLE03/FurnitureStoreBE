@@ -10,12 +10,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FurnitureStoreBE.Services.CartService
 {
-    public class CartServiceImp : ICartService
+    public class OrderItemServiceImp : IOrderItemService
     {
         private readonly ApplicationDBContext _dbContext;
-        private readonly ILogger<CartServiceImp> _logger;
+        private readonly ILogger<OrderItemServiceImp> _logger;
         private readonly IMapper _mapper;
-        public CartServiceImp(ApplicationDBContext dbContext, ILogger<CartServiceImp> logger, IMapper mapper)
+        public OrderItemServiceImp(ApplicationDBContext dbContext, ILogger<OrderItemServiceImp> logger, IMapper mapper)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -46,12 +46,11 @@ namespace FurnitureStoreBE.Services.CartService
                 .ToListAsync();
             return _mapper.Map<List<OrderItemResponse>>(listCartItem);
         }
-        public async Task<OrderItemResponse> AddCartItem(OrderItemRequest orderItemRequest)
+        public async Task<OrderItemResponse> AddCartItem(OrderItemRequest orderItemRequest,string userId)
         {
             await using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                var userId = orderItemRequest.UserId;
                 var cart = await _dbContext.Carts.Where(c => c.UserId.Equals(userId)).SingleOrDefaultAsync();
                 if (cart == null)
                 {

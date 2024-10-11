@@ -66,7 +66,7 @@ namespace FurnitureStoreBE.Mapper
                 .ForMember(dest => dest.Role, otp => otp.MapFrom(src => src.User.Role))
                 .ForMember(dest => dest.UpdatedDate, otp => otp.MapFrom(src => src.UpdatedDate))
                 .ForMember(dest => dest.ReplyResponses, otp => otp.MapFrom(src => src.Reply));
-
+            CreateMap<Order, OrderResponse>();
           
 
         }

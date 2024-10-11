@@ -302,7 +302,8 @@ namespace FurnitureStoreBE.Migrations
                     CloudinaryId = table.Column<string>(type: "text", nullable: false),
                     FolderName = table.Column<string>(type: "text", nullable: false),
                     ProductVariantId = table.Column<Guid>(type: "uuid", nullable: true),
-                    ReviewId = table.Column<Guid>(type: "uuid", nullable: true)
+                    ReviewId = table.Column<Guid>(type: "uuid", nullable: true),
+                    OrderStatusId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -462,6 +463,7 @@ namespace FurnitureStoreBE.Migrations
                     TaxFee = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     SubTotal = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     Total = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    AccountsReceivable = table.Column<decimal>(type: "numeric", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
@@ -550,6 +552,39 @@ namespace FurnitureStoreBE.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OrderStatus",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    OrderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ShipperId = table.Column<string>(type: "text", nullable: true),
+                    UserId = table.Column<string>(type: "text", nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    Note = table.Column<string>(type: "text", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedBy = table.Column<string>(type: "text", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "text", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeleteDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderStatus", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OrderStatus_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_OrderStatus_Order_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Order",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Category",
                 columns: table => new
                 {
@@ -593,6 +628,8 @@ namespace FurnitureStoreBE.Migrations
                     Discount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     Sold = table.Column<long>(type: "bigint", nullable: false),
                     Unit = table.Column<string>(type: "text", nullable: false),
+                    RatingCount = table.Column<int>(type: "integer", nullable: false),
+                    RatingValue = table.Column<float>(type: "real", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
                     AssetId = table.Column<Guid>(type: "uuid", nullable: true),
                     BrandId = table.Column<Guid>(type: "uuid", nullable: true),
@@ -892,7 +929,7 @@ namespace FurnitureStoreBE.Migrations
                         column: x => x.ReviewId,
                         principalTable: "Review",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.InsertData(
@@ -1114,6 +1151,11 @@ namespace FurnitureStoreBE.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Asset_OrderStatusId",
+                table: "Asset",
+                column: "OrderStatusId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Asset_ProductVariantId",
                 table: "Asset",
                 column: "ProductVariantId");
@@ -1224,6 +1266,16 @@ namespace FurnitureStoreBE.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItem_UserId",
                 table: "OrderItem",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderStatus_OrderId",
+                table: "OrderStatus",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderStatus_UserId",
+                table: "OrderStatus",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -1358,6 +1410,13 @@ namespace FurnitureStoreBE.Migrations
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
+                name: "FK_Asset_OrderStatus_OrderStatusId",
+                table: "Asset",
+                column: "OrderStatusId",
+                principalTable: "OrderStatus",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
                 name: "FK_Asset_ProductVariant_ProductVariantId",
                 table: "Asset",
                 column: "ProductVariantId",
@@ -1370,12 +1429,25 @@ namespace FurnitureStoreBE.Migrations
                 table: "Asset",
                 column: "ReviewId",
                 principalTable: "Review",
-                principalColumn: "Id");
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Address_AspNetUsers_UserId",
+                table: "Address");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Order_AspNetUsers_UserId",
+                table: "Order");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_OrderStatus_AspNetUsers_UserId",
+                table: "OrderStatus");
+
             migrationBuilder.DropForeignKey(
                 name: "FK_Review_AspNetUsers_UserId",
                 table: "Review");
@@ -1387,6 +1459,10 @@ namespace FurnitureStoreBE.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_Category_Asset_AssetId",
                 table: "Category");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Coupon_Asset_AssetId",
+                table: "Coupon");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_FurnitureType_Asset_AssetId",
@@ -1449,9 +1525,6 @@ namespace FurnitureStoreBE.Migrations
                 name: "Cart");
 
             migrationBuilder.DropTable(
-                name: "Order");
-
-            migrationBuilder.DropTable(
                 name: "Desginer");
 
             migrationBuilder.DropTable(
@@ -1464,16 +1537,13 @@ namespace FurnitureStoreBE.Migrations
                 name: "Notification");
 
             migrationBuilder.DropTable(
-                name: "Address");
-
-            migrationBuilder.DropTable(
-                name: "Coupon");
-
-            migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Asset");
+
+            migrationBuilder.DropTable(
+                name: "OrderStatus");
 
             migrationBuilder.DropTable(
                 name: "ProductVariant");
@@ -1482,10 +1552,19 @@ namespace FurnitureStoreBE.Migrations
                 name: "Review");
 
             migrationBuilder.DropTable(
+                name: "Order");
+
+            migrationBuilder.DropTable(
                 name: "Color");
 
             migrationBuilder.DropTable(
                 name: "Product");
+
+            migrationBuilder.DropTable(
+                name: "Address");
+
+            migrationBuilder.DropTable(
+                name: "Coupon");
 
             migrationBuilder.DropTable(
                 name: "Brand");
