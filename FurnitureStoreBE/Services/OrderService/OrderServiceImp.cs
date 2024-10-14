@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FurnitureStoreBE.Common;
 using FurnitureStoreBE.Common.Pagination;
 using FurnitureStoreBE.Data;
 using FurnitureStoreBE.DTOs.Request.OrderRequest;
 using FurnitureStoreBE.DTOs.Response.OrderResponse;
+using FurnitureStoreBE.DTOs.Response.ProductResponse;
+using FurnitureStoreBE.DTOs.Response.QuestionResponse;
 using FurnitureStoreBE.Enums;
 using FurnitureStoreBE.Exceptions;
 using FurnitureStoreBE.Models;
@@ -13,6 +16,7 @@ using FurnitureStoreBE.Services.CouponService;
 using FurnitureStoreBE.Services.FileUploadService;
 using FurnitureStoreBE.Services.OrderService.OrderStatusStrategy;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace FurnitureStoreBE.Services.OrderService
 {
@@ -70,7 +74,8 @@ namespace FurnitureStoreBE.Services.OrderService
                 order.setCommonCreate(UserSession.GetUserId());
                 foreach (var item in orderItems)
                 {
-                    item.OrderId = order.Id;
+                    item.CartId = null;
+                    //item.OrderId = order.Id;
                 }
                 await transaction.CommitAsync();
                 return (order, orderItems);
@@ -117,16 +122,27 @@ namespace FurnitureStoreBE.Services.OrderService
             await _dbContext.SaveChangesAsync();
             return _mappers.Map<OrderResponse>(order);
         }
-        public Task<PaginatedList<OrderResponse>> GetAllOrders(PageInfo pageInfo, OrderSearchRequest orderSearchRequest)
+        private async Task<PaginatedList<OrderResponse>> GetOrders(PageInfo pageInfo, Expression<Func<Order, bool>> predicate = null)
         {
-            throw new NotImplementedException();
+            predicate ??= r => true; // Nếu predicate là null, sử dụng một điều kiện luôn đúng
+            var orderQuery = _dbContext.Orders
+                .Include(r => r.OrderItems)
+                .Where(predicate)
+                .OrderByDescending(c => c.CreatedDate)
+                .ProjectTo<OrderResponse>(_mappers.ConfigurationProvider);
+
+            var count = await _dbContext.Orders.CountAsync(predicate);
+            return await Task.FromResult(PaginatedList<OrderResponse>.ToPagedList(orderQuery, pageInfo.PageNumber, pageInfo.PageSize));
+        }
+        public async Task<PaginatedList<OrderResponse>> GetAllOrders(PageInfo pageInfo, OrderSearchRequest orderSearchRequest)
+        {
+            return await GetOrders(pageInfo);
         }
 
-        public Task<PaginatedList<OrderResponse>> GetAllOrdersByCustomer(PageInfo pageInfo, OrderSearchRequest orderSearchRequest, string userId)
+        public async Task<PaginatedList<OrderResponse>> GetAllOrdersByCustomer(PageInfo pageInfo, OrderSearchRequest orderSearchRequest, string userId)
         {
-            throw new NotImplementedException();
-        }
-
+            return await GetOrders(pageInfo, (r => r.UserId == userId && !r.IsDeleted));
+        }  
         public async Task<OrderResponse> UpdateOrderStatus(Guid orderId, UpdateOrderStatusRequest updateOrderStatusRequest)
         {
             var order = await _dbContext.Orders.SingleOrDefaultAsync(o => o.Id == orderId);

@@ -18,6 +18,21 @@ namespace FurnitureStoreBE.Controllers.OrderController
         {
             _orderService = orderService;
         }
+        [HttpGet()]
+        public async Task<IActionResult> GetAllOrders([FromQuery] PageInfo pageInfo, [FromQuery] OrderSearchRequest orderSearchRequest)
+        {
+            return new SuccessfulResponse<object>(await _orderService.GetAllOrders(pageInfo, orderSearchRequest), (int)HttpStatusCode.OK, "Get orders successfully").GetResponse();
+        }
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> GetAllOrdersByCustomer([FromQuery] PageInfo pageInfo, [FromQuery] OrderSearchRequest orderSearchRequest, string userId)
+        {
+            return new SuccessfulResponse<object>(await _orderService.GetAllOrdersByCustomer(pageInfo, orderSearchRequest, userId), (int)HttpStatusCode.OK, "Get orders by customer successfully").GetResponse();
+        }
+        [HttpPost()]
+        public async Task<IActionResult> Createorder([FromForm] OrderRequest orderRequest)
+        {
+            return new SuccessfulResponse<object>(await _orderService.CreateOrder(orderRequest), (int)HttpStatusCode.Created, "Your order has been successfully added").GetResponse();
+        }
         [HttpPost("mock")]
         public async Task<IActionResult> CreateMockOrder([FromForm] OrderRequest orderRequest)
         {

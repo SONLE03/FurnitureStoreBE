@@ -3,8 +3,6 @@
     public class OrderItemRequest
     {
         public Guid ProductId { get; set; }
-        public string UserId { get; set; }
-
         public string Dimension { get; set; }
         public Guid ColorId { get; set; }
         public long Quantity { get; set; }

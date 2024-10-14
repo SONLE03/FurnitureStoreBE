@@ -38,6 +38,17 @@ using FurnitureStoreBE.Configurations;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Get PORT from environment variable (Railway uses dynamic ports)
+//var port = Environment.GetEnvironmentVariable("PORT") ?? "8081";
+
+//builder.WebHost.UseUrls($"http://*:{port}");
+var port = Environment.GetEnvironmentVariable("PORT");
+if(port != null) 
+{
+    builder.WebHost.UseUrls($"http://*:{port}");
+}
+
 //Log.Logger = new LoggerConfiguration()
 //    .WriteTo.BetterStack(sourceToken: builder.Configuration["BetterStack:SourceToken"])
 //    .MinimumLevel.Information()

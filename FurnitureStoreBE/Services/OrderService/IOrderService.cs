@@ -3,6 +3,7 @@ using FurnitureStoreBE.Common.Pagination;
 using FurnitureStoreBE.DTOs.Request.OrderRequest;
 using FurnitureStoreBE.DTOs.Response.OrderResponse;
 using FurnitureStoreBE.Enums;
+using FurnitureStoreBE.Models;
 
 namespace FurnitureStoreBE.Services.OrderService
 {
