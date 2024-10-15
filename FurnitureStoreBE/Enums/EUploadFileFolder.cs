@@ -11,6 +11,7 @@
         RoomSpace,
         Category,
         Coupon,
-        Review
+        Review,
+        OrderStatus
     }
 }

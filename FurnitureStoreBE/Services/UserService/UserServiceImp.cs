@@ -318,7 +318,7 @@ namespace FurnitureStoreBE.Services.UserService
         }
         public async Task<List<AddressResponse>> GetAddressesByUserId(string userId)
         {
-            if (await _dbContext.Users.AnyAsync(u => u.Id == userId))
+            if (!await _dbContext.Users.AnyAsync(u => u.Id == userId))
             {
                 throw new ObjectNotFoundException("User not found");
             }
@@ -330,7 +330,7 @@ namespace FurnitureStoreBE.Services.UserService
             await using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
-                if (await _dbContext.Users.AnyAsync(u => u.Id == userId))
+                if (!await _dbContext.Users.AnyAsync(u => u.Id == userId))
                 {
                     throw new ObjectNotFoundException("User not found");
                 }

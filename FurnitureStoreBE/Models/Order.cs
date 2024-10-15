@@ -12,9 +12,9 @@ namespace FurnitureStoreBE.Models
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public EPaymentMethod PaymentMethod { get; set; }
-        public DateTime CanceledAt { get; set; }
-        public DateTime CompletedAt { get; set; }
-        public DateTime DeliveredAt { get; set; }
+        public DateTime? CanceledAt { get; set; } = null;
+        public DateTime? CompletedAt { get; set; } = null;
+        public DateTime? DeliveredAt { get; set; } = null;
         public string? Note { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal ShippingFee { get; set; } = 30000;

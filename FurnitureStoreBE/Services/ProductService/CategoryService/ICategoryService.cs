@@ -8,7 +8,7 @@ namespace FurnitureStoreBE.Services.ProductService.CategoryService
 {
     public interface ICategoryService
     {
-        Task<PaginatedList<Category>> GetAllCategories(PageInfo pageInfo);
+        Task<PaginatedList<CategoryResponse>> GetAllCategories(PageInfo pageInfo);
         Task<CategoryResponse> CreateCategory(CategoryRequest categoryRequest);
         Task<CategoryResponse> UpdateCategory(Guid id, CategoryRequest categoryRequest);
         Task DeleteCategory(Guid id);

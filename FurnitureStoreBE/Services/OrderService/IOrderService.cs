@@ -3,6 +3,7 @@ using FurnitureStoreBE.Common.Pagination;
 using FurnitureStoreBE.DTOs.Request.OrderRequest;
 using FurnitureStoreBE.DTOs.Response.OrderResponse;
 using FurnitureStoreBE.Enums;
+using FurnitureStoreBE.Models;
 
 namespace FurnitureStoreBE.Services.OrderService
 {
@@ -13,6 +14,6 @@ namespace FurnitureStoreBE.Services.OrderService
         Task<OrderResponse> CreateOrder(OrderRequest orderRequest);
         Task<OrderResponse> CreateOrderPaid(Guid orderId);
         Task<OrderResponse> CreateMockOrder(OrderRequest orderRequest);
-        Task<OrderResponse> UpdateOrderStatus(Guid orderId, UpdateOrderStatusRequest updateOrderStatusRequest);
+        Task<OrderResponse> UpdateOrderStatus(Guid orderId, OrderStatusRequest updateOrderStatusRequest);
     }
 }

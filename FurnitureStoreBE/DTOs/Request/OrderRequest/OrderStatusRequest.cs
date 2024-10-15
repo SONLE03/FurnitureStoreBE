@@ -2,9 +2,8 @@
 
 namespace FurnitureStoreBE.DTOs.Request.OrderRequest
 {
-    public class UpdateOrderStatusRequest
+    public class OrderStatusRequest
     {
-        public Guid OrderId { get; set; }
         public EOrderStatus EOrderStatus { get; set; }
         public string? Note { get; set; }   
         public List<IFormFile>? Images { get; set; }

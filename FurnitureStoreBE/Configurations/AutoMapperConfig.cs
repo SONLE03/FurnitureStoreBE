@@ -42,7 +42,8 @@ namespace FurnitureStoreBE.Mapper
                 .ForMember(dest => dest.DisplayPrice, otp => otp.MapFrom(src => $"{src.MinPrice} - {src.MaxPrice}"))
                 .ForMember(dest => dest.ProductVariants, otp => otp.MapFrom(src => src.ProductVariants));
 
-            CreateMap<OrderItem, OrderItemResponse>().ForMember(dest => dest.ColorName, otp => otp.MapFrom(src => src.Color.ColorName))
+            CreateMap<OrderItem, OrderItemResponse>()
+                .ForMember(dest => dest.ColorName, otp => otp.MapFrom(src => src.Color.ColorName))
                 .ForMember(dest => dest.ProductName, otp => otp.MapFrom(src => src.Product.ProductName));
 
             CreateMap<Coupon, CouponResponse>()
@@ -66,8 +67,11 @@ namespace FurnitureStoreBE.Mapper
                 .ForMember(dest => dest.Role, otp => otp.MapFrom(src => src.User.Role))
                 .ForMember(dest => dest.UpdatedDate, otp => otp.MapFrom(src => src.UpdatedDate))
                 .ForMember(dest => dest.ReplyResponses, otp => otp.MapFrom(src => src.Reply));
-            CreateMap<Order, OrderResponse>();
-          
+
+            CreateMap<Order, OrderResponse>()
+                .ForMember(dest => dest.PaymentMethod, otp => otp.MapFrom(src => src.PaymentMethod.ToString()))
+                .ForMember(dest => dest.OrderStatus, otp => otp.MapFrom(src => src.OrderStatus.ToString()))
+                .ForMember(dest => dest.OrderItemResponses, otp => otp.MapFrom(src => src.OrderItems));
 
         }
     }

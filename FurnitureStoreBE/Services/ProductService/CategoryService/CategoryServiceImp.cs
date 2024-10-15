@@ -24,14 +24,14 @@ namespace FurnitureStoreBE.Services.ProductService.CategoryService
             _fileUploadService = fileUploadService;
             _mapper = mapper;
         }
-        public async Task<PaginatedList<Category>> GetAllCategories(PageInfo pageInfo)
+        public async Task<PaginatedList<CategoryResponse>> GetAllCategories(PageInfo pageInfo)
         {
             var categoryQuery = _dbContext.Categories
                 .Where(b => !b.IsDeleted)
-                .OrderByDescending(b => b.CreatedDate);
-                //.ProjectTo<CategoryResponse>(_mapper.ConfigurationProvider);
+                .OrderByDescending(b => b.CreatedDate)
+                .ProjectTo<CategoryResponse>(_mapper.ConfigurationProvider);
             var count = await _dbContext.Categories.CountAsync();
-            return await Task.FromResult(PaginatedList<Category>.ToPagedList(categoryQuery, pageInfo.PageNumber, pageInfo.PageSize));
+            return await Task.FromResult(PaginatedList<CategoryResponse>.ToPagedList(categoryQuery, pageInfo.PageNumber, pageInfo.PageSize));
         }
 
         public async Task ChangeCategoryImage(Guid id, IFormFile formFile)
