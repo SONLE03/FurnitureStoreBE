@@ -38,6 +38,10 @@ namespace FurnitureStoreBE.Controllers.OrderController
         {
             return new SuccessfulResponse<object>(await _orderService.CreateMockOrder(orderRequest), (int)HttpStatusCode.Created, "Your order has been successfully added").GetResponse();
         }
-
+        [HttpPut("{orderId}/status")]
+        public async Task<IActionResult> UpdateOrderStatus(Guid orderId, [FromForm] OrderStatusRequest orderStatusRequest)
+        {
+            return new SuccessfulResponse<object>(await _orderService.UpdateOrderStatus(orderId, orderStatusRequest), (int)HttpStatusCode.OK, "Order status has been successfully modified").GetResponse();
+        }
     }
 }

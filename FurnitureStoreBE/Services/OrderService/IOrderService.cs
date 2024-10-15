@@ -14,6 +14,6 @@ namespace FurnitureStoreBE.Services.OrderService
         Task<OrderResponse> CreateOrder(OrderRequest orderRequest);
         Task<OrderResponse> CreateOrderPaid(Guid orderId);
         Task<OrderResponse> CreateMockOrder(OrderRequest orderRequest);
-        Task<OrderResponse> UpdateOrderStatus(Guid orderId, UpdateOrderStatusRequest updateOrderStatusRequest);
+        Task<OrderResponse> UpdateOrderStatus(Guid orderId, OrderStatusRequest updateOrderStatusRequest);
     }
 }

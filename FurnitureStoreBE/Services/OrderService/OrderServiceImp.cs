@@ -5,8 +5,6 @@ using FurnitureStoreBE.Common.Pagination;
 using FurnitureStoreBE.Data;
 using FurnitureStoreBE.DTOs.Request.OrderRequest;
 using FurnitureStoreBE.DTOs.Response.OrderResponse;
-using FurnitureStoreBE.DTOs.Response.ProductResponse;
-using FurnitureStoreBE.DTOs.Response.QuestionResponse;
 using FurnitureStoreBE.Enums;
 using FurnitureStoreBE.Exceptions;
 using FurnitureStoreBE.Models;
@@ -14,7 +12,6 @@ using FurnitureStoreBE.Services.Caching;
 using FurnitureStoreBE.Services.CartService;
 using FurnitureStoreBE.Services.CouponService;
 using FurnitureStoreBE.Services.FileUploadService;
-using FurnitureStoreBE.Services.OrderService.OrderStatusStrategy;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -100,7 +97,7 @@ namespace FurnitureStoreBE.Services.OrderService
         {
             var (order, orderItems) = await GenerateOrderData(orderRequest);
             var cacheOrder = new { Order = order, OrderItems = orderItems }; // Create an anonymous object
-            await _redisCacheService.SetData(order.Id.ToString(), cacheOrder, TimeSpan.FromMinutes(15));
+            await _redisCacheService.SetData(order.Id.ToString(), cacheOrder, TimeSpan.FromMinutes(20));
             return _mappers.Map<OrderResponse>(order);
         }
 
@@ -143,35 +140,47 @@ namespace FurnitureStoreBE.Services.OrderService
         {
             return await GetOrders(pageInfo, (r => r.UserId == userId && !r.IsDeleted));
         }  
-        public async Task<OrderResponse> UpdateOrderStatus(Guid orderId, UpdateOrderStatusRequest updateOrderStatusRequest)
+        public async Task<OrderResponse> UpdateOrderStatus(Guid orderId, OrderStatusRequest updateOrderStatusRequest)
         {
-            var order = await _dbContext.Orders.SingleOrDefaultAsync(o => o.Id == orderId);
-            if (order == null)
+            await using var transaction = await _dbContext.Database.BeginTransactionAsync();
+            try
             {
-                throw new ObjectNotFoundException("Order not found");
+                var order = await _dbContext.Orders.SingleOrDefaultAsync(o => o.Id == orderId);
+                if (order == null)
+                {
+                    throw new ObjectNotFoundException("Order not found");
+                }
+                order.OrderStatus = updateOrderStatusRequest.EOrderStatus;
+                var orderStatus = new OrderStatus
+                {
+                    Order = order,
+                    ShipperId = updateOrderStatusRequest.ShipperId,
+                    Status = updateOrderStatusRequest.EOrderStatus,
+                    Note = updateOrderStatusRequest.Note,
+                };
+                if (updateOrderStatusRequest.Images != null)
+                {
+                    var productVariantImagesUploadResult = await _fileUploadService.UploadFilesAsync(updateOrderStatusRequest.Images, EUploadFileFolder.OrderStatus.ToString());
+                    var assets = productVariantImagesUploadResult.Select(img => new Asset
+                    {
+                        Name = img.OriginalFilename,
+                        URL = img.Url.ToString(),
+                        CloudinaryId = img.PublicId,
+                        FolderName = EUploadFileFolder.OrderStatus.ToString()
+                    }).ToList();
+                    orderStatus.Asset = assets;
+                }
+                _dbContext.Orders.Update(order);
+                await _dbContext.OrderStatus.AddAsync(orderStatus);
+                await _dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return _mappers.Map<OrderResponse>(order);
             }
-            OrderActionManager orderActionManager = new OrderActionManager();
-            switch (updateOrderStatusRequest.EOrderStatus)
+            catch
             {
-                case EOrderStatus.Canceled:
-                    orderActionManager.setActionStrategy(new CancelOrderStrategy(_dbContext, _fileUploadService, _cartService, _mappers));
-                    break;
-                case EOrderStatus.DeliveryToShipper:
-                    orderActionManager.setActionStrategy(new DeliverOrderToShipperStrategy(_dbContext, _fileUploadService, _mappers));
-                    break;
-                case EOrderStatus.Delivering:
-                    orderActionManager.setActionStrategy(new DeliverOrderToCustomerStrategy(_dbContext, _fileUploadService, _mappers));
-                    break;
-                case EOrderStatus.Completed:
-                    orderActionManager.setActionStrategy(new CompleteOrderStrategy(_dbContext, _fileUploadService, _mappers));
-                    break;
-                case EOrderStatus.ReturnGoods:
-                    orderActionManager.setActionStrategy(new ReturnOrderStrategy(_dbContext, _fileUploadService, _mappers));
-                    break;
-                default:
-                    throw new BusinessException("Order status not found");
+                await transaction.RollbackAsync();
+                throw;
             }
-            return await orderActionManager.executeAction(order,updateOrderStatusRequest);
         }
     }
 }

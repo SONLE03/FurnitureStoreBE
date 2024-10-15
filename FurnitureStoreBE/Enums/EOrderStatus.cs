@@ -3,11 +3,13 @@
     public enum EOrderStatus
     {
         Pending,
-        Paid, 
+        Paid,
+        Confirmed,
         Canceled,
         DeliveryToShipper,
         Delivering,
         Completed,
-        ReturnGoods
+        ReturnGoods,
+        Refund
     }
 }
