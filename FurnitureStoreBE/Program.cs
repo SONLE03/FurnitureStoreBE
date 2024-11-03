@@ -36,6 +36,7 @@ using FurnitureStoreBE.Services.QuestionService;
 using FurnitureStoreBE.Services.OrderService;
 using FurnitureStoreBE.Configurations;
 using StackExchange.Redis;
+using FurnitureStoreBE.Services.AnalyticsService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -287,6 +288,7 @@ builder.Services.AddScoped<IReviewService, ReviewServiceImp>();
 builder.Services.AddScoped<IQuestionService, QuestionServiceImp>();
 builder.Services.AddScoped<IOrderService, OrderServiceImp>();
 builder.Services.AddScoped<IRedisCacheService, RedisCacheServiceImp>();
+builder.Services.AddScoped<IAnalysisService, AnalysisServiceImp>();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
