@@ -29,7 +29,7 @@ namespace FurnitureStoreBE.Controllers.ProductController
             return new SuccessfulResponse<object>(await _brandService.CreateBrand(brandRequest), (int)HttpStatusCode.Created, "Brand created successfully").GetResponse();
         }
         [HttpPut("{brandId}")]
-        public async Task<IActionResult> UpdateBrand(Guid brandId, [FromBody] BrandRequest brandRequest)
+        public async Task<IActionResult> UpdateBrand(Guid brandId, [FromForm] BrandRequest brandRequest)
         {
             return new SuccessfulResponse<object>(await _brandService.UpdateBrand(brandId, brandRequest), (int)HttpStatusCode.OK, "Brand modified successfully").GetResponse();
         }

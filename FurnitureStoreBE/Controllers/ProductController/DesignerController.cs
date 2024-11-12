@@ -28,7 +28,7 @@ namespace FurnitureStoreBE.Controllers.ProductController
             return new SuccessfulResponse<object>(await _designerService.CreateDesigner(designerRequest), (int)HttpStatusCode.Created, "Designer created successfully").GetResponse();
         }
         [HttpPut("{designerId}")]
-        public async Task<IActionResult> UpdateDesigner(Guid designerId, [FromBody] DesignerRequest designerRequest)
+        public async Task<IActionResult> UpdateDesigner(Guid designerId, [FromForm] DesignerRequest designerRequest)
         {
             return new SuccessfulResponse<object>(await _designerService.UpdateDesigner(designerId, designerRequest), (int)HttpStatusCode.OK, "Designer modified successfully").GetResponse();
         }

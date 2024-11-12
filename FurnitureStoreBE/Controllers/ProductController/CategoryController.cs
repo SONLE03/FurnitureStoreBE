@@ -28,7 +28,7 @@ namespace FurnitureStoreBE.Controllers.ProductController
             return new SuccessfulResponse<object>(await _categoryService.CreateCategory(categoryRequest), (int)HttpStatusCode.Created, "Category created successfully").GetResponse();
         }
         [HttpPut("{categoryId}")]
-        public async Task<IActionResult> UpdateCategory(Guid categoryId, [FromBody] CategoryRequest categoryRequest)
+        public async Task<IActionResult> UpdateCategory(Guid categoryId, [FromForm] CategoryRequest categoryRequest)
         {
             return new SuccessfulResponse<object>(await _categoryService.UpdateCategory(categoryId, categoryRequest), (int)HttpStatusCode.OK, "Category modified successfully").GetResponse();
         }

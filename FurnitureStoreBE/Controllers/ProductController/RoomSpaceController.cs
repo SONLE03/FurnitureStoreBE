@@ -28,7 +28,7 @@ namespace FurnitureStoreBE.Controllers.ProductController
             return new SuccessfulResponse<object>(await _roomSpaceService.CreateRoomSpace(roomSpaceRequest), (int)HttpStatusCode.Created, "RoomSpace created successfully").GetResponse();
         }
         [HttpPut("{roomSpaceId}")]
-        public async Task<IActionResult> UpdateRoomSpace(Guid roomSpaceId, [FromBody] RoomSpaceRequest roomSpaceRequest)
+        public async Task<IActionResult> UpdateRoomSpace(Guid roomSpaceId, [FromForm] RoomSpaceRequest roomSpaceRequest)
         {
             return new SuccessfulResponse<object>(await _roomSpaceService.UpdateRoomSpace(roomSpaceId, roomSpaceRequest), (int)HttpStatusCode.OK, "RoomSpace modified successfully").GetResponse();
         }

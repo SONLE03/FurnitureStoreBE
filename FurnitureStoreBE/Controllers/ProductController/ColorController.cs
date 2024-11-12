@@ -29,7 +29,7 @@ namespace FurnitureStoreBE.Controllers.ProductController
             return new SuccessfulResponse<object>(await _colorService.CreateColor(colorRequest), (int)HttpStatusCode.Created, "Color created successfully").GetResponse();
         }
         [HttpPut("{colorId}")]
-        public async Task<IActionResult> UpdateColor(Guid colorId, [FromBody] ColorRequest colorRequest)
+        public async Task<IActionResult> UpdateColor(Guid colorId, [FromForm] ColorRequest colorRequest)
         {
             return new SuccessfulResponse<object>(await _colorService.UpdateColor(colorId, colorRequest), (int)HttpStatusCode.OK, "Color modified successfully").GetResponse();
         }
