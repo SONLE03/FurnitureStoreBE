@@ -472,7 +472,7 @@ namespace FurnitureStoreBE.Migrations
                     b.HasIndex("AssetId")
                         .IsUnique();
 
-                    b.ToTable("Desginer");
+                    b.ToTable("Designer");
                 });
 
             modelBuilder.Entity("FurnitureStoreBE.Models.Favorite", b =>

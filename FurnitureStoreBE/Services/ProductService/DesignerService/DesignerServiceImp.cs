@@ -100,8 +100,8 @@ namespace FurnitureStoreBE.Services.ProductService.DesignerService
 
         public async Task DeleteDesigner(Guid id)
         {
-            try
-            {
+            //try
+            //{
                 if (!await _dbContext.Designer.AnyAsync(b => b.Id == id)) throw new ObjectNotFoundException("Designer not found");
                 var sql = "DELETE FROM \"Designer\" WHERE \"Id\" = @p0";
                 int affectedRows = await _dbContext.Database.ExecuteSqlRawAsync(sql, id);
@@ -109,13 +109,12 @@ namespace FurnitureStoreBE.Services.ProductService.DesignerService
                 {
                     sql = "UPDATE \"Designer\" SET \"IsDeleted\" = @p0 WHERE \"Id\" = @p1";
                     await _dbContext.Database.ExecuteSqlRawAsync(sql, true, id);                 
-                }              
-            }
-            catch
-            {
-                throw new BusinessException("Designer removal failed");
-            }
-           
+                }
+            //}
+            //catch
+            //{
+            //    throw new BusinessException("Designer removal failed");
+            //}
         }
         public async Task<PaginatedList<DesignerResponse>> GetAllDesigners(PageInfo pageInfo)
         {

@@ -111,11 +111,11 @@ namespace FurnitureStoreBE.Services.ProductService.RoomSpaceService
             try
             {
                 if (!await _dbContext.RoomSpaces.AnyAsync(b => b.Id == id)) throw new ObjectNotFoundException("RoomSpace not found");
-                var sql = "DELETE FROM RoomSpace WHERE Id = @p0";
+                var sql = "DELETE FROM \"RoomSpace\" WHERE \"Id\" = @p0";
                 int affectedRows = await _dbContext.Database.ExecuteSqlRawAsync(sql, id);
                 if (affectedRows == 0)
                 {
-                    sql = "UPDATE RoomSpace SET IsDeleted = @p0 WHERE Id = @p1";
+                    sql = "UPDATE \"RoomSpace\" SET \"IsDeleted\" = @p0 WHERE \"Id\" = @p1";
                     await _dbContext.Database.ExecuteSqlRawAsync(sql, true, id);
                 }        
             }

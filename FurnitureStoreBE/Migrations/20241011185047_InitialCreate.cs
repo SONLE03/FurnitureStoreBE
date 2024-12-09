@@ -369,7 +369,7 @@ namespace FurnitureStoreBE.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Desginer",
+                name: "Designer",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -385,9 +385,9 @@ namespace FurnitureStoreBE.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Desginer", x => x.Id);
+                    table.PrimaryKey("PK_Designer", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Desginer_Asset_AssetId",
+                        name: "FK_Designer_Asset_AssetId",
                         column: x => x.AssetId,
                         principalTable: "Asset",
                         principalColumn: "Id");
@@ -754,9 +754,9 @@ namespace FurnitureStoreBE.Migrations
                 {
                     table.PrimaryKey("PK_ProductDesigner", x => new { x.DesignerId, x.ProductId });
                     table.ForeignKey(
-                        name: "FK_ProductDesigner_Desginer_DesignerId",
+                        name: "FK_ProductDesigner_Designer_DesignerId",
                         column: x => x.DesignerId,
-                        principalTable: "Desginer",
+                        principalTable: "Designer",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -1201,8 +1201,8 @@ namespace FurnitureStoreBE.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Desginer_AssetId",
-                table: "Desginer",
+                name: "IX_Designer_AssetId",
+                table: "Designer",
                 column: "AssetId",
                 unique: true);
 
@@ -1525,7 +1525,7 @@ namespace FurnitureStoreBE.Migrations
                 name: "Cart");
 
             migrationBuilder.DropTable(
-                name: "Desginer");
+                name: "Designer");
 
             migrationBuilder.DropTable(
                 name: "Material");

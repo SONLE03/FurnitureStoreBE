@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FurnitureStoreBE.Models
 {
-    [Table("Desginer")]
+    [Table("Designer")]
     public class Designer : BaseEntity
     {
         [Key]
