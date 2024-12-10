@@ -16,6 +16,7 @@ using FurnitureStoreBE.DTOs.Response.MailResponse;
 using FurnitureStoreBE.Services.Caching;
 using FurnitureStoreBE.DTOs.Response.UserResponse;
 using NuGet.Protocol;
+using AutoMapper;
 
 namespace FurnitureStoreBE.Services.Authentication
 {
@@ -32,10 +33,11 @@ namespace FurnitureStoreBE.Services.Authentication
         private readonly ITokenService _tokenService;
         private readonly IMailService _mailService;
         private readonly IRedisCacheService _redisCacheService;
+        private readonly IMapper _mapper;
 
         public AuthServiceImp(ILogger<AuthServiceImp> logger, ApplicationDBContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor
             , JwtUtil jwtUtil, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager
-            , ITokenService tokenService, IMailService mailService, IRedisCacheService redisCacheService)
+            , ITokenService tokenService, IMailService mailService, IRedisCacheService redisCacheService, IMapper mapper)
         {
             _logger = logger;
             _context = context;
@@ -48,14 +50,15 @@ namespace FurnitureStoreBE.Services.Authentication
             _tokenService = tokenService;
             _mailService = mailService;
             _redisCacheService = redisCacheService;
+            _mapper = mapper;
         }
-        public async Task<User> GetMe(string userId)
+        public async Task<UserResponse> GetMe(string userId)
         {
             if(!await _context.Users.AnyAsync(u => u.Id == userId))
             {
                 throw new ObjectNotFoundException("User not found");
             }
-            return await _context.Users.FirstAsync(u => u.Id == userId);
+            return _mapper.Map<UserResponse>(await _context.Users.Include(a => a.Asset).SingleOrDefaultAsync(u => u.Id == userId));
         }
         public async Task<bool> Signup(SignupRequest register)
         {

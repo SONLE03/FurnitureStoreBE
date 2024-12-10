@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CloudinaryDotNet;
 using FurnitureStoreBE.Common;
 using FurnitureStoreBE.Common.Pagination;
 using FurnitureStoreBE.Data;
 using FurnitureStoreBE.DTOs.Request.MailRequest;
 using FurnitureStoreBE.DTOs.Request.UserRequest;
+using FurnitureStoreBE.DTOs.Response.ProductResponse;
 using FurnitureStoreBE.DTOs.Response.UserResponse;
 using FurnitureStoreBE.Enums;
 using FurnitureStoreBE.Exceptions;
@@ -47,11 +49,11 @@ namespace FurnitureStoreBE.Services.UserService
             _fileUploadService = fileUploadService;
             _logger = logger;
         }
-        public async Task<PaginatedList<User>> GetAllUsers(string role, PageInfo pageInfo)
+        public async Task<PaginatedList<UserResponse>> GetAllUsers(string role, PageInfo pageInfo)
         {
-            var usersQuery = _dbContext.Users.Where(u => u.Role == role);
+            var usersQuery = _dbContext.Users.Include(a => a.Asset).Where(u => u.Role == role).ProjectTo<UserResponse>(_mapper.ConfigurationProvider);
             var count = await _dbContext.Users.CountAsync();
-            return await Task.FromResult(PaginatedList<User>.ToPagedList(usersQuery, pageInfo.PageNumber, pageInfo.PageSize));
+            return await Task.FromResult(PaginatedList<UserResponse>.ToPagedList(usersQuery, pageInfo.PageNumber, pageInfo.PageSize));
         }
         public async Task<UserResponse> CreateUser(UserRequestCreate userRequest, string roleName)
         {

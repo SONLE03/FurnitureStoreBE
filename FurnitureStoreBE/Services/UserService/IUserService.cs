@@ -8,7 +8,7 @@ namespace FurnitureStoreBE.Services.UserService
 {
     public interface IUserService
     {
-        Task<PaginatedList<User>> GetAllUsers(string role, PageInfo pageInfo);
+        Task<PaginatedList<UserResponse>> GetAllUsers(string role, PageInfo pageInfo);
         Task<List<UserClaimsResponse>> GetUserClaims(string userId);
         Task<ClaimsResult> GetClaimsByRole(int role);
         Task<UserResponse> CreateUser(UserRequestCreate userRequest, string roleName);

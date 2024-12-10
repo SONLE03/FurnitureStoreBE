@@ -16,7 +16,7 @@ namespace FurnitureStoreBE.Mapper
         public AutoMapperConfig()
         {
             CreateMap<AspNetTypeClaims, TypeClaimsResponse>();
-            CreateMap<User,  UserResponse>();
+            CreateMap<User,  UserResponse>().ForMember(dest => dest.ImageSource, opt => opt.MapFrom(src => src.Asset.URL));
             CreateMap<Address, AddressResponse>();
             CreateMap<Color, ColorResponse>();
             CreateMap<Brand, BrandResponse>().ForMember(dest => dest.ImageSource, opt => opt.MapFrom(src => src.Asset.URL));
