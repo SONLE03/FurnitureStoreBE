@@ -20,7 +20,9 @@ namespace FurnitureStoreBE.Models
         public decimal MinOrderValue { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal DiscountValue { get; set; }
+        [Column(TypeName = "date")]
         public DateTime StartDate { get; set; }
+        [Column(TypeName = "date")]
         public DateTime EndDate { get; set; }
         public ECouponType ECouponType { get; set; }
         public ECouponStatus ECouponStatus { get; set; } = ECouponStatus.Active;

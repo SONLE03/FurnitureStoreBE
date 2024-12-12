@@ -268,13 +268,13 @@ namespace FurnitureStoreBE.Services.ProductService.ProductService
             try
             {
                 if (!await _dbContext.Products.AnyAsync(b => b.Id == productId)) throw new ObjectNotFoundException("Product not found");
-                var sqlDelete = "DELETE FROM \"Product\" WHERE \"Id\" = @p0";
-                int affectedRows = await _dbContext.Database.ExecuteSqlRawAsync(sqlDelete, productId);
-                if (affectedRows == 0)
-                {
-                    var sqlUpdate = "UPDATE \"Brand\" SET \"IsDeleted\" = @p0 WHERE \"Id\" = @p1"; // Sử dụng dấu ngoặc kép
+                //var sqlDelete = "DELETE FROM \"Product\" WHERE \"Id\" = @p0";
+                //int affectedRows = await _dbContext.Database.ExecuteSqlRawAsync(sqlDelete, productId);
+                //if (affectedRows == 0)
+                //{
+                    var sqlUpdate = "UPDATE \"Product\" SET \"IsDeleted\" = @p0 WHERE \"Id\" = @p1"; // Sử dụng dấu ngoặc kép
                     await _dbContext.Database.ExecuteSqlRawAsync(sqlUpdate, true, productId);
-                }
+                //}
             }
             catch
             {

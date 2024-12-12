@@ -12,6 +12,7 @@ namespace FurnitureStoreBE.Models
         [PersonalData]
         public string? FullName { get; set; }
         [PersonalData]
+        [Column(TypeName = "date")]
         public DateTime? DateOfBirth { get; set; }
         [PersonalData]
         public Guid? AssetId { get; set; }
