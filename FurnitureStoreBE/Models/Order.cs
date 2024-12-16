@@ -12,8 +12,14 @@ namespace FurnitureStoreBE.Models
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public EPaymentMethod PaymentMethod { get; set; }
+        [Column(TypeName = "timestamp without time zone")]
+
         public DateTime? CanceledAt { get; set; } = null;
+        [Column(TypeName = "timestamp without time zone")]
+
         public DateTime? CompletedAt { get; set; } = null;
+        [Column(TypeName = "timestamp without time zone")]
+
         public DateTime? DeliveredAt { get; set; } = null;
         public string? Note { get; set; }
         [Column(TypeName = "decimal(18,2)")]

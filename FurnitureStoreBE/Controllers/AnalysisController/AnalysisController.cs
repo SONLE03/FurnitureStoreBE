@@ -18,7 +18,7 @@ namespace FurnitureStoreBE.Controllers.AnalyticsController
         [HttpGet]
         public async Task<IActionResult> OrderAnalyticDataByMonth([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
         {
-            return new SuccessfulResponse<object>(_analysisService.OrderAnalyticDataByMonth(startDate, endDate), (int)HttpStatusCode.OK, "Get data successfully").GetResponse();
+            return new SuccessfulResponse<object>(await _analysisService.OrderAnalyticDataByMonth(startDate, endDate), (int)HttpStatusCode.OK, "Get data successfully").GetResponse();
         }
     }
 }

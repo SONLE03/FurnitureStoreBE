@@ -10,7 +10,7 @@
     {
         public int Year { get; set; } // Make these non-nullable if possible
         public int Month { get; set; } // Same here
-        public long TotalOrders { get; set; }
+        public int TotalOrders { get; set; }
         public decimal TotalRevenue { get; set; }
     }
 }

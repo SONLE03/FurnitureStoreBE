@@ -238,7 +238,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
@@ -253,7 +253,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -298,7 +298,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
@@ -316,7 +316,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -345,7 +345,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
@@ -357,7 +357,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -381,10 +381,10 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("date");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("date");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -399,7 +399,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("EndDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("date");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
@@ -411,13 +411,13 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("date");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<long>("UsageCount")
                         .HasColumnType("bigint");
@@ -446,7 +446,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
@@ -465,7 +465,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -487,7 +487,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
@@ -499,7 +499,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("UserId", "ProductId");
 
@@ -521,7 +521,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
@@ -543,7 +543,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -568,7 +568,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
@@ -587,7 +587,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -611,7 +611,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
@@ -637,7 +637,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -656,10 +656,10 @@ namespace FurnitureStoreBE.Migrations
                     b.Property<Guid>("AddressId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CanceledAt")
+                    b.Property<DateTime?>("CanceledAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("CompletedAt")
+                    b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("CouponId")
@@ -669,12 +669,12 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("DeliveredAt")
+                    b.Property<DateTime?>("DeliveredAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
@@ -713,7 +713,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -790,7 +790,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
@@ -814,7 +814,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("UserId")
                         .HasColumnType("text");
@@ -847,7 +847,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
@@ -891,7 +891,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -918,7 +918,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
@@ -949,7 +949,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<decimal>("Width")
                         .HasColumnType("decimal(18,2)");
@@ -977,7 +977,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
@@ -992,7 +992,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -1053,7 +1053,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
@@ -1071,7 +1071,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -1102,7 +1102,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
@@ -1120,7 +1120,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -1148,7 +1148,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("timestamp with time zone");
@@ -1167,7 +1167,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
