@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FurnitureStoreBE.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20241216173623_InitialCreate")]
+    [Migration("20241219202714_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -558,6 +558,62 @@ namespace FurnitureStoreBE.Migrations
                     b.ToTable("FurnitureType");
                 });
 
+            modelBuilder.Entity("FurnitureStoreBE.Models.ImportInvoice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("DeleteDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ImportInvoice");
+                });
+
+            modelBuilder.Entity("FurnitureStoreBE.Models.ImportItem", b =>
+                {
+                    b.Property<Guid>("ProductVariantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ImportInvoiceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<long>("Quantity")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("ProductVariantId", "ImportInvoiceId");
+
+                    b.HasIndex("ImportInvoiceId");
+
+                    b.ToTable("ImportItem");
+                });
+
             modelBuilder.Entity("FurnitureStoreBE.Models.Material", b =>
                 {
                     b.Property<Guid>("Id")
@@ -660,10 +716,10 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("CanceledAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("CompletedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<Guid?>("CouponId")
                         .HasColumnType("uuid");
@@ -678,7 +734,7 @@ namespace FurnitureStoreBE.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeliveredAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -2603,6 +2659,25 @@ namespace FurnitureStoreBE.Migrations
                     b.Navigation("RoomSpace");
                 });
 
+            modelBuilder.Entity("FurnitureStoreBE.Models.ImportItem", b =>
+                {
+                    b.HasOne("FurnitureStoreBE.Models.ImportInvoice", "ImportInvoice")
+                        .WithMany("ImportItem")
+                        .HasForeignKey("ImportInvoiceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FurnitureStoreBE.Models.ProductVariant", "ProductVariant")
+                        .WithMany("ImportItem")
+                        .HasForeignKey("ProductVariantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ImportInvoice");
+
+                    b.Navigation("ProductVariant");
+                });
+
             modelBuilder.Entity("FurnitureStoreBE.Models.Material", b =>
                 {
                     b.HasOne("FurnitureStoreBE.Models.Asset", "Asset")
@@ -3018,6 +3093,11 @@ namespace FurnitureStoreBE.Migrations
                     b.Navigation("Categories");
                 });
 
+            modelBuilder.Entity("FurnitureStoreBE.Models.ImportInvoice", b =>
+                {
+                    b.Navigation("ImportItem");
+                });
+
             modelBuilder.Entity("FurnitureStoreBE.Models.Order", b =>
                 {
                     b.Navigation("OrderItems");
@@ -3046,6 +3126,8 @@ namespace FurnitureStoreBE.Migrations
             modelBuilder.Entity("FurnitureStoreBE.Models.ProductVariant", b =>
                 {
                     b.Navigation("Assets");
+
+                    b.Navigation("ImportItem");
                 });
 
             modelBuilder.Entity("FurnitureStoreBE.Models.Question", b =>

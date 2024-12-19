@@ -31,7 +31,7 @@ namespace FurnitureStoreBE.Models
 
         public static DateTime resultTimestamp()
         {
-            return DateTime.UtcNow;
+            return DateTime.Now;
         }
     }
 }

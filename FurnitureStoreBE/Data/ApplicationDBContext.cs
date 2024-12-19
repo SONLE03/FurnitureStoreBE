@@ -37,6 +37,8 @@ namespace FurnitureStoreBE.Data
         public DbSet<Notification> Notification { get; set; }
         public DbSet<AspNetTypeClaims> TypeClaims { get; set; }
         public DbSet<AspNetRoleClaims<string>> RoleClaims { get; set; }
+        public DbSet<ImportInvoice> ImportInvoices { get; set; }
+        public DbSet<ImportItem> ImportItems { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -116,7 +118,19 @@ namespace FurnitureStoreBE.Data
                 .WithOne(uc => uc.User)
                 .HasForeignKey(uc => uc.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
-
+            // Import Item
+            modelBuilder.Entity<ImportItem>()
+                .HasKey(ii => new { ii.ProductVariantId, ii.ImportInvoiceId });
+            modelBuilder.Entity<ImportInvoice>()
+               .HasMany(i => i.ImportItem)
+               .WithOne(ii => ii.ImportInvoice)
+               .HasForeignKey(ii => ii.ImportInvoiceId)
+               .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<ProductVariant>()
+                .HasMany(pv => pv.ImportItem)
+                .WithOne(ii => ii.ProductVariant)
+                .HasForeignKey(ii => ii.ProductVariantId)
+                .OnDelete(DeleteBehavior.Restrict);
             // Designer relationship
             modelBuilder.Entity<Asset>()
               .HasOne(p => p.Designer)
