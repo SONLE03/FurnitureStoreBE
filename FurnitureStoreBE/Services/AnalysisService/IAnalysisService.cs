@@ -4,7 +4,8 @@ namespace FurnitureStoreBE.Services.AnalyticsService
 {
     public interface IAnalysisService
     {
-        Task<List<OrderAnalyticData>> OrderAnalyticDataByMonth(DateTime startDate, DateTime endDate);
+        Task<SummaryAnalytics> Summary();
+        Task<List<OrderAnalyticData>> OrderAnalyticData(DateTime startDate, DateTime endDate);
 
     }
 }

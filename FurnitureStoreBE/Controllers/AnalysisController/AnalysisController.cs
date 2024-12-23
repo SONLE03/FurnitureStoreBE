@@ -15,10 +15,15 @@ namespace FurnitureStoreBE.Controllers.AnalyticsController
         {
             _analysisService = analysisService;
         }
-        [HttpGet]
+        [HttpGet("summary")]
+        public async Task<IActionResult> OrderAnalyticDataSummary()
+        {
+            return new SuccessfulResponse<object>(await _analysisService.Summary(), (int)HttpStatusCode.OK, "Get data successfully").GetResponse();
+        }
+        [HttpGet("order-analytics")]
         public async Task<IActionResult> OrderAnalyticDataByMonth([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
         {
-            return new SuccessfulResponse<object>(await _analysisService.OrderAnalyticDataByMonth(startDate, endDate), (int)HttpStatusCode.OK, "Get data successfully").GetResponse();
+            return new SuccessfulResponse<object>(await _analysisService.OrderAnalyticData(startDate, endDate), (int)HttpStatusCode.OK, "Get data successfully").GetResponse();
         }
     }
 }

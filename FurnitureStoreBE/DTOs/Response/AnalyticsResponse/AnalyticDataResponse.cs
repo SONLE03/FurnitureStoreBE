@@ -8,9 +8,11 @@
     }
     public class OrderAnalyticData
     {
-        public int Year { get; set; } // Make these non-nullable if possible
-        public int Month { get; set; } // Same here
+        //public int Year { get; set; } // Make these non-nullable if possible
+        //public int Month { get; set; } // Same here
+        public string Key { get; set; }
         public int TotalOrders { get; set; }
+        public long TotalProductsSold { get; set; }
         public decimal TotalRevenue { get; set; }
     }
 }
