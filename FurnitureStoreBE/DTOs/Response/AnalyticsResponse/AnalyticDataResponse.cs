@@ -14,5 +14,11 @@
         public int TotalOrders { get; set; }
         public long TotalProductsSold { get; set; }
         public decimal TotalRevenue { get; set; }
+        public List<ProductAnalyticData> ProductAnalyticDatas { get; set; }
+    }
+    public class ProductAnalyticData
+    {
+        public string ProductName { get; set; }
+        public long TotalProductSold { get; set; }
     }
 }

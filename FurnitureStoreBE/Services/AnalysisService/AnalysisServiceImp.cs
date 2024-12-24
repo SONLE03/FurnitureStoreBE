@@ -3,6 +3,7 @@ using FurnitureStoreBE.DTOs.Response.AnalyticsResponse;
 using FurnitureStoreBE.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Linq;
 
 namespace FurnitureStoreBE.Services.AnalyticsService
 {
@@ -45,45 +46,61 @@ namespace FurnitureStoreBE.Services.AnalyticsService
             var dayOfYear = date.DayOfYear;
             return (int)Math.Ceiling(dayOfYear / 7.0);
         }
-        private async Task<List<OrderAnalyticData>> GetOrderAnalyticsByDay(DateTime startDate, DateTime endDate)
+        public async Task<List<OrderAnalyticData>> GetOrderAnalyticsByDay(DateTime startDate, DateTime endDate)
         {
-            var orderData = await _dbContext.Orders
-               .Where(o => o.CreatedDate >= startDate && o.CreatedDate <= endDate)
+            var orderData = await _dbContext.OrderItems
+               .Include(o => o.Order)
+               .Where(o => o.Order.CreatedDate >= startDate && o.Order.CreatedDate <= endDate)
                .Select(o => new
                {
-                   o.CreatedDate,
-                   o.Total,
-                   o.OrderItems
+                   o.ProductId,
+                   o.Product,
+                   o.Quantity,
+                   o.Order.CreatedDate,
+                   o.Order.Total,
                })
                .ToListAsync();
 
+            // Group the data by day
             var groupedData = orderData
                 .GroupBy(o => o.CreatedDate.Value.Date)
-              .Select(g => new OrderAnalyticData
-              {
-                  Key = g.Key.ToString("yyyy-MM-dd"),
-                  TotalOrders = g.Count(),
-                  TotalRevenue = g.Sum(o => o.Total),
-                  TotalProductsSold = g.Sum(o => o.OrderItems.Sum(oi => oi.Quantity))
-              })
-              .OrderBy(data => data.Key)
-              .ToList();
+                .Select(g => new OrderAnalyticData
+                {
+                    Key = g.Key.ToString("yyyy-MM-dd"),
+                    TotalOrders = g.Count(),
+                    TotalRevenue = g.Sum(o => o.Total),
+                    TotalProductsSold = g.Sum(o => o.Quantity),  // Sum quantities of order items
+                    ProductAnalyticDatas = g
+                        .GroupBy(oi => oi.ProductId) // Group by ProductId
+                        .Select(oiGroup => new ProductAnalyticData
+                        {
+                            // Null check for Product before accessing Name
+                            ProductName = oiGroup.FirstOrDefault()?.Product?.ProductName ?? "Unknown Product", // Default to "Unknown Product" if Product is null
+                            TotalProductSold = oiGroup.Sum(oi => oi.Quantity) // Summing quantities for each product
+                        })
+                        .Take(10)
+                        .OrderByDescending(p => p.TotalProductSold)
+                        .ToList()
+                })
+                .OrderBy(data => data.Key)
+                .ToList();
+
             return groupedData;
         }
-
-
-
         private async Task<List<OrderAnalyticData>> GetOrderAnalyticsByWeek(DateTime startDate, DateTime endDate)
         {
-            var orderData = await _dbContext.Orders
-                .Where(o => o.CreatedDate >= startDate && o.CreatedDate <= endDate)
-                .Select(o => new
-                {
-                    o.CreatedDate,
-                    o.Total,
-                    o.OrderItems
-                })
-                .ToListAsync();
+             var orderData = await _dbContext.OrderItems
+               .Include(o => o.Order)
+               .Where(o => o.Order.CreatedDate >= startDate && o.Order.CreatedDate <= endDate)
+               .Select(o => new
+               {
+                   o.ProductId,
+                   o.Product,
+                   o.Quantity,
+                   o.Order.CreatedDate,
+                   o.Order.Total,
+               })
+               .ToListAsync();
             var groupedData = orderData
                 .GroupBy(o => new
                 {
@@ -95,7 +112,18 @@ namespace FurnitureStoreBE.Services.AnalyticsService
                     Key = $"Week {g.Key.Week} - {g.Key.Year}",
                     TotalOrders = g.Count(),
                     TotalRevenue = g.Sum(o => o.Total),
-                    TotalProductsSold = g.Sum(o => o.OrderItems.Sum(oi => oi.Quantity))
+                    TotalProductsSold = g.Sum(o => o.Quantity),
+                    ProductAnalyticDatas = g
+                        .GroupBy(oi => oi.ProductId) // Group by ProductId
+                        .Select(oiGroup => new ProductAnalyticData
+                        {
+                            // Null check for Product before accessing Name
+                            ProductName = oiGroup.FirstOrDefault()?.Product?.ProductName ?? "Unknown Product", // Default to "Unknown Product" if Product is null
+                            TotalProductSold = oiGroup.Sum(oi => oi.Quantity) // Summing quantities for each product
+                        })
+                        .Take(10)
+                        .OrderByDescending(p => p.TotalProductSold)
+                        .ToList()
                 })
                 .OrderBy(data => data.Key)
                 .ToList();
@@ -105,15 +133,18 @@ namespace FurnitureStoreBE.Services.AnalyticsService
 
         private async Task<List<OrderAnalyticData>> GetOrderAnalyticsByMonth(DateTime startDate, DateTime endDate)
         {
-            var orderData = await _dbContext.Orders
-                .Where(o => o.CreatedDate >= startDate && o.CreatedDate <= endDate)
-                .Select(o => new
-                {
-                    o.CreatedDate,
-                    o.Total,
-                    o.OrderItems
-                })
-                .ToListAsync();
+            var orderData = await _dbContext.OrderItems
+              .Include(o => o.Order)
+              .Where(o => o.Order.CreatedDate >= startDate && o.Order.CreatedDate <= endDate)
+              .Select(o => new
+              {
+                  o.ProductId,
+                  o.Product,
+                  o.Quantity,
+                  o.Order.CreatedDate,
+                  o.Order.Total,
+              })
+              .ToListAsync();
             var groupedData = orderData
                 .GroupBy(o => new
                 {
@@ -125,7 +156,18 @@ namespace FurnitureStoreBE.Services.AnalyticsService
                     Key = $"Month {g.Key.Month} - {g.Key.Year}",
                     TotalOrders = g.Count(),
                     TotalRevenue = g.Sum(o => o.Total),
-                    TotalProductsSold = g.Sum(o => o.OrderItems.Sum(oi => oi.Quantity))
+                    TotalProductsSold = g.Sum(o => o.Quantity),
+                    ProductAnalyticDatas = g
+                        .GroupBy(oi => oi.ProductId) // Group by ProductId
+                        .Select(oiGroup => new ProductAnalyticData
+                        {
+                            // Null check for Product before accessing Name
+                            ProductName = oiGroup.FirstOrDefault()?.Product?.ProductName ?? "Unknown Product", // Default to "Unknown Product" if Product is null
+                            TotalProductSold = oiGroup.Sum(oi => oi.Quantity) // Summing quantities for each product
+                        })
+                        .Take(10)
+                        .OrderByDescending(p => p.TotalProductSold)
+                        .ToList()
                 })
                 .OrderBy(data => data.Key)
                 .ToList();
