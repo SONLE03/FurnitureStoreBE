@@ -95,7 +95,7 @@ namespace FurnitureStoreBE.Services.CartService
 
                 if(discountValue != 0)
                 {
-                    subtotal = subtotal * discountValue / 100;
+                    subtotal = subtotal * (1 - discountValue / 100);
                 }
                 var orderItem = new OrderItem
                 {
@@ -202,7 +202,7 @@ namespace FurnitureStoreBE.Services.CartService
                 var subtotal = price * quantity;
                 if (discountValue != 0)
                 {
-                    subtotal = subtotal * discountValue / 100;
+                    subtotal = subtotal * (1 - discountValue / 100);
                 }
 
                 existOrderItem.Quantity = quantity;
