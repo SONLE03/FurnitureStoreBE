@@ -30,7 +30,7 @@ namespace FurnitureStoreBE.Controllers.ImportController
             return new SuccessfulResponse<object>(await _importService.GetImportById(importId), (int)HttpStatusCode.OK, "Get import successfully").GetResponse();
         }
         [HttpPost()]
-        public async Task<IActionResult> CreateImport([FromForm] List<ImportRequest> importRequests)
+        public async Task<IActionResult> CreateImport([FromBody] List<ImportRequest> importRequests)
         {
             if (importRequests == null || !importRequests.Any())
             {
